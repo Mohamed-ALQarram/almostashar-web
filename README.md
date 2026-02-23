@@ -16,7 +16,7 @@ Ensure you have the following installed:
 ### 2. Cloning the Project
 Open your terminal and run:
 ```bash
-git clone [URL_OF_REPO]
+git clone https://github.com/Mohamed-ALQarram/almostashar-web.git
 cd almostashar-web
 ```
 
