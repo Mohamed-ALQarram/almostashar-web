@@ -33,7 +33,6 @@ const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm(
 });
 
 const onSubmit = async (data) => {
-    try {
     const formData = new FormData();
     formData.append('fullName', data.fullName);
     formData.append('email', data.email);
@@ -41,14 +40,18 @@ const onSubmit = async (data) => {
     formData.append('phone', data.phone);
     formData.append('licenseNo', data.licenseNo);
     formData.append('specialization', data.specialization);
-      // data.syndicateCard is a FileList
+    // data.syndicateCard is a FileList
     formData.append('syndicateCard', data.syndicateCard[0]);
-
+    
+    try 
+    {
     await axios.post('/api/lawyer/auth/register', formData);
     alert('تم التسجيل بنجاح!');
-    window.location.href = '/verification-pending';
-    } catch (err) {
-    alert('خطأ في الاتصال بالسيرفر');
+    //window.location.href = '/verification-pending';
+    } 
+    catch (err) 
+    {
+    alert('خطأ في الاتصال بالسيرفر' + err);
     }
 };
 
