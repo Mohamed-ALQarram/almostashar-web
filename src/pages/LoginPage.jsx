@@ -1,5 +1,6 @@
-import LoginForm from "../features/auth/components/loginForm";
-import BrandingSide from "../features/auth/components/BrandingSide";
+// import LoginForm from "../features/auth/components/LoginForm";
+import {BrandingSide} from "../features/auth";
+import {LoginForm} from "../features/auth"
 
 const LoginPage = () => {
     return (
