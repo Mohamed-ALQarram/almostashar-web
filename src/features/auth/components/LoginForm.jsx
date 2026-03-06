@@ -3,6 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
+import useLogin from '../hooks/useLogin';
 
 // Setup validation schema using Yup
 const schema = yup.object().shape({
@@ -16,20 +17,41 @@ const schema = yup.object().shape({
         .min(6, 'كلمة المرور يجب أن تتكون من 6 أحرف على الأقل'),
 });
 
+/**
+ * Maps server-side field validation details to field names used in the form.
+ * Server returns PascalCase (e.g. "Email"), form uses camelCase (e.g. "email").
+ */
+const mapServerFieldErrors = (details) => {
+    if (!details?.length) return {};
+    const map = {};
+    for (const d of details) {
+        const key = d.property?.toLowerCase();
+        if (key) map[key] = d.error;
+    }
+    return map;
+};
+
 const LoginForm = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm({
         resolver: yupResolver(schema),
     });
 
-    const onSubmit = async (data) => {
-        // API Call logic would go here
-        console.log("Form Submitted:", data);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+    const { mutate: login, isPending, error: serverError } = useLogin();
+
+    const onSubmit = (data) => {
+        login(data);
     };
+
+    // Merge server field-level errors with client-side errors
+    const serverFieldErrors = mapServerFieldErrors(serverError?.details);
+
+    // General error (no field-level details — e.g. invalid credentials)
+    const generalError =
+        serverError && !serverError.details ? serverError.message : null;
 
     const GoogleIcon = (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -47,12 +69,19 @@ const LoginForm = () => {
     );
 
     return (
-        <div className="w-full max-w-[440px] mx-auto flex flex-col items-center">
+        <div className="w-full max-w-[400px] mx-auto flex flex-col items-center">
             {/* Header */}
-            <div className="text-center mb-8">
-                <h1 className="text-[32px] font-bold text-primary mb-3">أهلاً بك مرة أخرى!</h1>
-                <p className="text-brand-muted text-[15px]">سعداء برؤيتك مجدداً، يرجى تسجيل الدخول للمتابعة.</p>
+            <div className="text-center mb-5">
+                <h1 className="text-[28px] font-bold text-primary mb-2">أهلاً بك مرة أخرى!</h1>
+                <p className="text-brand-muted text-[14px]">سعداء برؤيتك مجدداً، يرجى تسجيل الدخول للمتابعة.</p>
             </div>
+
+            {/* General server error banner */}
+            {generalError && (
+                <div className="w-full mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-center">
+                    <p className="text-error text-sm font-medium">{generalError}</p>
+                </div>
+            )}
 
             <form onSubmit={handleSubmit(onSubmit)} className="w-full flex-col flex gap-5">
 
@@ -62,7 +91,7 @@ const LoginForm = () => {
                     placeholder="name@example.com"
                     icon={MailIcon}
                     {...register('email')}
-                    error={errors.email?.message}
+                    error={errors.email?.message || serverFieldErrors.email}
                 />
 
                 <Input
@@ -75,14 +104,15 @@ const LoginForm = () => {
                         </a>
                     }
                     {...register('password')}
-                    error={errors.password?.message}
+                    error={errors.password?.message || serverFieldErrors.password}
                 />
 
                 <Button
                     type="submit"
                     variant="primary"
                     className="w-full mt-3"
-                    isLoading={isSubmitting}
+                    isLoading={isPending}
+                    disabled={isPending}
                 >
                     تسجيل الدخول
                 </Button>
