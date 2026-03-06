@@ -6,28 +6,26 @@ import Button from "../../../components/ui/Button";
 const BrandingSide = () => {
     return (
         <div
-            className="hidden lg:flex flex-col items-center justify-between w-full max-w-[420px] self-stretch bg-primary-dark p-10 text-brand-light rounded-s-3xl"
+            className="hidden lg:flex flex-col items-center justify-between w-full max-w-[360px] self-stretch bg-primary-dark py-6 px-8 text-brand-light rounded-s-3xl overflow-y-auto"
             dir="rtl"
         >
             {/* Upper Section: Logo and Brand Name */}
-            <div className="flex flex-col items-center mt-8">
-                <div className="w-100 h-80 rounded-full opacity-60 bg-primary-light/10 flex items-center justify-center border border-primary-light/20 mb-8">
-                    <img className="rounded-[100px]" src={logo} alt="AlMostashar logo" />
-                </div>
+            <div className=" rounded-full opacity-60 bg-primary-light/10 flex items-center justify-center border border-primary-light/20 mb-4">
+                <img className="rounded-[40%] w-[270px] h-[270px] object-cover" src={logo} alt="AlMostashar logo" />
             </div>
 
             {/* Middle Section: Welcome Text */}
-            <div className="text-center space-y-5">
-                <h2 className="text-4xl font-bold text-white">أهلاً بكم</h2>
-                <p className="text-brand-muted text-lg leading-relaxed max-w-[320px] mx-auto">
+            <div className="text-center space-y-3">
+                <h2 className="text-3xl font-bold text-white">أهلاً بكم</h2>
+                <p className="text-brand-muted text-base leading-relaxed max-w-[300px] mx-auto">
                     منصتكم القانونية الأولى للوصول إلى أفضل الخدمات والاستشارات القانونية
                     الموثوقة بكل سهولة وأمان.
                 </p>
             </div>
 
             {/* Bottom Section: Action Box */}
-            <div className="w-full bg-primary-light/5 border border-primary-light/10 rounded-3xl p-8 mb-6 text-center">
-                <p className="text-brand-light/80 mb-6">
+            <div className="w-full bg-primary-light/5 border border-primary-light/10 rounded-2xl p-6 mb-2 text-center">
+                <p className="text-brand-light/80 mb-4">
                     ليس لديك حساب؟
                     <Link
                         to="/lawyer-register"
