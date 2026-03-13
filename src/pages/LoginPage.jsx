@@ -11,7 +11,7 @@ const LoginPage = () => {
             {/* Card wrapper — acts as the split-screen container */}
             <div className="flex w-full max-w-[850px] lg:max-h-[90vh] lg:h-[680px] bg-white rounded-3xl shadow-xl overflow-hidden">
                 {/* Right side – Branding (hidden on mobile) */}
-                <BrandingSide />
+                <BrandingSide isLoginPage={true} />
                 {/* Left side – Login Form */}
                 <div className="flex-1 flex items-center justify-center px-3 py-4 sm:px-6 lg:px-8">
                     <LoginForm />

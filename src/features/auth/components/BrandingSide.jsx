@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Button from "../../../components/ui/Button";
 
-const BrandingSide = () => {
+const BrandingSide = ({ isLoginPage }) => {
     return (
         <div
             className="hidden lg:flex flex-col items-center justify-between w-full max-w-[360px] self-stretch bg-primary-dark py-6 px-8 text-brand-light rounded-s-3xl overflow-y-auto"
@@ -24,7 +24,7 @@ const BrandingSide = () => {
             </div>
 
             {/* Bottom Section: Action Box */}
-            <div className="w-full bg-primary-light/5 border border-primary-light/10 rounded-2xl p-6 mb-2 text-center">
+            {isLoginPage && <div className="w-full bg-primary-light/5 border border-primary-light/10 rounded-2xl p-6 mb-2 text-center">
                 <p className="text-brand-light/80 mb-4">
                     ليس لديك حساب؟
                     <Link
@@ -44,7 +44,7 @@ const BrandingSide = () => {
                         انضم لفريق المحامين
                     </Button>
                 </Link>
-            </div>
+            </div>}
         </div>
     );
 };
