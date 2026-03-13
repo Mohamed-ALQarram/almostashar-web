@@ -1,8 +1,11 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from '../pages/LoginPage';
-import LawyerRegister from '../pages/LawyerRegister';
+import LawyerRegisterPage from '../pages/LawyerRegisterPage';
 import HomePage from '../pages/HomePage';
+import AdminDashboardPage from '../pages/AdminDashboardPage';
+import AdminVerificationPage from '../pages/AdminVerificationPage';
 import ProtectedRoute from './ProtectedRoute';
+import { useAuthStore } from '../features/auth/store/authStore';
 
 // Error pages
 import UnauthorizedPage from '../pages/errors/UnauthorizedPage';
@@ -11,6 +14,14 @@ import BadRequestPage from '../pages/errors/BadRequestPage';
 import NetworkErrorPage from '../pages/errors/NetworkErrorPage';
 import ServerErrorPage from '../pages/errors/ServerErrorPage';
 
+const RootRedirect = () => {
+    const { user } = useAuthStore();
+    if (user?.role === 'Admin') {
+        return <Navigate to="/admin" replace />;
+    }
+    return <HomePage />;
+};
+
 const AppRoutes = () => {
     return (
         <Routes>
@@ -18,12 +29,14 @@ const AppRoutes = () => {
                 path="/"
                 element={
                     <ProtectedRoute allowedRoles={['Client', 'Lawyer', 'Admin']}>
-                        <HomePage />
+                        <RootRedirect />
                     </ProtectedRoute>
                 }
             />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/lawyer-register" element={<LawyerRegister />} />
+            <Route path="/admin" element={<ProtectedRoute allowedRoles={['Admin']}><AdminDashboardPage /></ProtectedRoute>} />
+            <Route path="/admin/verification" element={<ProtectedRoute allowedRoles={['Admin']}><AdminVerificationPage /></ProtectedRoute>} />
+            <Route path="/lawyer-register" element={<LawyerRegisterPage />} />
 
             {/* Error pages */}
             <Route path="/unauthorized" element={<UnauthorizedPage />} />

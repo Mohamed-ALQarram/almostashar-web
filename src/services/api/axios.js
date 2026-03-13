@@ -3,10 +3,11 @@ import { useAuthStore } from '../../features/auth/store/authStore';
 
 const api = axios.create({
     baseURL: 'https://almostashar.runasp.net',
+    // baseURL: 'https://localhost:7151',
     headers: {
         'Content-Type': 'application/json',
     },
-    timeout: 15000,
+    timeout: 50000,
 });
 
 // ─── Request Interceptor ────────────────────────────────────────────
@@ -47,12 +48,11 @@ api.interceptors.response.use(
         if (serverError) {
             // Reject with the normalized server error shape:
             // { code, message, details? }
-            window.location.href = '/server-error';
             return Promise.reject(serverError);
         }
 
         // Network / timeout errors
-        window.location.href = '/network-error';
+        // window.location.href = '/network-error';
         return Promise.reject({
             code: 'Network.Error',
             message: 'حدث خطأ في الاتصال بالخادم. يرجى المحاولة لاحقاً.',
