@@ -20,8 +20,13 @@ const useLogin = () => {
     return useMutation({
         mutationFn: loginApi,
         onSuccess: (data) => {
-            setAuth(data);
-            navigate('/');
+            if(data.user.accountStatus=="PendingReview")
+                navigate('/account-status')
+            else
+            {
+                setAuth(data);
+                navigate('/');
+            }
         },
     });
 };

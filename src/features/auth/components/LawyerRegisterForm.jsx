@@ -93,7 +93,7 @@ const LawyerRegisterForm = ({ onNext }) => {
 
     const onSubmit = (data) => {
         // Remove confirmPassword before storing
-        const { confirmPassword, ...formData } = data;
+        const { ...formData } = data;
         setFormData(formData);
         onNext();
     };
