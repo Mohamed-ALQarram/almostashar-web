@@ -1,105 +1,81 @@
-import { useState, useEffect, useCallback } from 'react';
-import aboutImg from '../../../assets/About-Section.jpg';
-const slides = [
+import { Scale, FileText, Gavel, Building2, Briefcase, Users } from 'lucide-react';
+
+const services = [
     {
-        title: 'استشارات قانونية ذكية',
-        description: 'المنصة تستخدم الذكاء الاصطناعي لتوفير استشارات قانونية فورية ومهنية',
+        icon: Scale,
+        title: 'الاستشارات القانونية',
+        description: 'احصل على استشارات قانونية دقيقة وموثوقة من نخبة من المحامين المعتمدين في مختلف التخصصات.',
     },
     {
-        title: 'محامون معتمدون',
-        description: 'نخبة من المحامين المعتمدين والمتخصصين في مختلف المجالات القانونية',
+        icon: FileText,
+        title: 'صياغة العقود',
+        description: 'صياغة ومراجعة كافة أنواع العقود التجارية والمدنية باحترافية عالية لحماية حقوقك.',
     },
     {
-        title: 'سرية وخصوصية تامة',
-        description: 'نضمن حماية بياناتك ومعلوماتك القانونية بأعلى معايير الأمان والسرية',
+        icon: Gavel,
+        title: 'التمثيل القانوني',
+        description: 'تمثيل قانوني متكامل أمام كافة المحاكم والجهات القضائية للدفاع عن مصالحك.',
+    },
+    {
+        icon: Building2,
+        title: 'تأسيس الشركات',
+        description: 'خدمات متكاملة لتأسيس الشركات واستخراج التراخيص اللازمة لبدء نشاطك التجاري.',
+    },
+    {
+        icon: Briefcase,
+        title: 'القضايا العمالية',
+        description: 'متخصصون في حل النزاعات العمالية وحماية حقوق الموظفين وأصحاب العمل.',
+    },
+    {
+        icon: Users,
+        title: 'الأحوال الشخصية',
+        description: 'معالجة قضايا الأسرة والأحوال الشخصية بسرية تامة واحترافية عالية.',
     },
 ];
-const AboutSection = () => {
-    const [currentSlide, setCurrentSlide] = useState(0);
-    const nextSlide = useCallback(() => {
-        setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, []);
-    useEffect(() => {
-        const interval = setInterval(nextSlide, 4000);
-        return () => clearInterval(interval);
-    }, [nextSlide]);
+
+const ServicesSection = () => {
     return (
-        <section id="about" className="py-16 sm:py-24 bg-brand-page">
+        <section id="services" className="py-16 sm:py-24 bg-white">
             <div className="section-container">
                 {/* Section Title */}
-                <div className="text-center mb-12">
-                    <span className="text-gold text-sm font-semibold tracking-wider">من نحن</span>
+                <div className="text-center mb-16">
+                    <span className="text-gold text-sm font-semibold tracking-wider">خدماتنا</span>
                     <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-primary mt-2">
-                        "منصة المستشار"
+                        خدمات قانونية متكاملة
                     </h2>
                     <div className="flex items-center justify-center gap-3 mt-4">
                         <span className="w-10 h-px bg-gold/40" />
                         <span className="w-2 h-2 rounded-full bg-gold" />
                         <span className="w-10 h-px bg-gold/40" />
                     </div>
+                    <p className="text-brand-muted mt-6 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
+                        نقدم مجموعة شاملة من الخدمات القانونية لتلبية كافة احتياجاتك الفردية والتجارية،
+                        من خلال فريق عمل متخصص من المحامين والمستشارين.
+                    </p>
                 </div>
-                {/* Content Grid */}
-                <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                    {/* Text Side */}
-                    <div className="order-2 lg:order-1">
-                        <p className="text-brand-muted leading-relaxed text-sm sm:text-base mb-8">
-                            منصة المستشار هي منصتك القانونية الموثوقة التي تجمع بين التقنية الحديثة والخبرة القانونية العريقة.
-                            نقدم لك استشارات قانونية ذكية مدعومة بالذكاء الاصطناعي، مع إمكانية التواصل المباشر مع نخبة من المحامين المعتمدين
-                            في مختلف التخصصات القانونية.
-                        </p>
-                        {/* Slider */}
-                        <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-100">
-                            <div className="relative overflow-hidden min-h-[120px]">
-                                {slides.map((slide, index) => (
-                                    <div
-                                        key={index}
-                                        className={`transition-all duration-500 ${index === currentSlide
-                                                ? 'opacity-100 translate-x-0'
-                                                : 'opacity-0 absolute inset-0 translate-x-8'
-                                            }`}
-                                    >
-                                        <h3 className="text-lg sm:text-xl font-bold text-primary mb-3">
-                                            {slide.title}
-                                        </h3>
-                                        <p className="text-brand-muted text-sm leading-relaxed">
-                                            {slide.description}
-                                        </p>
-                                    </div>
-                                ))}
+
+                {/* Services Grid */}
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                    {services.map((service, index) => (
+                        <div
+                            key={index}
+                            className="group bg-brand-page border border-gray-100 rounded-2xl p-6 sm:p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                        >
+                            <div className="w-14 h-14 rounded-xl bg-white shadow-sm flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300 border border-gray-100 group-hover:border-primary">
+                                <service.icon className="w-7 h-7 text-gold group-hover:text-white transition-colors duration-300" />
                             </div>
-                            {/* Dots */}
-                            <div className="flex items-center justify-center gap-2 mt-6">
-                                {slides.map((_, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => setCurrentSlide(index)}
-                                        className={`rounded-full transition-all duration-300 ${index === currentSlide
-                                                ? 'w-8 h-2.5 bg-gold'
-                                                : 'w-2.5 h-2.5 bg-gray-300 hover:bg-gold/50'
-                                            }`}
-                                        aria-label={`Go to slide ${index + 1}`}
-                                    />
-                                ))}
-                            </div>
+                            <h3 className="text-xl font-bold text-primary mb-3">
+                                {service.title}
+                            </h3>
+                            <p className="text-brand-muted text-sm leading-relaxed">
+                                {service.description}
+                            </p>
                         </div>
-                    </div>
-                    {/* Image Side */}
-                    <div className="order-1 lg:order-2">
-                        <div className="relative">
-                            <div className="rounded-2xl overflow-hidden shadow-xl">
-                                <img
-                                    src={aboutImg}
-                                    alt="منصة المستشار - استشارات قانونية ذكية"
-                                    className="w-full h-[300px] sm:h-[400px] lg:h-[480px] object-cover"
-                                />
-                            </div>
-                            {/* Decorative gold border accent */}
-                            <div className="absolute -bottom-3 -right-3 w-full h-full border-2 border-gold/30 rounded-2xl -z-10" />
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </section>
     );
 };
-export default AboutSection;
+
+export default ServicesSection;
