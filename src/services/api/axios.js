@@ -22,6 +22,21 @@ api.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
+// ─── Refresh-token queue ────────────────────────────────────────────
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+    failedQueue.forEach(({ resolve, reject }) => {
+        if (error) {
+            reject(error);
+        } else {
+            resolve(token);
+        }
+    });
+    failedQueue = [];
+};
+
 // ─── Response Interceptor ───────────────────────────────────────────
 api.interceptors.response.use(
     (response) => {
@@ -41,8 +56,63 @@ api.interceptors.response.use(
 
         return data;
     },
-    (error) => {
-        // Server returned an error status (4xx, 5xx)
+    async (error) => {
+        const originalRequest = error.config;
+
+        // ── 401 → attempt silent refresh ────────────────────────
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            // Mark to prevent infinite loops
+            originalRequest._retry = true;
+
+            // If already refreshing, queue this request
+            if (isRefreshing) {
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({ resolve, reject });
+                }).then((token) => {
+                    originalRequest.headers.Authorization = `Bearer ${token}`;
+                    return api(originalRequest);
+                });
+            }
+
+            isRefreshing = true;
+
+            const { refreshToken } = useAuthStore.getState();
+
+            try {
+                // Call refresh endpoint directly via axios to avoid interceptor loops
+                const { data } = await axios.post(
+                    `${api.defaults.baseURL}/api/auth/refresh`,
+                    { refreshToken },
+                    { headers: { 'Content-Type': 'application/json' } }
+                );
+
+                if (!data?.isSuccess) {
+                    throw new Error(data?.error?.message || 'Refresh failed');
+                }
+
+                const { user, tokens } = data.value;
+
+                // Persist new credentials
+                useAuthStore.getState().setAuth({ user, tokens });
+
+                // Replay queued requests with the new token
+                processQueue(null, tokens.accessToken);
+
+                // Retry the original request
+                originalRequest.headers.Authorization = `Bearer ${tokens.accessToken}`;
+                return api(originalRequest);
+            } catch (refreshError) {
+                // Refresh failed → clear session & redirect
+                processQueue(refreshError, null);
+                useAuthStore.getState().logout();
+                window.location.href = '/guest';
+                return Promise.reject(refreshError);
+            } finally {
+                isRefreshing = false;
+            }
+        }
+
+        // ── Other error statuses ────────────────────────────────
         const serverError = error.response?.data?.error;
 
         if (serverError) {
