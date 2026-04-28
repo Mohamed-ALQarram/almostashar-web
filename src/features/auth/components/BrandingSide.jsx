@@ -10,7 +10,7 @@ const BrandingSide = ({ isLoginPage }) => {
             dir="rtl"
         >
             {/* Upper Section: Logo and Brand Name */}
-            <div className=" rounded-full opacity-60 bg-primary-light/10 flex items-center justify-center border border-primary-light/20 mb-4">
+            <div className=" rounded-full opacity-90 bg-primary-light/10 flex items-center justify-center border border-primary-light/20 mb-4">
                 <img className="rounded-[40%] w-[270px] h-[270px] object-cover" src={logo} alt="AlMostashar logo" />
             </div>
 

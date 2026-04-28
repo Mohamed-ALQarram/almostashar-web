@@ -13,12 +13,19 @@ import NotFoundPage from '../pages/errors/NotFoundPage';
 import BadRequestPage from '../pages/errors/BadRequestPage';
 import NetworkErrorPage from '../pages/errors/NetworkErrorPage';
 import ServerErrorPage from '../pages/errors/ServerErrorPage';
+import GuestPage from '../pages/GuestPage';
 
 const RootRedirect = () => {
-    const { user } = useAuthStore();
+    const { isAuthenticated, user } = useAuthStore();
+    // Not logged in → show guest landing page
+    if (!isAuthenticated) {
+        return <GuestPage />;
+    }
+    // Admin → admin dashboard
     if (user?.role === 'Admin') {
         return <Navigate to="/admin" replace />;
     }
+    // Other authenticated users → home
     return <HomePage />;
 };
 
@@ -33,6 +40,8 @@ const AppRoutes = () => {
                     </ProtectedRoute>
                 }
             />
+            <Route path="/guest" element={<GuestPage />} />
+            <Route path="/lawyer-dashboard" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/admin" element={<ProtectedRoute allowedRoles={['Admin']}><AdminDashboardPage /></ProtectedRoute>} />
             <Route path="/admin/verification" element={<ProtectedRoute allowedRoles={['Admin']}><AdminVerificationPage /></ProtectedRoute>} />
