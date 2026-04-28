@@ -13,13 +13,13 @@ const AdminDashboardPage = () => {
 
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Main Content Area (Tables) */}
-                    <div className="flex-1 w-full lg:w-2/3 flex flex-col gap-0">
+                    <div className="flex-1 min-w-0 w-full lg:w-2/3 flex flex-col gap-0">
                         <WithdrawalRequests />
                         <OpenDisputes />
                     </div>
 
                     {/* Sidebar Area (Top Consultants) */}
-                    <div className="w-full lg:w-1/3">
+                    <div className="w-full lg:w-1/3 min-w-0">
                         <TopConsultants />
                     </div>
                 </div>
