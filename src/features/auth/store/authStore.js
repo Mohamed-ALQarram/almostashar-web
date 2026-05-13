@@ -20,6 +20,11 @@ export const useAuthStore = create(
                     isAuthenticated: true,
                 }),
 
+            updateUser: (updatedFields) =>
+                set((state) => ({
+                    user: state.user ? { ...state.user, ...updatedFields } : null,
+                })),
+
             logout: () => {
                 stopChatHub();
                 set({

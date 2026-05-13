@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useChats } from '../hooks/useLawyerDashboard';
+import { useChats } from '../../hooks/useLawyerDashboard';
 import ChatCard from './ChatCard';
 
 const ChatList = ({ activeChatId, onChatSelect }) => {

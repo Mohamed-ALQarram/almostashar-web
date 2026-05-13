@@ -1,5 +1,5 @@
 import React from 'react';
-import { useActiveCases } from '../hooks/useLawyerDashboard';
+import { useActiveCases } from '../../hooks/useLawyerDashboard';
 
 const statusStyles = {
     'جاري': 'bg-emerald-50 text-emerald-600 border-emerald-200',
@@ -52,18 +52,16 @@ const ActiveCases = () => {
                         {cases.map((c) => (
                             <div
                                 key={c.caseId}
-                                className={`p-4 flex items-center gap-4 hover:bg-gray-50/50 transition-colors cursor-pointer border-r-4 ${
-                                    borderColors[c.status] || 'border-r-gray-300'
-                                }`}
+                                className={`p-4 flex items-center gap-4 hover:bg-gray-50/50 transition-colors cursor-pointer border-r-4 ${borderColors[c.status] || 'border-r-gray-300'
+                                    }`}
                             >
                                 <div className="flex-1 min-w-0">
                                     <h4 className="font-semibold text-sm text-gray-900 truncate">{c.title}</h4>
                                     <p className="text-xs text-gray-400 mt-1 truncate">{c.secondaryText}</p>
                                 </div>
                                 <span
-                                    className={`text-[11px] font-medium px-3 py-1 rounded-full border whitespace-nowrap ${
-                                        statusStyles[c.status] || 'bg-gray-100 text-gray-600 border-gray-200'
-                                    }`}
+                                    className={`text-[11px] font-medium px-3 py-1 rounded-full border whitespace-nowrap ${statusStyles[c.status] || 'bg-gray-100 text-gray-600 border-gray-200'
+                                        }`}
                                 >
                                     {c.status}
                                 </span>

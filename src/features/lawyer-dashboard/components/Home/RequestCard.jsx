@@ -1,6 +1,26 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAcceptRequest, useRejectRequest } from '../../hooks/useLawyerRequests';
 
 const RequestCard = ({ request }) => {
+    const navigate = useNavigate();
+    const { mutate: acceptRequest, isPending: isAccepting } = useAcceptRequest();
+    const { mutate: rejectRequest, isPending: isRejecting } = useRejectRequest();
+    const isProcessing = isAccepting || isRejecting;
+
+    const handleCardClick = () => {
+        navigate('/lawyer-dashboard/requests', { state: { selectedRequest: request } });
+    };
+
+    const handleAccept = (e) => {
+        e.stopPropagation();
+        acceptRequest(request.id);
+    };
+
+    const handleReject = (e) => {
+        e.stopPropagation();
+        rejectRequest(request.id);
+    };
     const getTimeAgo = (dateStr) => {
         const diff = Date.now() - new Date(dateStr).getTime();
         const mins = Math.floor(diff / 60000);
@@ -11,7 +31,10 @@ const RequestCard = ({ request }) => {
     };
 
     return (
-        <div className="bg-white rounded-2xl border border-gray-100 p-5 min-w-[250px] max-w-[280px] flex-shrink-0 hover:shadow-lg transition-all duration-300 group">
+        <div
+            onClick={handleCardClick}
+            className="bg-white rounded-2xl border border-gray-100 p-5 min-w-[250px] max-w-[280px] flex-shrink-0 hover:shadow-lg transition-all duration-300 group cursor-pointer"
+        >
             {/* Top: Time badge + avatar */}
             <div className="flex items-center justify-between mb-4">
                 <span className="text-[11px] text-gray-400 bg-gray-50 rounded-full px-2.5 py-1">
@@ -49,10 +72,18 @@ const RequestCard = ({ request }) => {
 
             {/* Action buttons */}
             <div className="flex items-center gap-2">
-                <button className="flex-1 bg-gold hover:bg-gold-dark text-white text-xs font-bold py-2.5 px-3 rounded-xl transition-colors duration-200">
+                <button
+                    onClick={handleAccept}
+                    disabled={isProcessing}
+                    className="flex-1 bg-primary hover:bg-primary-dark text-white text-xs font-bold py-2.5 px-3 rounded-xl transition-colors duration-200 disabled:opacity-70"
+                >
                     قبول العرض
                 </button>
-                <button className="flex-1 bg-transparent border border-red-200 text-red-500 hover:bg-red-50 text-xs font-bold py-2.5 px-3 rounded-xl transition-colors duration-200">
+                <button
+                    onClick={handleReject}
+                    disabled={isProcessing}
+                    className="flex-1 bg-white text-red-600 border border-red-200 hover:bg-red-50 text-xs font-bold py-2.5 px-3 rounded-xl transition-colors duration-200 disabled:opacity-70"
+                >
                     رفض
                 </button>
             </div>

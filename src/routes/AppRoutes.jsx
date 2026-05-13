@@ -1,21 +1,26 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from '../pages/LoginPage';
-import LawyerRegisterPage from '../pages/LawyerRegisterPage';
-import HomePage from '../pages/HomePage';
-import AdminDashboardPage from '../pages/AdminDashboardPage';
-import LawyerDashboardPage from '../pages/LawyerDashboardPage';
-import LawyerChatsPage from '../pages/LawyerChatsPage';
-import AdminVerificationPage from '../pages/AdminVerificationPage';
+import {
+    LoginPage,
+    LawyerRegisterPage,
+    AdminDashboardPage,
+    LawyerDashboardPage,
+    LawyerProfilePage,
+    LawyerChatsPage,
+    LawyerServicesPage,
+    LawyerRequestsPage,
+    LawyerTendersPage,
+    AdminVerificationPage,
+    GuestPage,
+    ServiceDetailPage,
+    LawyersListPage,
+    UnauthorizedPage,
+    NotFoundPage,
+    BadRequestPage,
+    NetworkErrorPage,
+    ServerErrorPage
+} from '../pages';
 import ProtectedRoute from './ProtectedRoute';
 import { useAuthStore } from '../features/auth/store/authStore';
-
-// Error pages
-import UnauthorizedPage from '../pages/errors/UnauthorizedPage';
-import NotFoundPage from '../pages/errors/NotFoundPage';
-import BadRequestPage from '../pages/errors/BadRequestPage';
-import NetworkErrorPage from '../pages/errors/NetworkErrorPage';
-import ServerErrorPage from '../pages/errors/ServerErrorPage';
-import GuestPage from '../pages/GuestPage';
 
 const RootRedirect = () => {
     const { isAuthenticated, user } = useAuthStore();
@@ -32,7 +37,7 @@ const RootRedirect = () => {
         return <Navigate to="/lawyer-dashboard" replace />;
     }
     // Other authenticated users → home
-    return <HomePage />;
+    return <GuestPage />;
 };
 
 const AppRoutes = () => {
@@ -47,8 +52,14 @@ const AppRoutes = () => {
                 }
             />
             <Route path="/guest" element={<GuestPage />} />
+            <Route path="/services/:id" element={<ServiceDetailPage />} />
+            <Route path="/lawyers" element={<LawyersListPage />} />
             <Route path="/lawyer-dashboard" element={<ProtectedRoute allowedRoles={['Lawyer']}><LawyerDashboardPage /></ProtectedRoute>} />
+            <Route path="/lawyer-dashboard/profile" element={<ProtectedRoute allowedRoles={['Lawyer']}><LawyerProfilePage /></ProtectedRoute>} />
             <Route path="/lawyer-dashboard/chats" element={<ProtectedRoute allowedRoles={['Lawyer']}><LawyerChatsPage /></ProtectedRoute>} />
+            <Route path="/lawyer-dashboard/services" element={<ProtectedRoute allowedRoles={['Lawyer']}><LawyerServicesPage /></ProtectedRoute>} />
+            <Route path="/lawyer-dashboard/requests" element={<ProtectedRoute allowedRoles={['Lawyer']}><LawyerRequestsPage /></ProtectedRoute>} />
+            <Route path="/lawyer-dashboard/tenders" element={<ProtectedRoute allowedRoles={['Lawyer']}><LawyerTendersPage /></ProtectedRoute>} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/admin" element={<ProtectedRoute allowedRoles={['Admin']}><AdminDashboardPage /></ProtectedRoute>} />
             <Route path="/admin/verification" element={<ProtectedRoute allowedRoles={['Admin']}><AdminVerificationPage /></ProtectedRoute>} />

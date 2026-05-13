@@ -1,5 +1,5 @@
 import React from 'react';
-import usePresignedUrl from '../hooks/usePresignedUrl';
+import { usePresignedUrl } from '../..';
 
 const caseTypeLabels = {
     Consultation: 'استشارة قانونية',

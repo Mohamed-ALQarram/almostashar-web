@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import LawyerSidebar from '../features/lawyer-dashboard/components/LawyerSidebar';
-import ChatList from '../features/lawyer-dashboard/components/ChatList';
-import ChatArea from '../features/lawyer-dashboard/components/ChatArea';
-import { useLawyerSidebarStore } from '../features/lawyer-dashboard/store/lawyerSidebarStore';
-import useChatSignalR from '../features/lawyer-dashboard/hooks/useChatSignalR';
+import {
+    LawyerSidebar,
+    ChatList,
+    ChatArea,
+    useLawyerSidebarStore,
+    useChatSignalR
+} from '../features/lawyer-dashboard';
 
 const LawyerChatsPage = () => {
     const [activeChat, setActiveChat] = useState(null);

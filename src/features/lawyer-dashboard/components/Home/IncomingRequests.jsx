@@ -1,8 +1,10 @@
 import React from 'react';
-import { useIncomingRequests } from '../hooks/useLawyerDashboard';
+import { useNavigate } from 'react-router-dom';
+import { useIncomingRequests } from '../../hooks/useLawyerDashboard';
 import RequestCard from './RequestCard';
 
 const IncomingRequests = () => {
+    const navigate = useNavigate();
     const { data: requests, isLoading } = useIncomingRequests({ status: 'Pending' });
 
     // Show top 4 on the dashboard
@@ -16,7 +18,10 @@ const IncomingRequests = () => {
                     <h2 className="text-lg font-bold text-gray-900">طلبات العملاء الواردة</h2>
                     <p className="text-sm text-gray-400">إدارة ومراجعة طلبات الاستشارة الواردة من العملاء المحتملين.</p>
                 </div>
-                <button className="text-sm text-gold hover:text-gold-dark font-medium transition-colors whitespace-nowrap">
+                <button
+                    onClick={() => navigate('/lawyer-dashboard/requests')}
+                    className="text-sm text-gold hover:text-gold-dark font-medium transition-colors whitespace-nowrap"
+                >
                     عرض الكل
                 </button>
             </div>

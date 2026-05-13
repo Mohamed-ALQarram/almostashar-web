@@ -13,13 +13,13 @@ import { getPresignedUrl } from '../api/lawyerDashboardApi';
  */
 const usePresignedUrl = (filePath) => {
     const { data, isLoading } = useQuery({
-        queryKey: ['presignedUrl', filePath],
+        queryKey: ['presignedUrl:resolved', filePath],
         queryFn: async () => {
             const result = await getPresignedUrl(filePath);
             // result is already unwrapped by axios interceptor → { url, expirationMinutes }
             return result?.url || result;
         },
-        enabled: !!filePath,
+        enabled: !!filePath && filePath !== 'string',
         staleTime: 1000 * 60 * 60 * 23, // 23 hours — URLs valid for 24h
         gcTime: 1000 * 60 * 60 * 24,    // keep in cache for 24h
     });

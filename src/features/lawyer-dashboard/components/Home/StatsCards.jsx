@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLawyerAnalytics } from '../hooks/useLawyerDashboard';
+import { useLawyerAnalytics } from '../../hooks/useLawyerDashboard';
 
 const StatsCards = () => {
     const { data: stats, isLoading } = useLawyerAnalytics();

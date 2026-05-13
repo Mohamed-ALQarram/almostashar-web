@@ -59,11 +59,39 @@ const MobileAppSection = () => {
                     {/* Phone Mockup */}
                     <div className="flex justify-center order-2 lg:order-2">
                         <div className="relative">
-                            <img
-                                src={phoneMockup}
-                                alt="تطبيق المستشار"
-                                className="w-56 sm:w-64 lg:w-72 h-auto drop-shadow-2xl"
-                            />
+                            {/* Phone Frame */}
+                            <div className="relative w-56 sm:w-64 lg:w-72 mx-auto">
+                                {/* Outer shell */}
+                                <div className="bg-gray-900 rounded-[2.5rem] p-[6px] shadow-2xl shadow-black/40 border border-gray-700/50">
+                                    {/* Inner bezel */}
+                                    <div className="bg-black rounded-[2.2rem] overflow-hidden relative">
+                                        {/* Notch / Dynamic Island */}
+                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 bg-black w-24 h-6 rounded-b-2xl flex items-center justify-center gap-2">
+                                            <div className="w-2 h-2 rounded-full bg-gray-800 border border-gray-700" />
+                                            <div className="w-10 h-3 rounded-full bg-gray-800 border border-gray-700" />
+                                        </div>
+
+                                        {/* Screenshot */}
+                                        <img
+                                            src={phoneMockup}
+                                            alt="تطبيق المستشار"
+                                            className="w-full h-auto block"
+                                        />
+
+                                        {/* Bottom bar indicator */}
+                                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-white/30 rounded-full" />
+                                    </div>
+                                </div>
+
+                                {/* Side buttons */}
+                                {/* Power button */}
+                                <div className="absolute -left-[2px] top-24 w-[3px] h-10 bg-gray-700 rounded-l-sm" />
+                                {/* Volume up */}
+                                <div className="absolute -right-[2px] top-20 w-[3px] h-6 bg-gray-700 rounded-r-sm" />
+                                {/* Volume down */}
+                                <div className="absolute -right-[2px] top-28 w-[3px] h-6 bg-gray-700 rounded-r-sm" />
+                            </div>
+
                             {/* Glow effect */}
                             <div className="absolute inset-0 bg-gold/10 blur-3xl rounded-full -z-10 scale-75" />
                         </div>

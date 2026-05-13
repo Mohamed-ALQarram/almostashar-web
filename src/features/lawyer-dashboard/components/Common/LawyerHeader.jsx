@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useAuthStore } from '../../auth/store/authStore';
-import { useNotifications, useMarkNotificationsAsRead } from '../hooks/useLawyerDashboard';
+import { Link } from 'react-router-dom';
+import { useAuthStore } from '../../../auth';
+import { useNotifications, useMarkNotificationsAsRead, usePresignedUrl } from '../..';
 
 const LawyerHeader = ({ onMenuToggle }) => {
     const { user } = useAuthStore();
@@ -8,6 +9,7 @@ const LawyerHeader = ({ onMenuToggle }) => {
     const notifRef = useRef(null);
 
     const { data: notificationsData } = useNotifications({ pageSize: 5 });
+    const { url: avatarUrl, isLoading: isAvatarLoading } = usePresignedUrl(user?.profileImage);
     const { mutate: markAsRead } = useMarkNotificationsAsRead();
 
     const notifications = Array.isArray(notificationsData)
@@ -59,7 +61,7 @@ const LawyerHeader = ({ onMenuToggle }) => {
             </div>
 
             {/* Center: Search */}
-            <div className="relative hidden md:block flex-1 max-w-md mx-4">
+            {/* <div className="relative hidden md:block flex-1 max-w-md mx-4">
                 <input
                     type="text"
                     placeholder="ابحث عن قضية, رقم 123, العميل / ..."
@@ -71,16 +73,9 @@ const LawyerHeader = ({ onMenuToggle }) => {
                     </svg>
                 </div>
             </div>
-
+ */}
             {/* Left: Notifications + User */}
             <div className="flex items-center gap-4">
-                {/* Online status */}
-                <button className="p-2 text-gray-400 hover:text-primary transition-colors hover:bg-gray-50 rounded-full">
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.14 0M1.394 9.393c5.857-5.858 15.355-5.858 21.213 0" />
-                    </svg>
-                </button>
-
                 {/* Notifications */}
                 <div className="relative" ref={notifRef}>
                     <button
@@ -131,11 +126,21 @@ const LawyerHeader = ({ onMenuToggle }) => {
                         <p className="text-sm font-semibold text-primary leading-tight">مرحباً أ/ {user?.firstName + ' ' + user?.lastName || 'أحمد'}</p>
                         <p className="text-xs text-gray-400">{user?.email || 'أحمد عبدالعاطي'}</p>
                     </div>
-                    <img
-                        src={user?.avatar || 'https://i.pravatar.cc/150?u=lawyer_avatar'}
-                        alt="Profile"
-                        className="w-10 h-10 rounded-full border-2 border-gray-100 object-cover"
-                    />
+                    <Link to="/lawyer-dashboard/profile" className="block w-10 h-10 rounded-full">
+                        {isAvatarLoading || !avatarUrl ? (
+                            <div className="w-10 h-10 rounded-full border-2 border-gray-100 bg-gray-100 flex items-center justify-center hover:border-gold transition-colors cursor-pointer">
+                                <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                        ) : (
+                            <img
+                                src={avatarUrl}
+                                alt="Profile"
+                                className="w-10 h-10 rounded-full border-2 border-gray-100 object-cover hover:border-gold transition-colors cursor-pointer"
+                            />
+                        )}
+                    </Link>
                 </div>
             </div>
         </header>
