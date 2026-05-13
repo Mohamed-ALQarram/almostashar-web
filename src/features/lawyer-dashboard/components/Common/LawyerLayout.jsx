@@ -1,6 +1,7 @@
 import React from 'react';
 import LawyerSidebar from './LawyerSidebar';
 import LawyerHeader from './LawyerHeader';
+import AiChatWidget from '../AiChat/AiChatWidget';
 import { useLawyerSidebarStore } from '../../store/lawyerSidebarStore';
 
 const LawyerLayout = ({ children }) => {
@@ -18,6 +19,7 @@ const LawyerLayout = ({ children }) => {
                     {children}
                 </main>
             </div>
+            <AiChatWidget />
         </div>
     );
 };
