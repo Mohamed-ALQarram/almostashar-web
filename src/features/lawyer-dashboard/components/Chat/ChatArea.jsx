@@ -1,12 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useChatMessages } from '../hooks/useLawyerDashboard';
-import usePresignedUrl from '../hooks/usePresignedUrl';
-import useSendMessage from '../hooks/useSendMessage';
-import useTypingIndicator from '../hooks/useTypingIndicator';
-import { useAuthStore } from '../../auth/store/authStore';
-import { useChatStore } from '../store/chatStore';
-import { markMessagesAsRead } from '../api/lawyerDashboardApi';
+import { useChatMessages, usePresignedUrl, useSendMessage, useTypingIndicator } from '../..';
+import { useAuthStore } from '../../../auth';
+import { useChatStore } from '../../store/chatStore';
+import { markMessagesAsRead } from '../../api/lawyerDashboardApi';
 
 const caseTypeLabels = {
     Consultation: 'استشارة قانونية',
