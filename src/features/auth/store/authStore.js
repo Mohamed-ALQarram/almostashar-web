@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { stopChatHub } from '../../lawyer-dashboard/signalr/chatHub';
 
 export const useAuthStore = create(
     persist(
@@ -19,13 +20,15 @@ export const useAuthStore = create(
                     isAuthenticated: true,
                 }),
 
-            logout: () =>
+            logout: () => {
+                stopChatHub();
                 set({
                     user: null,
                     accessToken: null,
                     refreshToken: null,
                     isAuthenticated: false,
-                }),
+                });
+            },
         }),
         {
             name: 'almostashar-auth', // localStorage key

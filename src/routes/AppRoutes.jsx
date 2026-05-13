@@ -3,6 +3,8 @@ import LoginPage from '../pages/LoginPage';
 import LawyerRegisterPage from '../pages/LawyerRegisterPage';
 import HomePage from '../pages/HomePage';
 import AdminDashboardPage from '../pages/AdminDashboardPage';
+import LawyerDashboardPage from '../pages/LawyerDashboardPage';
+import LawyerChatsPage from '../pages/LawyerChatsPage';
 import AdminVerificationPage from '../pages/AdminVerificationPage';
 import ProtectedRoute from './ProtectedRoute';
 import { useAuthStore } from '../features/auth/store/authStore';
@@ -25,6 +27,10 @@ const RootRedirect = () => {
     if (user?.role === 'Admin') {
         return <Navigate to="/admin" replace />;
     }
+    // Lawyer → lawyer dashboard
+    if (user?.role === 'Lawyer') {
+        return <Navigate to="/lawyer-dashboard" replace />;
+    }
     // Other authenticated users → home
     return <HomePage />;
 };
@@ -41,7 +47,8 @@ const AppRoutes = () => {
                 }
             />
             <Route path="/guest" element={<GuestPage />} />
-            <Route path="/lawyer-dashboard" element={<HomePage />} />
+            <Route path="/lawyer-dashboard" element={<ProtectedRoute allowedRoles={['Lawyer']}><LawyerDashboardPage /></ProtectedRoute>} />
+            <Route path="/lawyer-dashboard/chats" element={<ProtectedRoute allowedRoles={['Lawyer']}><LawyerChatsPage /></ProtectedRoute>} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/admin" element={<ProtectedRoute allowedRoles={['Admin']}><AdminDashboardPage /></ProtectedRoute>} />
             <Route path="/admin/verification" element={<ProtectedRoute allowedRoles={['Admin']}><AdminVerificationPage /></ProtectedRoute>} />
