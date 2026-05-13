@@ -1,0 +1,193 @@
+/* ─── AI Chat Widget ─────────────────────────────────────────────── */
+
+/* Floating Button Pulse Ring */
+@keyframes ai-pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.ai-fab-pulse::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(212, 175, 55, 0.3);
+  animation: ai-pulse-ring 2s ease-out infinite;
+}
+
+/* Chat Window Entrance */
+@keyframes ai-chat-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.85) translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes ai-chat-exit {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.85) translateY(20px);
+  }
+}
+
+.ai-chat-window-enter {
+  animation: ai-chat-enter 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.ai-chat-window-exit {
+  animation: ai-chat-exit 0.25s ease-in forwards;
+}
+
+/* Message Fade In */
+@keyframes ai-msg-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ai-msg-enter {
+  animation: ai-msg-fade 0.3s ease-out forwards;
+}
+
+/* Typing Cursor Blink */
+@keyframes ai-cursor-blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+.ai-typing-cursor::after {
+  content: '▎';
+  color: #D4AF37;
+  font-weight: bold;
+  animation: ai-cursor-blink 0.8s step-end infinite;
+  margin-right: 2px;
+}
+
+/* Thinking Dots */
+@keyframes ai-dot-bounce {
+
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-6px);
+  }
+}
+
+.ai-thinking-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #D4AF37;
+  margin: 0 3px;
+}
+
+.ai-thinking-dot:nth-child(1) {
+  animation: ai-dot-bounce 1.2s ease-in-out infinite 0s;
+}
+
+.ai-thinking-dot:nth-child(2) {
+  animation: ai-dot-bounce 1.2s ease-in-out infinite 0.15s;
+}
+
+.ai-thinking-dot:nth-child(3) {
+  animation: ai-dot-bounce 1.2s ease-in-out infinite 0.3s;
+}
+
+/* Chat Scrollbar */
+.ai-chat-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ai-chat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ai-chat-scroll::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.25);
+  border-radius: 9999px;
+}
+
+.ai-chat-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.45);
+}
+
+/* Source Card Hover */
+.ai-source-card {
+  transition: all 0.2s ease;
+}
+
+.ai-source-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 43, 74, 0.12);
+}
+
+/* Suggestion Card */
+.ai-suggestion-card {
+  transition: all 0.2s ease;
+}
+
+.ai-suggestion-card:hover {
+  background: #1A2B4A !important;
+  color: #fff !important;
+  border-color: #1A2B4A !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(26, 43, 74, 0.15);
+}
+
+/* Glassmorphism overlay */
+.ai-glass {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Warning Banner Shimmer */
+@keyframes ai-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.ai-warning-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.08) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: ai-shimmer 3s ease-in-out infinite;
+}
