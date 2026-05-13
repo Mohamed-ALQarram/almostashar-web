@@ -7,3 +7,4 @@ export { default as useRegisterLawyer } from './hooks/useRegisterLawyer';
 export { default as useUploadIdentityDocuments } from './hooks/useUploadIdentityDocuments';
 export {default as AccountStatus } from './components/AccountStatus';
 export { useLawyerRegisterStore } from './store/lawyerRegisterStore';
+export { useAuthStore } from './store/authStore';
