@@ -4,6 +4,7 @@ import {
     AboutSection,
     WhyChooseUsSection,
     ServicesSection,
+    OurLawyersSection,
     JoinNetworkSection,
     MobileAppSection,
 } from '../features/guest-landing';
@@ -15,6 +16,7 @@ const GuestPage = () => {
             <AboutSection />
             <ServicesSection />
             <WhyChooseUsSection />
+            <OurLawyersSection />
             <JoinNetworkSection />
             <MobileAppSection />
         </GuestLayout>
