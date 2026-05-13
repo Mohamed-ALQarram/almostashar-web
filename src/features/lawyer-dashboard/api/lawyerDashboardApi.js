@@ -13,7 +13,38 @@ export const getAnalytics = () => api.get('/api/lawyers/home/analytics');
  * @param {{ status?: string, serviceType?: string }} params
  */
 export const getIncomingRequests = (params = {}) =>
-    api.get('/api/lawyer/requests/direct/incoming', { params });
+    api.get('/api/lawyer/requests/direct/incoming', {
+        params: { status: 0, ...params }
+    });
+
+/**
+ * PUT /api/lawyer/requests/{id}/accept
+ * Accept a direct request
+ */
+export const acceptDirectRequest = (id) =>
+    api.put(`/api/lawyer/requests/${id}/accept`);
+
+/**
+ * PUT /api/lawyer/requests/{id}/reject
+ * Reject a direct request
+ */
+export const rejectDirectRequest = (id) =>
+    api.put(`/api/lawyer/requests/${id}/reject`);
+
+// ─── Broadcast Requests ─────────────────────────────────────────────
+/**
+ * GET /api/lawyer/requests/broadcast/available
+ * Fetch available broadcast requests
+ */
+export const getAvailableBroadcastRequests = (params = {}) =>
+    api.get('/api/lawyer/requests/broadcast/available', { params });
+
+/**
+ * POST /api/lawyer/requests/{id}/offers
+ * Send an offer to a broadcast request
+ */
+export const sendOffer = (id, data) =>
+    api.post(`/api/lawyer/requests/${id}/offers`, data);
 
 // ─── Active Cases ───────────────────────────────────────────────────
 /**
@@ -74,3 +105,33 @@ export const markMessagesAsRead = (chatId, lastReadMessageId) =>
  */
 export const getPresignedUrl = (filePath, expirationMinutes = 1440) =>
     api.post('/api/documents/presigned-url', { filePath, expirationMinutes });
+
+// ─── Lawyer Services ────────────────────────────────────────────────
+/**
+ * GET /api/LawyerService
+ * Fetch the services the lawyer has previously added
+ */
+export const getLawyerServices = () =>
+    api.get('/api/lawyer-services');
+
+/**
+ * POST /api/LawyerService
+ * Add a new service to the lawyer's services list
+ */
+export const addLawyerService = (data) =>
+    api.post('/api/lawyer-services', data);
+
+/**
+ * PUT /api/LawyerService/{serviceId}
+ * Update price, duration, or active status
+ */
+export const updateLawyerService = (serviceId, data) =>
+    api.put(`/api/lawyer-services/${serviceId}`, data);
+
+// ─── Legal Services Catalog ─────────────────────────────────────────
+/**
+ * GET /api/LegalServices
+ * Get general catalog to populate dropdowns
+ */
+export const getLegalServicesCatalog = () =>
+    api.get('/api/legal-services');

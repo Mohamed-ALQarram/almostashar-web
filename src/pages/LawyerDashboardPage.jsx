@@ -1,9 +1,11 @@
 import React from 'react';
-import LawyerLayout from '../features/lawyer-dashboard/components/LawyerLayout';
-import StatsCards from '../features/lawyer-dashboard/components/StatsCards';
-import IncomingRequests from '../features/lawyer-dashboard/components/IncomingRequests';
-import ActiveCases from '../features/lawyer-dashboard/components/ActiveCases';
-import LastMessages from '../features/lawyer-dashboard/components/LastMessages';
+import {
+    LawyerLayout,
+    StatsCards,
+    IncomingRequests,
+    ActiveCases,
+    LastMessages
+} from '../features/lawyer-dashboard';
 
 const LawyerDashboardPage = () => {
     return (
