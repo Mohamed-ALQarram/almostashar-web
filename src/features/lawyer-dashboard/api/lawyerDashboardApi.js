@@ -5,7 +5,7 @@ import api from '../../../services/api/axios';
  * GET /api/Lawyers/home/analytics
  * Fetch stats: ratings, requests count, earnings, open/completed cases.
  */
-export const getAnalytics = () => api.get('/api/lawyer/home/analytics');
+export const getAnalytics = () => api.get('/api/lawyers/home/analytics');
 
 // ─── Incoming Direct Requests ───────────────────────────────────────
 /**
