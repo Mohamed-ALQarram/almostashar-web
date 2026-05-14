@@ -1,6 +1,13 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useChatMessages, usePresignedUrl, useSendMessage, useTypingIndicator } from '../..';
+import {
+    useChatDevices,
+    useChatMessages,
+    useEncryptedDocument,
+    usePresignedUrl,
+    useSendMessage,
+    useTypingIndicator,
+} from '../..';
 import { useAuthStore } from '../../../auth';
 import { useChatStore } from '../../store/chatStore';
 import { markMessagesAsRead } from '../../api/lawyerDashboardApi';
@@ -12,7 +19,6 @@ const caseTypeLabels = {
     Lawsuit: 'قضية',
 };
 
-// ─── Shared helpers ─────────────────────────────────────────────────
 const formatTime = (dateStr) => {
     if (!dateStr) return '';
     return new Date(dateStr).toLocaleTimeString('ar-EG', {
@@ -23,7 +29,6 @@ const formatTime = (dateStr) => {
     });
 };
 
-// ─── Seen Icon (double checkmark) ───────────────────────────────────
 const SeenIcon = ({ isSeen }) => (
     <svg className={`w-4 h-4 ${isSeen ? 'text-blue-300' : 'text-white/40'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M2 13l4 4L14 7" />
@@ -31,7 +36,6 @@ const SeenIcon = ({ isSeen }) => (
     </svg>
 );
 
-// ─── Timestamp + Seen row ───────────────────────────────────────────
 const MessageMeta = ({ sentAt, isMine, isSeen }) => (
     <div className={`flex items-center gap-1 mt-1.5 ${isMine ? 'justify-start' : 'justify-end'}`}>
         <span className={`text-[10px] ${isMine ? 'text-white/50' : 'text-gray-400'}`}>
@@ -41,22 +45,29 @@ const MessageMeta = ({ sentAt, isMine, isSeen }) => (
     </div>
 );
 
-// ─── Loading shimmer for media ──────────────────────────────────────
 const MediaLoading = ({ isMine }) => (
     <div className={`flex ${isMine ? 'justify-start' : 'justify-end'} mb-3`}>
         <div className={`w-48 h-14 rounded-2xl animate-pulse ${isMine ? 'bg-primary/20 mr-auto' : 'bg-gray-200 ml-auto'}`} />
     </div>
 );
 
-// ─── Document Message (uses presigned URL hook) ─────────────────────
 const DocumentBubble = ({ message, isMine }) => {
-    const { url, isLoading } = usePresignedUrl(message.documentUrl);
+    const encryptedDocument = useEncryptedDocument(message);
+    const legacyDocument = usePresignedUrl(message.document ? null : message.documentUrl);
+    const url = message.document ? encryptedDocument.url : legacyDocument.url;
+    const isLoading = message.document ? encryptedDocument.isLoading : legacyDocument.isLoading;
+    const documentName = encryptedDocument.name || message.documentName || 'Encrypted document';
 
     if (isLoading) return <MediaLoading isMine={isMine} />;
 
     return (
         <div className={`flex ${isMine ? 'justify-start' : 'justify-end'} mb-3`}>
             <div className={`max-w-[75%] rounded-2xl px-4 py-3 ${isMine ? 'bg-primary text-white rounded-bl-sm' : 'bg-gray-100 text-gray-900 rounded-br-sm'}`}>
+                {message.content && (
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap mb-2">
+                        {message.content}
+                    </p>
+                )}
                 <a
                     href={url || '#'}
                     target="_blank"
@@ -66,17 +77,24 @@ const DocumentBubble = ({ message, isMine }) => {
                     <svg className="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <span className="truncate">{message.documentName || 'مستند'}</span>
+                    <span className="truncate">{documentName}</span>
                 </a>
+                {encryptedDocument.error && (
+                    <p className={`text-[11px] mt-2 ${isMine ? 'text-white/60' : 'text-red-500'}`}>
+                        Unable to decrypt document on this device.
+                    </p>
+                )}
                 <MessageMeta sentAt={message.sentAt} isMine={isMine} isSeen={message.isSeen} />
             </div>
         </div>
     );
 };
 
-// ─── Image Message (uses presigned URL hook) ────────────────────────
 const ImageBubble = ({ message, isMine }) => {
-    const { url, isLoading } = usePresignedUrl(message.documentUrl);
+    const encryptedDocument = useEncryptedDocument(message);
+    const legacyDocument = usePresignedUrl(message.document ? null : message.documentUrl);
+    const url = message.document ? encryptedDocument.url : legacyDocument.url;
+    const isLoading = message.document ? encryptedDocument.isLoading : legacyDocument.isLoading;
 
     if (isLoading) {
         return (
@@ -89,33 +107,41 @@ const ImageBubble = ({ message, isMine }) => {
     return (
         <div className={`flex ${isMine ? 'justify-start' : 'justify-end'} mb-3`}>
             <div className={`max-w-[65%] rounded-2xl overflow-hidden ${isMine ? 'bg-primary rounded-bl-sm' : 'bg-gray-100 rounded-br-sm'}`}>
-                <img
-                    src={url || ''}
-                    alt="صورة"
-                    className="w-full max-h-64 object-cover cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => url && window.open(url, '_blank')}
-                />
-                <div className={`flex items-center gap-1 px-3 py-1.5 ${isMine ? 'justify-start' : 'justify-end'}`}>
-                    <span className={`text-[10px] ${isMine ? 'text-white/50' : 'text-gray-400'}`}>
-                        {formatTime(message.sentAt)}
-                    </span>
-                    {isMine && <SeenIcon isSeen={message.isSeen} />}
-                </div>
+                {url ? (
+                    <img
+                        src={url}
+                        alt="صورة"
+                        className="w-full max-h-64 object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                        onClick={() => window.open(url, '_blank')}
+                    />
+                ) : (
+                    <div className={`px-4 py-6 text-sm ${isMine ? 'text-white/70' : 'text-red-500'}`}>
+                        Unable to decrypt image on this device.
+                    </div>
+                )}
+                <MessageMeta sentAt={message.sentAt} isMine={isMine} isSeen={message.isSeen} />
             </div>
         </div>
     );
 };
 
-// ─── Message Bubble (router) ────────────────────────────────────────
+const getFallbackText = (status) => ({
+    'missing-key': 'This message was not encrypted for this device.',
+    'missing-sender-device': 'Unable to find sender device key.',
+    failed: 'Unable to decrypt this message.',
+    'encrypted-pending': 'Decrypting message...',
+}[status]);
+
 const MessageBubble = ({ message, isMine }) => {
-    if (message.messageType === 'Document' && message.documentUrl) {
+    const hasDocument = message.documentUrl || message.document;
+
+    if ((message.messageType === 'Document' || message.messageType === 'TextWithAttachment') && hasDocument) {
         return <DocumentBubble message={message} isMine={isMine} />;
     }
-    if (message.messageType === 'Image' && message.documentUrl) {
+    if (message.messageType === 'Image' && hasDocument) {
         return <ImageBubble message={message} isMine={isMine} />;
     }
 
-    // Text message (default)
     return (
         <div className={`flex ${isMine ? 'justify-start' : 'justify-end'} mb-3`}>
             <div
@@ -124,19 +150,15 @@ const MessageBubble = ({ message, isMine }) => {
                     : 'bg-gray-100 text-gray-900 rounded-br-sm'
                     }`}
             >
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
-                <div className={`flex items-center gap-1 mt-1 ${isMine ? 'justify-start' : 'justify-end'}`}>
-                    <span className={`text-[10px] ${isMine ? 'text-white/50' : 'text-gray-400'}`}>
-                        {formatTime(message.sentAt)}
-                    </span>
-                    {isMine && <SeenIcon isSeen={message.isSeen} />}
-                </div>
+                <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                    {getFallbackText(message.decryptionStatus) || message.content}
+                </p>
+                <MessageMeta sentAt={message.sentAt} isMine={isMine} isSeen={message.isSeen} />
             </div>
         </div>
     );
 };
 
-// ─── Empty State ────────────────────────────────────────────────────
 const EmptyChat = () => (
     <div className="flex-1 flex flex-col items-center justify-center bg-[#F8F9FB] text-center p-8">
         <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mb-6">
@@ -144,12 +166,11 @@ const EmptyChat = () => (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
         </div>
-        <h3 className="text-lg font-bold text-gray-400 mb-2">لا يوجد محادثة محدده</h3>
+        <h3 className="text-lg font-bold text-gray-400 mb-2">لا يوجد محادثة محددة</h3>
         <p className="text-sm text-gray-300">اختر محادثة من القائمة لبدء المحادثة</p>
     </div>
 );
 
-// ─── Typing Indicator Dots ──────────────────────────────────────────
 const TypingDots = () => (
     <div className="flex justify-end mb-3">
         <div className="bg-gray-100 rounded-2xl rounded-br-sm px-4 py-3 flex items-center gap-1">
@@ -160,9 +181,9 @@ const TypingDots = () => (
     </div>
 );
 
-// ─── File Preview Bar ───────────────────────────────────────────────
 const FilePreview = ({ file, onRemove }) => {
     const isImage = file.type && file.type.startsWith('image/');
+
     return (
         <div className="flex items-center gap-2 bg-gold/10 border border-gold/20 rounded-xl px-3 py-2 mx-3 mb-2" dir="rtl">
             {isImage ? (
@@ -191,7 +212,6 @@ const FilePreview = ({ file, onRemove }) => {
     );
 };
 
-// ─── Main ChatArea Component ────────────────────────────────────────
 const ChatArea = ({ activeChat }) => {
     const { user } = useAuthStore();
     const messagesEndRef = useRef(null);
@@ -200,6 +220,7 @@ const ChatArea = ({ activeChat }) => {
     const queryClient = useQueryClient();
 
     const { data: messagesData, isLoading } = useChatMessages(activeChat?.chatId);
+    const { data: devicesState } = useChatDevices(activeChat?.chatId);
     const { url: headerAvatarUrl } = usePresignedUrl(activeChat?.profileImage);
     const { sendMessage, isSending, error: sendError, clearError } = useSendMessage();
     const { emitTyping, stopTyping } = useTypingIndicator(activeChat?.chatId, activeChat?.userId);
@@ -210,46 +231,46 @@ const ChatArea = ({ activeChat }) => {
     const [inputValue, setInputValue] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
 
-    const rawMessages = messagesData?.items || (Array.isArray(messagesData) ? messagesData : []);
-    // API returns descending → reverse for chronological display
-    const messages = [...rawMessages].reverse();
+    const rawMessages = useMemo(
+        () => messagesData?.items || (Array.isArray(messagesData) ? messagesData : []),
+        [messagesData]
+    );
+    const messages = useMemo(() => [...rawMessages].reverse(), [rawMessages]);
+    const keyChangedWarning = devicesState?.warnings?.find((warning) => warning.type === 'key-changed');
+    const newDeviceNotice = devicesState?.warnings?.find((warning) => warning.type === 'new-device');
 
-    // Track active chat in store so SignalR can auto mark-as-read
     useEffect(() => {
         setActiveChatId(activeChat?.chatId || null);
         return () => setActiveChatId(null);
     }, [activeChat?.chatId, setActiveChatId]);
 
-    // Auto-scroll to bottom on new messages
     useEffect(() => {
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages.length]);
 
-    // Mark unread messages as read when opening a chat or messages load
     useEffect(() => {
         if (!activeChat?.chatId || !rawMessages.length || !user?.id) return;
 
-        // Find the last message from the OTHER user (those are the ones we need to mark as read)
         const lastUnreadFromOther = rawMessages.find(
             (m) => m.senderId !== user.id && !m.isSeen
         );
 
         if (lastUnreadFromOther) {
-            // rawMessages is descending, so the first unread from other = the latest unread
             markMessagesAsRead(activeChat.chatId, lastUnreadFromOther.messageId)
                 .then(() => queryClient.invalidateQueries({ queryKey: ['chats'] }))
                 .catch((err) => console.warn('[MarkRead] failed:', err));
         }
     }, [activeChat?.chatId, rawMessages, user?.id, queryClient]);
 
-    // Clear input state when switching chats
     useEffect(() => {
-        setInputValue('');
-        setSelectedFile(null);
-        clearError();
-    }, [activeChat?.chatId]);
+        const timer = window.setTimeout(() => {
+            setInputValue('');
+            setSelectedFile(null);
+            clearError();
+        }, 0);
+
+        return () => window.clearTimeout(timer);
+    }, [activeChat?.chatId, clearError]);
 
     const handleSend = async () => {
         const text = inputValue.trim();
@@ -264,12 +285,11 @@ const ChatArea = ({ activeChat }) => {
                 file: selectedFile,
             });
 
-            // Clear input on success
             setInputValue('');
             setSelectedFile(null);
             stopTyping();
         } catch {
-            // Error is already set in useSendMessage
+            // Error is surfaced in the send error banner.
         }
     };
 
@@ -290,7 +310,6 @@ const ChatArea = ({ activeChat }) => {
         if (file) {
             setSelectedFile(file);
         }
-        // Reset input so same file can be re-selected
         e.target.value = '';
     };
 
@@ -298,10 +317,8 @@ const ChatArea = ({ activeChat }) => {
 
     return (
         <div className="flex-1 flex flex-col h-full bg-[#F8F9FB] min-w-0">
-            {/* Chat Header */}
             <div className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-5 flex-shrink-0" dir="rtl">
                 <div className="flex items-center gap-3">
-                    {/* Avatar */}
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm overflow-hidden flex-shrink-0">
                         {headerAvatarUrl ? (
                             <img src={headerAvatarUrl} alt={activeChat.fullName} className="w-full h-full object-cover" />
@@ -334,8 +351,18 @@ const ChatArea = ({ activeChat }) => {
                 </div>
             </div>
 
-            {/* Messages Area */}
             <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4" dir="rtl">
+                {keyChangedWarning && (
+                    <div className="mb-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+                        Peer device key changed. Sending to that device is blocked until it is reviewed.
+                    </div>
+                )}
+                {!keyChangedWarning && newDeviceNotice && (
+                    <div className="mb-3 rounded-xl border border-yellow-200 bg-yellow-50 px-3 py-2 text-xs text-yellow-700">
+                        A new peer device was detected. Future messages may be readable on that device.
+                    </div>
+                )}
+
                 {isLoading ? (
                     <div className="flex flex-col gap-3 animate-pulse">
                         <div className="flex justify-end"><div className="h-10 w-48 bg-primary/10 rounded-2xl" /></div>
@@ -357,31 +384,26 @@ const ChatArea = ({ activeChat }) => {
                         />
                     ))
                 )}
-                {/* Typing indicator */}
                 {typingUser && <TypingDots />}
                 <div ref={messagesEndRef} />
             </div>
 
-            {/* File Preview */}
             {selectedFile && (
                 <FilePreview file={selectedFile} onRemove={() => setSelectedFile(null)} />
             )}
 
-            {/* Send Error */}
             {sendError && (
                 <div className="mx-3 mb-2 flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-xs rounded-xl px-3 py-2" dir="rtl">
                     <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span className="flex-1">{sendError}</span>
-                    <button onClick={clearError} className="text-red-400 hover:text-red-600">✕</button>
+                    <button onClick={clearError} className="text-red-400 hover:text-red-600">x</button>
                 </div>
             )}
 
-            {/* Input Area */}
             <div className="bg-white border-t border-gray-100 p-3 flex-shrink-0" dir="rtl">
                 <div className="flex items-center gap-2">
-                    {/* Hidden file input */}
                     <input
                         ref={fileInputRef}
                         type="file"
@@ -390,7 +412,6 @@ const ChatArea = ({ activeChat }) => {
                         onChange={handleFileSelect}
                     />
 
-                    {/* Attachment button */}
                     <button
                         onClick={() => fileInputRef.current?.click()}
                         disabled={isSending}
@@ -401,7 +422,6 @@ const ChatArea = ({ activeChat }) => {
                         </svg>
                     </button>
 
-                    {/* Text input */}
                     <input
                         ref={inputRef}
                         type="text"
@@ -413,7 +433,6 @@ const ChatArea = ({ activeChat }) => {
                         className="flex-1 bg-gray-50 border border-transparent focus:bg-white focus:border-gold/30 rounded-xl py-3 px-4 text-sm text-gray-700 transition-colors outline-none disabled:opacity-50"
                     />
 
-                    {/* Send button */}
                     <button
                         onClick={handleSend}
                         disabled={isSending || (!inputValue.trim() && !selectedFile)}

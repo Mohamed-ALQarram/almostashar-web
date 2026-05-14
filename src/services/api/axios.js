@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useAuthStore } from '../../features/auth/store/authStore';
+import { getStoredDeviceId } from '../../features/lawyer-dashboard/e2ee/deviceIdentity';
 
 const api = axios.create({
     baseURL: 'https://almostashar.runasp.net',
@@ -16,6 +17,10 @@ api.interceptors.request.use(
         const token = useAuthStore.getState().accessToken;
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
+        }
+        const deviceId = getStoredDeviceId();
+        if (deviceId) {
+            config.headers['X-E2EE-Device-Id'] = deviceId;
         }
         return config;
     },
@@ -114,6 +119,15 @@ api.interceptors.response.use(
 
         // ── Other error statuses ────────────────────────────────
         const serverError = error.response?.data?.error;
+
+        if (
+            error.response?.status === 403
+            && ['Device.CurrentRequired', 'Device.CurrentInactive'].includes(serverError?.code)
+        ) {
+            useAuthStore.getState().logout();
+            window.location.href = '/login';
+            return Promise.reject(serverError);
+        }
 
         if (serverError) {
             // Reject with the normalized server error shape:

@@ -1,14 +1,15 @@
 import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { startChatHub, getChatHubConnection } from '../signalr/chatHub';
+import { startChatHub } from '../signalr/chatHub';
 import { useChatStore } from '../store/chatStore';
 import { markMessagesAsRead } from '../api/lawyerDashboardApi';
+import { decryptSingleMessageForChat } from '../e2ee/messages';
 
 /**
- * Starts the SignalR hub and subscribes to ReceiveMessage & ReceiveTypingIndicator.
+ * Starts the SignalR hub and subscribes to encrypted messages and typing events.
  *
- * Call this ONCE at the page level (e.g. LawyerChatsPage), not in ChatArea.
- * Protected against duplicate subscriptions via ref flag.
+ * Call this once at the page level. Incoming encrypted messages are cached
+ * immediately, then replaced with a decrypted in-memory copy when possible.
  */
 const useChatSignalR = () => {
     const queryClient = useQueryClient();
@@ -25,44 +26,62 @@ const useChatSignalR = () => {
             if (!hub || subscribedRef.current) return;
             subscribedRef.current = true;
 
-            // ── ReceiveMessage ──────────────────────────────────
-            hub.off('ReceiveMessage');
-            hub.on('ReceiveMessage', (chatId, message) => {
-                // Append to the correct chat's message cache
+            hub.off('ReceiveEncryptedMessage');
+            hub.on('ReceiveEncryptedMessage', (...args) => {
+                const chatId = typeof args[0] === 'number' ? args[0] : args[0]?.chatId;
+                const encryptedMessage = typeof args[0] === 'number' ? args[1] : args[0];
+
+                if (!chatId || !encryptedMessage) return;
+
                 queryClient.setQueryData(['chatMessages', chatId], (oldData) => {
                     if (!oldData) return oldData;
 
-                    // Current cache shape: { items: [...], nextCursor, hasMore, ... }
                     const items = oldData.items || [];
-
-                    // Dedup by messageId
-                    if (items.some((m) => m.messageId === message.messageId)) {
+                    if (items.some((m) => m.messageId === encryptedMessage.messageId)) {
                         return oldData;
                     }
 
-                    // API returns descending, new messages go at the start (index 0)
                     return {
                         ...oldData,
-                        items: [message, ...items],
+                        items: [
+                            {
+                                ...encryptedMessage,
+                                content: '',
+                                decryptionStatus: 'encrypted-pending',
+                            },
+                            ...items,
+                        ],
                     };
                 });
 
-                // Refresh chats list to update last message / unread count
-                queryClient.invalidateQueries({ queryKey: ['chats'] });
+                decryptSingleMessageForChat(chatId, encryptedMessage)
+                    .then((decryptedMessage) => {
+                        queryClient.setQueryData(['chatMessages', chatId], (oldData) => {
+                            if (!oldData) return oldData;
 
-                // Clear typing indicator for this chat
+                            return {
+                                ...oldData,
+                                items: (oldData.items || []).map((item) =>
+                                    item.messageId === encryptedMessage.messageId
+                                        ? decryptedMessage
+                                        : item
+                                ),
+                            };
+                        });
+                    })
+                    .catch((err) => console.warn('[E2EE] realtime decrypt failed:', err));
+
+                queryClient.invalidateQueries({ queryKey: ['chats'] });
                 clearTyping(chatId);
 
-                // Auto mark-as-read if this chat is currently open
                 const activeChatId = useChatStore.getState().activeChatId;
-                if (activeChatId === chatId && message.messageId) {
-                    markMessagesAsRead(chatId, message.messageId)
+                if (activeChatId === chatId && encryptedMessage.messageId) {
+                    markMessagesAsRead(chatId, encryptedMessage.messageId)
                         .then(() => queryClient.invalidateQueries({ queryKey: ['chats'] }))
                         .catch((err) => console.warn('[MarkRead] auto mark-read failed:', err));
                 }
             });
 
-            // ── ReceiveTypingIndicator ──────────────────────────
             hub.off('ReceiveTypingIndicator');
             hub.on('ReceiveTypingIndicator', (chatId, senderId, isTyping) => {
                 if (isTyping) {
@@ -76,10 +95,8 @@ const useChatSignalR = () => {
         setup();
 
         return () => {
-            // Clean up listeners but do NOT stop the connection
-            // (other pages may reuse it; stopChatHub is called on logout)
             if (hub) {
-                hub.off('ReceiveMessage');
+                hub.off('ReceiveEncryptedMessage');
                 hub.off('ReceiveTypingIndicator');
             }
             subscribedRef.current = false;
@@ -88,4 +105,3 @@ const useChatSignalR = () => {
 };
 
 export default useChatSignalR;
-

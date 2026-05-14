@@ -28,7 +28,7 @@ const ChatCard = ({ chat, isActive, onClick }) => {
     const getLastMessagePreview = () => {
         if (chat.lastMessageType === 'Document') return '📎 مرفق';
         if (chat.lastMessageType === 'Image') return '🖼️ صورة';
-        return chat.lastMessageContent || '';
+        return chat.lastMessageContent || 'Encrypted message';
     };
 
     return (

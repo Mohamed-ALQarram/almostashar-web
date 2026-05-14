@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as lawyerApi from '../api/lawyerDashboardApi';
+import { decryptMessagesForChat } from '../e2ee/messages';
 
 // ─── Analytics ──────────────────────────────────────────────────────
 export const useLawyerAnalytics = () => {
@@ -68,7 +69,10 @@ export const useChats = (params = {}) => {
 export const useChatMessages = (chatId, pageSize = 20) => {
     return useQuery({
         queryKey: ['chatMessages', chatId],
-        queryFn: () => lawyerApi.getChatMessages({ ChatId: chatId, PageSize: pageSize }),
+        queryFn: async () => {
+            const data = await lawyerApi.getChatMessages({ ChatId: chatId, PageSize: pageSize });
+            return decryptMessagesForChat(chatId, data);
+        },
         enabled: !!chatId,
         staleTime: 1000 * 30, // 30 sec
     });

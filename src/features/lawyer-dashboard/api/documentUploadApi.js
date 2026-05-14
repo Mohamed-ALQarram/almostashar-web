@@ -27,3 +27,24 @@ export const uploadChatDocument = async (file) => {
 
     return result.fileUrl;
 };
+
+/**
+ * Uploads encrypted file bytes for E2EE documents.
+ *
+ * @param {Blob} encryptedBlob
+ * @returns {Promise<string>} fileUrl path
+ */
+export const uploadEncryptedDocumentBytes = async (encryptedBlob) => {
+    const formData = new FormData();
+    formData.append('File', encryptedBlob, 'encrypted.bin');
+
+    const result = await api.post('/api/documents/upload', formData, {
+        headers: { 'Content-Type': undefined },
+    });
+
+    if (!result?.fileUrl) {
+        throw new Error('Encrypted file upload failed.');
+    }
+
+    return result.fileUrl;
+};

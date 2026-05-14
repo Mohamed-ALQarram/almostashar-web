@@ -88,6 +88,13 @@ export const getChats = (params = {}) =>
 export const getChatMessages = (params) =>
     api.get('/api/Chats/Messages', { params });
 
+/**
+ * GET /api/Chats/{chatId}/devices
+ * Fetches participant devices used for E2EE key wrapping.
+ */
+export const getChatParticipantDevices = (chatId) =>
+    api.get(`/api/Chats/${chatId}/devices`);
+
 // ─── Mark Messages as Read ──────────────────────────────────────────
 /**
  * PUT /api/Chats/{chatId}/messages/{lastReadMessageId}/mark-read
