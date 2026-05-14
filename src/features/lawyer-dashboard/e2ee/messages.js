@@ -22,7 +22,6 @@ const CHAT_MESSAGE_TYPES = {
     TEXT: 'Text',
     IMAGE: 'Image',
     DOCUMENT: 'Document',
-    TEXT_WITH_ATTACHMENT: 'TextWithAttachment',
 };
 
 const isActiveStatus = (status) =>
@@ -92,11 +91,9 @@ export const createEncryptedMessagePayload = async ({
     let document = null;
 
     if (file) {
-        messageType = content
-            ? CHAT_MESSAGE_TYPES.TEXT_WITH_ATTACHMENT
-            : file.type?.startsWith('image/')
-                ? CHAT_MESSAGE_TYPES.IMAGE
-                : CHAT_MESSAGE_TYPES.DOCUMENT;
+        messageType = file.type?.startsWith('image/')
+            ? CHAT_MESSAGE_TYPES.IMAGE
+            : CHAT_MESSAGE_TYPES.DOCUMENT;
         document = await createEncryptedDocumentPayload({
             file,
             currentDevice,

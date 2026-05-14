@@ -126,6 +126,11 @@ const ImageBubble = ({ message, isMine }) => {
                         Unable to decrypt image on this device.
                     </div>
                 )}
+                {message.content && (
+                    <p className={`px-3 pt-2 text-sm leading-relaxed whitespace-pre-wrap ${isMine ? 'text-white/90' : 'text-gray-800'}`}>
+                        {message.content}
+                    </p>
+                )}
                 <MessageMeta sentAt={message.sentAt} isMine={isMine} isSeen={message.isSeen} />
             </div>
         </div>
@@ -142,7 +147,7 @@ const getFallbackText = (status) => ({
 const MessageBubble = ({ message, isMine }) => {
     const hasDocument = message.documentUrl || message.document;
 
-    if ((message.messageType === 'Document' || message.messageType === 'TextWithAttachment') && hasDocument) {
+    if (message.messageType === 'Document' && hasDocument) {
         return <DocumentBubble message={message} isMine={isMine} />;
     }
     if (message.messageType === 'Image' && hasDocument) {

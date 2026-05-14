@@ -6,6 +6,7 @@ const KEY_STORE = 'keys';
 const STATE_STORAGE_KEY = 'almostashar-e2ee-device';
 const PRIVATE_KEY_ID = 'current-device-private-key';
 const PUBLIC_KEY_ID = 'current-device-public-key';
+const PROTOCOL_VERSION = 'AM-E2EE-v1';
 
 const openDb = () =>
     new Promise((resolve, reject) => {
@@ -68,6 +69,7 @@ export const ensureLocalDeviceIdentity = async () => {
     const existingState = readStoredState();
     const privateKey = await readKey(PRIVATE_KEY_ID);
     const publicKey = await readKey(PUBLIC_KEY_ID);
+    let shouldReuseDeviceId = false;
 
     if (existingState?.deviceId && existingState?.identityPublicKey && privateKey && publicKey) {
         try {
@@ -75,6 +77,7 @@ export const ensureLocalDeviceIdentity = async () => {
             const nextState = {
                 ...existingState,
                 identityPublicKey,
+                protocolVersion: existingState.protocolVersion || PROTOCOL_VERSION,
             };
 
             if (identityPublicKey !== existingState.identityPublicKey) {
@@ -87,20 +90,31 @@ export const ensureLocalDeviceIdentity = async () => {
                 publicKey,
             };
         } catch (error) {
-            console.warn('[E2EE] Stored device public key could not be exported. Regenerating device keys.', error);
+            console.warn('[E2EE] Stored device keys are invalid. Regenerating with a new deviceId.', error);
         }
+    } else if (!existingState?.deviceId) {
+        shouldReuseDeviceId = false;
+    } else {
+        console.warn('[E2EE] Stored device id exists without valid local keys. Regenerating with a new deviceId.');
     }
 
     const keyPair = await generateDeviceKeyPair();
     const identityPublicKey = await exportPublicKeyRaw(keyPair.publicKey);
     const now = new Date().toISOString();
     const state = {
-        deviceId: existingState?.deviceId || crypto.randomUUID(),
-        deviceName: existingState?.deviceName || getDeviceName(),
+        deviceId: shouldReuseDeviceId
+            ? existingState.deviceId
+            : crypto.randomUUID(),
+        deviceName: shouldReuseDeviceId
+            ? existingState.deviceName || getDeviceName()
+            : getDeviceName(),
         deviceType: 'Web',
         identityPublicKey,
         privateKeyRef: PRIVATE_KEY_ID,
-        createdAt: existingState?.createdAt || now,
+        createdAt: shouldReuseDeviceId
+            ? existingState.createdAt || now
+            : now,
+        protocolVersion: PROTOCOL_VERSION,
     };
 
     await writeKey(PRIVATE_KEY_ID, keyPair.privateKey);
