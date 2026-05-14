@@ -70,11 +70,25 @@ export const ensureLocalDeviceIdentity = async () => {
     const publicKey = await readKey(PUBLIC_KEY_ID);
 
     if (existingState?.deviceId && existingState?.identityPublicKey && privateKey && publicKey) {
-        return {
-            ...existingState,
-            privateKey,
-            publicKey,
-        };
+        try {
+            const identityPublicKey = await exportPublicKeyRaw(publicKey);
+            const nextState = {
+                ...existingState,
+                identityPublicKey,
+            };
+
+            if (identityPublicKey !== existingState.identityPublicKey) {
+                writeStoredState(nextState);
+            }
+
+            return {
+                ...nextState,
+                privateKey,
+                publicKey,
+            };
+        } catch (error) {
+            console.warn('[E2EE] Stored device public key could not be exported. Regenerating device keys.', error);
+        }
     }
 
     const keyPair = await generateDeviceKeyPair();

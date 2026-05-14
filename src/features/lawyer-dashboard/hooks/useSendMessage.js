@@ -28,7 +28,7 @@ const useSendMessage = () => {
             try {
                 const hub = await startChatHub();
                 const currentDevice = await ensureLocalDeviceIdentity();
-                const { activeDevices, warnings, hasBlockedDevices } = await prepareChatDevices(chatId);
+                const { activeDevices, warnings, hasBlockedDevices } = await prepareChatDevices(chatId, user?.id);
 
                 if (hasBlockedDevices) {
                     throw new Error('Peer device key changed. Message was not sent.');
@@ -89,8 +89,10 @@ const useSendMessage = () => {
 
                 return sentMessage;
             } catch (err) {
-                const message =
-                    err?.message || err?.toString() || 'فشل إرسال الرسالة';
+                const rawMessage = err?.message || err?.toString() || '';
+                const message = rawMessage.includes('Device.CurrentRequired') || rawMessage.includes('Device.CurrentInactive')
+                    ? 'Please login again to activate secure messaging on this device.'
+                    : rawMessage || 'فشل إرسال الرسالة';
                 console.error('[SendEncryptedMessage] Error:', err);
                 setError(message);
                 throw err;

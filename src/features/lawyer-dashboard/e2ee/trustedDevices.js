@@ -36,7 +36,7 @@ export const normalizeParticipantDevices = (response) => {
     });
 };
 
-export const updateTrustedDevices = (devices) => {
+export const updateTrustedDevices = (devices, currentUserId) => {
     const trustMap = readTrustMap();
     const now = new Date().toISOString();
     const warnings = [];
@@ -45,6 +45,7 @@ export const updateTrustedDevices = (devices) => {
 
     devices.forEach((device) => {
         if (!device.userId || !device.deviceId || !device.identityPublicKey) return;
+        if (String(device.userId) === String(currentUserId)) return;
 
         const key = getTrustKey(device.userId, device.deviceId);
         const existing = trustMap[key];
@@ -95,6 +96,9 @@ export const updateTrustedDevices = (devices) => {
     });
 
     Object.keys(trustMap).forEach((key) => {
+        const [userId] = key.split(':');
+        if (String(userId) === String(currentUserId)) return;
+
         if (!activeKeys.has(key) && trustMap[key].status !== 'changed') {
             trustMap[key] = {
                 ...trustMap[key],

@@ -1,21 +1,14 @@
-export const bytesToBase64Url = (bytes) => {
+export const bytesToBase64 = (bytes) => {
     let binary = '';
     bytes.forEach((byte) => {
         binary += String.fromCharCode(byte);
     });
 
-    return btoa(binary)
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/g, '');
+    return btoa(binary);
 };
 
-export const base64UrlToBytes = (input) => {
-    const value = input || '';
-    const padded = value.replace(/-/g, '+').replace(/_/g, '/')
-        + '==='.slice((value.length + 3) % 4);
-    const binary = atob(padded);
-
+export const base64ToBytes = (base64) => {
+    const binary = atob(base64 || '');
     return Uint8Array.from(binary, (char) => char.charCodeAt(0));
 };
 

@@ -57,6 +57,7 @@ const DocumentBubble = ({ message, isMine }) => {
     const url = message.document ? encryptedDocument.url : legacyDocument.url;
     const isLoading = message.document ? encryptedDocument.isLoading : legacyDocument.isLoading;
     const documentName = encryptedDocument.name || message.documentName || 'Encrypted document';
+    const canOpen = Boolean(url) && !encryptedDocument.error;
 
     if (isLoading) return <MediaLoading isMine={isMine} />;
 
@@ -69,17 +70,23 @@ const DocumentBubble = ({ message, isMine }) => {
                     </p>
                 )}
                 <a
-                    href={url || '#'}
-                    target="_blank"
+                    href={canOpen ? url : undefined}
+                    target={canOpen ? '_blank' : undefined}
                     rel="noopener noreferrer"
-                    className={`flex items-center gap-2 text-sm ${isMine ? 'text-white/90 hover:text-white' : 'text-primary hover:text-primary-dark'}`}
+                    aria-disabled={!canOpen}
+                    onClick={(event) => {
+                        if (!canOpen) {
+                            event.preventDefault();
+                        }
+                    }}
+                    className={`flex items-center gap-2 text-sm ${canOpen ? 'cursor-pointer' : 'cursor-not-allowed opacity-70'} ${isMine ? 'text-white/90 hover:text-white' : 'text-primary hover:text-primary-dark'}`}
                 >
                     <svg className="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     <span className="truncate">{documentName}</span>
                 </a>
-                {encryptedDocument.error && (
+                {message.document && !canOpen && (
                     <p className={`text-[11px] mt-2 ${isMine ? 'text-white/60' : 'text-red-500'}`}>
                         Unable to decrypt document on this device.
                     </p>

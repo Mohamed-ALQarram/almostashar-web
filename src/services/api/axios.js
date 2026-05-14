@@ -2,6 +2,9 @@ import axios from 'axios';
 import { useAuthStore } from '../../features/auth/store/authStore';
 import { getStoredDeviceId } from '../../features/lawyer-dashboard/e2ee/deviceIdentity';
 
+const SECURE_MESSAGING_LOGIN_MESSAGE =
+    'Please login again to activate secure messaging on this device.';
+
 const api = axios.create({
     baseURL: 'https://almostashar.runasp.net',
     // baseURL: 'https://localhost:7151',
@@ -124,6 +127,7 @@ api.interceptors.response.use(
             error.response?.status === 403
             && ['Device.CurrentRequired', 'Device.CurrentInactive'].includes(serverError?.code)
         ) {
+            sessionStorage.setItem('almostashar-login-message', SECURE_MESSAGING_LOGIN_MESSAGE);
             useAuthStore.getState().logout();
             window.location.href = '/login';
             return Promise.reject(serverError);

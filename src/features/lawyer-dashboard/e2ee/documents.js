@@ -1,16 +1,14 @@
-import api from '../../../services/api/axios';
 import { uploadEncryptedDocumentBytes } from '../api/documentUploadApi';
 import { getPresignedUrl } from '../api/lawyerDashboardApi';
 import {
-    aesGcmDecryptBytes,
+    aesGcmDecryptRawBytes,
     aesGcmDecryptText,
-    aesGcmEncryptBytes,
+    aesGcmEncryptBytesRaw,
     aesGcmEncryptText,
     generateContentKey,
     unwrapContentKey,
     wrapContentKeyForDevice,
 } from './crypto';
-import { bytesToBase64Url } from './encoding';
 
 const getDocumentKeys = (document) =>
     document?.keys || document?.documentKeys || document?.DocumentKeys || [];
@@ -26,9 +24,9 @@ export const createEncryptedDocumentPayload = async ({
 }) => {
     const fileBytes = new Uint8Array(await file.arrayBuffer());
     const fileContentKey = await generateContentKey();
-    const encryptedFile = await aesGcmEncryptBytes(fileContentKey, fileBytes);
+    const encryptedFile = await aesGcmEncryptBytesRaw(fileContentKey, fileBytes);
     const encryptedBytes = new Blob(
-        [base64UrlToBlobPart(encryptedFile.ciphertext)],
+        [encryptedFile.ciphertextBytes],
         { type: 'application/octet-stream' }
     );
     const storageUrl = await uploadEncryptedDocumentBytes(encryptedBytes);
@@ -110,9 +108,9 @@ export const downloadAndDecryptDocument = async ({
     const presigned = await getPresignedUrl(filePath);
     const url = presigned?.url || presigned;
     const encryptedBytes = new Uint8Array(await fetch(url).then((response) => response.arrayBuffer()));
-    const plaintext = await aesGcmDecryptBytes(
+    const plaintext = await aesGcmDecryptRawBytes(
         fileKey,
-        bytesToBase64Url(encryptedBytes),
+        encryptedBytes,
         document.fileNonce,
         document.fileTag
     );
@@ -122,12 +120,5 @@ export const downloadAndDecryptDocument = async ({
     });
 };
 
-export const postEncryptedCaseDocument = (caseId, payload) =>
-    api.post(`/api/cases/${caseId}/documents`, payload);
-
-const base64UrlToBlobPart = (input) => {
-    const padded = input.replace(/-/g, '+').replace(/_/g, '/')
-        + '==='.slice((input.length + 3) % 4);
-    const binary = atob(padded);
-    return Uint8Array.from(binary, (char) => char.charCodeAt(0));
-};
+// TODO: Standalone case/request documents need backend createdByDeviceId or
+// encryptionSenderDeviceId before they can be decrypted outside chat context.

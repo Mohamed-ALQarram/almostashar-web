@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -32,6 +33,11 @@ const mapServerFieldErrors = (details) => {
 };
 
 const LoginForm = () => {
+    const [sessionMessage] = useState(() => {
+        const message = sessionStorage.getItem('almostashar-login-message');
+        sessionStorage.removeItem('almostashar-login-message');
+        return message;
+    });
     const {
         register,
         handleSubmit,
@@ -76,10 +82,9 @@ const LoginForm = () => {
                 <p className="text-brand-muted text-[14px]">سعداء برؤيتك مجدداً، يرجى تسجيل الدخول للمتابعة.</p>
             </div>
 
-            {/* General server error banner */}
-            {generalError && (
+            {(sessionMessage || generalError) && (
                 <div className="w-full mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-center">
-                    <p className="text-error text-sm font-medium">{generalError}</p>
+                    <p className="text-error text-sm font-medium">{sessionMessage || generalError}</p>
                 </div>
             )}
 

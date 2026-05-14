@@ -1,4 +1,5 @@
 import { getChatParticipantDevices } from '../api/lawyerDashboardApi';
+import { useAuthStore } from '../../auth/store/authStore';
 import {
     aesGcmDecryptText,
     aesGcmEncryptText,
@@ -14,6 +15,15 @@ const getMessageKeys = (message) =>
     message?.keys || message?.messageKeys || message?.MessageKeys || [];
 
 const getDocument = (message) => message?.document || message?.Document || null;
+
+// Matches the E2EE frontend/backend guide available in this repo.
+// If backend enum names change, update these constants before sending.
+const CHAT_MESSAGE_TYPES = {
+    TEXT: 'Text',
+    IMAGE: 'Image',
+    DOCUMENT: 'Document',
+    TEXT_WITH_ATTACHMENT: 'TextWithAttachment',
+};
 
 const isActiveStatus = (status) =>
     status === undefined
@@ -39,10 +49,10 @@ const buildDeviceMap = (devices, currentDevice) => {
     return map;
 };
 
-export const prepareChatDevices = async (chatId) => {
+export const prepareChatDevices = async (chatId, currentUserId = useAuthStore.getState().user?.id) => {
     const response = await getChatParticipantDevices(chatId);
     const allDevices = normalizeParticipantDevices(response);
-    const trust = updateTrustedDevices(allDevices);
+    const trust = updateTrustedDevices(allDevices, currentUserId);
     const activeDevices = getActiveDevices(allDevices).filter(
         (device) => !trust.blockedDeviceIds.has(device.deviceId)
     );
@@ -78,15 +88,15 @@ export const createEncryptedMessagePayload = async ({
         )
     );
 
-    let messageType = 'Text';
+    let messageType = CHAT_MESSAGE_TYPES.TEXT;
     let document = null;
 
     if (file) {
         messageType = content
-            ? 'TextWithAttachment'
+            ? CHAT_MESSAGE_TYPES.TEXT_WITH_ATTACHMENT
             : file.type?.startsWith('image/')
-                ? 'Image'
-                : 'Document';
+                ? CHAT_MESSAGE_TYPES.IMAGE
+                : CHAT_MESSAGE_TYPES.DOCUMENT;
         document = await createEncryptedDocumentPayload({
             file,
             currentDevice,

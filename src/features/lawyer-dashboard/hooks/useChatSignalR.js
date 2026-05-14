@@ -4,6 +4,24 @@ import { startChatHub } from '../signalr/chatHub';
 import { useChatStore } from '../store/chatStore';
 import { markMessagesAsRead } from '../api/lawyerDashboardApi';
 import { decryptSingleMessageForChat } from '../e2ee/messages';
+import { ensureLocalDeviceIdentity } from '../e2ee/deviceIdentity';
+import { useAuthStore } from '../../auth/store/authStore';
+
+const SECURE_MESSAGING_LOGIN_MESSAGE =
+    'Please login again to activate secure messaging on this device.';
+
+const tokenHasDeviceClaim = (token) => {
+    try {
+        const payload = token.split('.')[1];
+        const padded = payload.replace(/-/g, '+').replace(/_/g, '/')
+            + '==='.slice((payload.length + 3) % 4);
+        const claims = JSON.parse(atob(padded));
+
+        return Boolean(claims.device_id || claims.deviceId || claims.DeviceId);
+    } catch {
+        return false;
+    }
+};
 
 /**
  * Starts the SignalR hub and subscribes to encrypted messages and typing events.
@@ -21,6 +39,16 @@ const useChatSignalR = () => {
         let hub;
 
         const setup = async () => {
+            await ensureLocalDeviceIdentity();
+
+            const token = useAuthStore.getState().accessToken;
+            if (token && !tokenHasDeviceClaim(token)) {
+                sessionStorage.setItem('almostashar-login-message', SECURE_MESSAGING_LOGIN_MESSAGE);
+                useAuthStore.getState().logout();
+                window.location.href = '/login';
+                return;
+            }
+
             hub = await startChatHub();
 
             if (!hub || subscribedRef.current) return;
