@@ -1,6 +1,8 @@
 export { default as AccountStatusPage } from './AccountStatusPage';
 export { default as AdminDashboardPage } from './AdminDashboardPage';
 export { default as AdminVerificationPage } from './AdminVerificationPage';
+export { default as AdminDisputesPage } from './AdminDisputesPage';
+export { default as AdminDisputeDetailPage } from './AdminDisputeDetailPage';
 export { default as GuestPage } from './GuestPage';
 export { default as LawyerChatsPage } from './LawyerChatsPage';
 export { default as LawyerDashboardPage } from './LawyerDashboardPage';

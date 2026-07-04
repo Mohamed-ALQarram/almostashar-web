@@ -10,6 +10,8 @@ import {
     LawyerRequestsPage,
     LawyerTendersPage,
     AdminVerificationPage,
+    AdminDisputesPage,
+    AdminDisputeDetailPage,
     GuestPage,
     ServiceDetailPage,
     LawyersListPage,
@@ -63,6 +65,8 @@ const AppRoutes = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/admin" element={<ProtectedRoute allowedRoles={['Admin']}><AdminDashboardPage /></ProtectedRoute>} />
             <Route path="/admin/verification" element={<ProtectedRoute allowedRoles={['Admin']}><AdminVerificationPage /></ProtectedRoute>} />
+            <Route path="/admin/disputes" element={<ProtectedRoute allowedRoles={['Admin']}><AdminDisputesPage /></ProtectedRoute>} />
+            <Route path="/admin/disputes/:id" element={<ProtectedRoute allowedRoles={['Admin']}><AdminDisputeDetailPage /></ProtectedRoute>} />
             <Route path="/lawyer-register" element={<LawyerRegisterPage />} />
 
             {/* Error pages */}
