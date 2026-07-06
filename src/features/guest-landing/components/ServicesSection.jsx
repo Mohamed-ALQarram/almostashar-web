@@ -86,8 +86,8 @@ const ServicesSection = () => {
                                     to={`/services/${service.id}`}
                                     className="flex flex-col items-center justify-center group bg-brand-page border border-gray-100 rounded-2xl p-6 sm:p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
                                 >
-                                    <div className="w-14 h-14 rounded-xl bg-white shadow-sm flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300 border border-gray-100 group-hover:border-primary">
-                                        <Icon className="w-7 h-7 text-gold group-hover:text-white transition-colors duration-300" />
+                                    <div className="w-16 h-16 rounded-xl bg-white shadow-sm flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300 border border-gray-100 group-hover:border-primary">
+                                        <img src={service.iconUrl} alt={service.title} className="w-full h-full rounded-xl text-gold group-hover:text-white transition-colors duration-300" />
                                     </div>
                                     <h3 className="text-xl font-bold text-primary mb-3">
                                         {service.title}

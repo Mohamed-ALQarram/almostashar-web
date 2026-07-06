@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePresignedUrl } from '../../documents/hooks/usePresignedUrl';
+import { usePresignedUrl } from '../../admin-dashboard/hooks/useAdminDashboard';
 
 const DocumentPreviewModal = ({ title, filePath, onClose }) => {
     const { data, isLoading, isError } = usePresignedUrl(filePath);

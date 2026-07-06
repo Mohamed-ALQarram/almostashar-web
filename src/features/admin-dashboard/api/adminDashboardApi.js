@@ -1,3 +1,4 @@
+import api from "../../../services/api/axios";
 /* eslint-disable no-unused-vars */
 
 // API file for Admin Dashboard
@@ -18,3 +19,13 @@ export const getOpenDisputes = async () => {
 export const getTopConsultants = async () => {
   // TODO: implement fetch
 };
+
+/*
+ * @param {string} filePath - the file path
+ * @returns {Promise<{ url: string, expirationMinutes: number }>}
+ */
+export const getPresignedUrl = (filePath, expirationMinutes = 60) =>
+  api.post('/api/documents/PreSignedUrl', {
+    filePath,
+    expirationMinutes,
+  });

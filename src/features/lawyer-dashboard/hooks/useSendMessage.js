@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { startChatHub } from '../signalr/chatHub';
-import { uploadChatDocument } from '../api/documentUploadApi';
+import { useUploadDocument } from '../../documents';
 
 /**
  * Hook for sending messages through SignalR.
@@ -15,7 +15,7 @@ const useSendMessage = () => {
     const [isSending, setIsSending] = useState(false);
     const [error, setError] = useState(null);
     const queryClient = useQueryClient();
-
+    const { mutateAsync: uploadDocumentAsync, isLoading: isUploadingDocument, error: uploadDocumentError } = useUploadDocument();
     const sendMessage = useCallback(
         async ({ chatId, receiverId, content, file }) => {
             setIsSending(true);
@@ -24,19 +24,16 @@ const useSendMessage = () => {
             try {
                 const hub = await startChatHub();
 
-                let messageType = 'Text';
-                let documentUrl = null;
-                let documentName = null;
+                let messageType = 0; // 0 = Text
+                let documentId = null;
 
                 // ── File upload (if any) ────────────────────────────
                 if (file) {
-                    const fileUrl = await uploadChatDocument(file);
-                    documentUrl = fileUrl;
-                    documentName = file.name;
-                    messageType =
-                        file.type && file.type.startsWith('image/')
-                            ? 'Image'
-                            : 'Document';
+                    const document = await uploadDocumentAsync(file);
+                    documentId = document?.documentId;
+
+                    const isImage = file.type.startsWith('image/') || document?.type?.startsWith('image/');
+                    messageType = isImage ? 1 : 2; // 1 = Image, 2 = Document
                 }
 
                 // ── Send via SignalR ────────────────────────────────
@@ -45,8 +42,7 @@ const useSendMessage = () => {
                     receiverId,
                     content: content || '',
                     messageType,
-                    documentName,
-                    documentUrl,
+                    documentId,
                 });
 
                 // ── Update cache ────────────────────────────────────
@@ -88,7 +84,7 @@ const useSendMessage = () => {
         [queryClient]
     );
 
-    return { sendMessage, isSending, error, clearError: () => setError(null) };
+    return { sendMessage, isSending, error, clearError: () => setError(null), isUploadingDocument };
 };
 
 export default useSendMessage;

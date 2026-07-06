@@ -17,7 +17,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         { label: 'لوحة القيادة', icon: 'dashboard', path: '/admin' },
         { label: 'التحقق', icon: 'shield-check', path: '/admin/verification' },
         { label: 'المالية', icon: 'cash', path: '#' },
-        { label: 'النزاعات', icon: 'exclamation-circle', badge: 3, path: '#' },
+        { label: 'النزاعات', icon: 'exclamation-circle', path: '/admin/disputes' },
         { label: 'المستخدمين', icon: 'users', path: '#' },
         { label: 'التحليلات', icon: 'chart-bar', path: '#' },
     ];

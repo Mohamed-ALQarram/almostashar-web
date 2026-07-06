@@ -47,7 +47,6 @@ export {
     useUpdateLawyerService
 } from './hooks/useLawyerServices';
 
-export { default as usePresignedUrl } from './hooks/usePresignedUrl';
 export { default as useChatSignalR } from './hooks/useChatSignalR';
 export { default as useSendMessage } from './hooks/useSendMessage';
 export { default as useTypingIndicator } from './hooks/useTypingIndicator';

@@ -15,6 +15,10 @@ export const getSpecializations = () => api.get('/api/Lawyers/specializations');
 /**
  * PUT /api/Lawyers/edit-profile
  * Update lawyer profile
- * @param {object} data - Profile data
+ * @param {FormData} data - Profile form data
  */
-export const editProfile = (data) => api.put('/api/Lawyers/edit-profile', data);
+export const editProfile = (data) => api.put('/api/Lawyers/edit-profile', data, {
+    headers: {
+        'Content-Type': 'multipart/form-data',
+    },
+});

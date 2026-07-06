@@ -7,14 +7,15 @@ import { getPresignedUrl } from '../api/documentsApi';
  *
  * Usage:
  *   const { data, isLoading, isError } = usePresignedUrl(lawyer.ssN_Url);
- *   // data will be { url, expirationMinutes } (auto-unwrapped by axios interceptor)
+ * @returns { documentId: number, documentName: string, url: string, type: string, sizeInBytes: number, expirationMinutes: number, expiresAt: string }}<PresignedUrl>
  */
-export const usePresignedUrl = (filePath) => {
+const usePresignedUrl = (documentId, expirationMinutes = 60) => {
     return useQuery({
-        // Include the filePath in the query key so it refetches when the path changes
-        queryKey: ['presignedUrl', filePath],
-        queryFn: () => getPresignedUrl(filePath),
-        enabled: !!filePath && filePath !== 'string', // 'string' is swagger default fallback, we ignore it
-        staleTime: 1000 * 60 * 15, // URLs expire, but should be good to cache for ~15 mins
+        queryKey: ['presigned-url', documentId],
+        queryFn: () => getPresignedUrl(documentId, expirationMinutes),
+        enabled: !!documentId,
+        staleTime: 1000 * expirationMinutes * 30, // 30 times the expiration time
+        gcTime: 1000 * expirationMinutes * 30, // 30 times the expiration time
     });
 };
+export default usePresignedUrl; 

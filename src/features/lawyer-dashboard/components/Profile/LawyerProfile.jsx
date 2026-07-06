@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuthStore } from '../../../auth';
 import { useLawyerProfile, useSpecializations, useEditProfile } from '../../hooks/useLawyerProfile';
-import usePresignedUrl from '../../hooks/usePresignedUrl';
-import { uploadChatDocument } from '../../api/documentUploadApi';
 import {
     Pencil, Camera, User, Briefcase, ShieldCheck,
     Check, AlertCircle, Loader2, X
@@ -15,7 +13,7 @@ const EMPTY_IMAGE =
 const unwrap = (res) => res?.data ?? res ?? null;
 
 const buildForm = (p) => {
-    const names = p?.fullName?.trim().split(' ') ?? [];
+    const names = (p?.fullName || '').trim().split(' ');
     return {
         firstName: p?.firstName || names[0] || '',
         lastName: p?.lastName || names.slice(1).join(' ') || '',
@@ -23,7 +21,6 @@ const buildForm = (p) => {
         about: p?.about || '',
         yearsOfExperience: p?.yearsOfExperience || 0,
         specializationIds: p?.specializations?.map(s => s.id) || [],
-        profileImage: p?.profileImage || '',
     };
 };
 
@@ -46,19 +43,11 @@ const LawyerProfile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [toast, setToast] = useState(null);
     const [formData, setFormData] = useState(buildForm(null));
+    const [selectedImageFile, setSelectedImageFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
-    const [imagePath, setImagePath] = useState('');
     const previewRef = useRef(null);
 
-    const { url: resolvedImageUrl } = usePresignedUrl(imagePath);
-    const profileImageSrc = previewUrl || resolvedImageUrl || EMPTY_IMAGE;
 
-    // Sync imagePath when profile data loads (for view mode)
-    useEffect(() => {
-        if (profile.profileImage && !isEditing) {
-            setImagePath(profile.profileImage);
-        }
-    }, [profile.profileImage, isEditing]);
 
     // ── Helpers ─────────────────────────────────────────────────────
     const showToast = (type, message) => {
@@ -72,22 +61,15 @@ const LawyerProfile = () => {
             previewRef.current = null;
         }
         setPreviewUrl(null);
+        setSelectedImageFile(null);
     };
 
-    // ── Handlers ────────────────────────────────────────────────────
     const handleEditToggle = () => {
-        if (!isEditing) {
-            const next = buildForm(profile);
-            setFormData(next);
-            setImagePath(next.profileImage);
-            setIsEditing(true);
-        } else {
+        if (isEditing) {
             clearPreview();
-            const next = buildForm(profile);
-            setFormData(next);
-            setImagePath(next.profileImage);
-            setIsEditing(false);
         }
+        setFormData(buildForm(profile));
+        setIsEditing(!isEditing);
     };
 
     const handleChange = (e) => {
@@ -107,7 +89,7 @@ const LawyerProfile = () => {
         }));
     };
 
-    const handleImageUpload = async (e) => {
+    const handleImageUpload = (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -115,37 +97,41 @@ const LawyerProfile = () => {
         const localUrl = URL.createObjectURL(file);
         previewRef.current = localUrl;
         setPreviewUrl(localUrl);
+        setSelectedImageFile(file);
 
-        try {
-            const res = await uploadChatDocument(file);
-            const url = typeof res === 'string' ? res : (res?.fileUrl || res?.url || '');
-            if (!url) throw new Error('No URL in upload response');
-            setFormData(prev => ({ ...prev, profileImage: url }));
-            setImagePath(url);
-        } catch (err) {
-            console.error('Image upload failed:', err);
-            clearPreview();
-        } finally {
-            e.target.value = '';
-        }
+        e.target.value = '';
     };
 
     const handleSubmit = () => {
         if (isPending) return;
         setToast(null);
 
-        updateProfile(formData, {
+        const formPayload = new FormData();
+        formPayload.append('FirstName', formData.firstName || '');
+        formPayload.append('LastName', formData.lastName || '');
+        formPayload.append('Bio', formData.bio || '');
+        formPayload.append('About', formData.about || '');
+        formPayload.append('YearsOfExperience', formData.yearsOfExperience || 0);
+
+        if (formData.specializationIds && formData.specializationIds.length > 0) {
+            formData.specializationIds.forEach(id => {
+                formPayload.append('SpecializationIds', id);
+            });
+        }
+
+        if (selectedImageFile) {
+            formPayload.append('ProfileImage', selectedImageFile);
+        }
+
+        updateProfile(formPayload, {
             onSuccess: (res) => {
                 const updated = unwrap(res) || {};
-                const nextImage = updated.profileImage || formData.profileImage;
 
                 setIsEditing(false);
                 clearPreview();
 
-                if (nextImage) {
-                    setFormData(prev => ({ ...prev, profileImage: nextImage }));
-                    setImagePath(nextImage);
-                    updateUser({ profileImage: nextImage });
+                if (updated.profileImage) {
+                    updateUser({ profileImage: updated.profileImage });
                 }
 
                 showToast('success', 'تم حفظ التغييرات بنجاح');
@@ -164,6 +150,8 @@ const LawyerProfile = () => {
             </div>
         );
     }
+
+    const profileImageSrc = previewUrl || profile?.profileImage || EMPTY_IMAGE;
 
     // ── Render ───────────────────────────────────────────────────────
     return (
@@ -234,7 +222,7 @@ const LawyerProfile = () => {
                             </div>
                         ) : (
                             <h1 className="text-2xl font-bold text-white mb-1">
-                                {profile.fullName || `${formData.firstName} ${formData.lastName}`.trim()}
+                                {profile.fullName || `${profile.firstName || ''} ${profile.lastName || ''}`.trim() || 'اسم المحامي'}
                             </h1>
                         )}
 

@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useChatMessages, usePresignedUrl, useSendMessage, useTypingIndicator } from '../..';
+import { useChatMessages, useSendMessage, useTypingIndicator } from '../..';
+import { usePresignedUrl } from '../../../documents';
 import { useAuthStore } from '../../../auth';
 import { useChatStore } from '../../store/chatStore';
 import { markMessagesAsRead } from '../../api/lawyerDashboardApi';
@@ -50,15 +51,25 @@ const MediaLoading = ({ isMine }) => (
 
 // ─── Document Message (uses presigned URL hook) ─────────────────────
 const DocumentBubble = ({ message, isMine }) => {
-    const { url, isLoading } = usePresignedUrl(message.documentUrl);
+    const { data: document, isLoading } = usePresignedUrl(message.documentId);
 
     if (isLoading) return <MediaLoading isMine={isMine} />;
+
+    if (!document) {
+        return (
+            <div className={`flex ${isMine ? 'justify-start' : 'justify-end'} mb-3`}>
+                <div className={`max-w-[75%] rounded-2xl px-4 py-3 bg-red-50 text-red-500 text-sm`}>
+                    تعذر تحميل المرفق
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={`flex ${isMine ? 'justify-start' : 'justify-end'} mb-3`}>
             <div className={`max-w-[75%] rounded-2xl px-4 py-3 ${isMine ? 'bg-primary text-white rounded-bl-sm' : 'bg-gray-100 text-gray-900 rounded-br-sm'}`}>
                 <a
-                    href={url || '#'}
+                    href={document?.url || '#'}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`flex items-center gap-2 text-sm ${isMine ? 'text-white/90 hover:text-white' : 'text-primary hover:text-primary-dark'}`}
@@ -66,8 +77,15 @@ const DocumentBubble = ({ message, isMine }) => {
                     <svg className="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <span className="truncate">{message.documentName || 'مستند'}</span>
+                    <span className="truncate" dir="ltr">{document.documentName || 'مستند'}</span>
                 </a>
+
+                {message.content && (
+                    <p className="mt-2 mb-1 text-sm leading-relaxed whitespace-pre-wrap">
+                        {message.content}
+                    </p>
+                )}
+
                 <MessageMeta sentAt={message.sentAt} isMine={isMine} isSeen={message.isSeen} />
             </div>
         </div>
@@ -76,7 +94,8 @@ const DocumentBubble = ({ message, isMine }) => {
 
 // ─── Image Message (uses presigned URL hook) ────────────────────────
 const ImageBubble = ({ message, isMine }) => {
-    const { url, isLoading } = usePresignedUrl(message.documentUrl);
+    const { data: document, isLoading } = usePresignedUrl(message.documentId);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     if (isLoading) {
         return (
@@ -86,32 +105,80 @@ const ImageBubble = ({ message, isMine }) => {
         );
     }
 
-    return (
-        <div className={`flex ${isMine ? 'justify-start' : 'justify-end'} mb-3`}>
-            <div className={`max-w-[65%] rounded-2xl overflow-hidden ${isMine ? 'bg-primary rounded-bl-sm' : 'bg-gray-100 rounded-br-sm'}`}>
-                <img
-                    src={url || ''}
-                    alt="صورة"
-                    className="w-full max-h-64 object-cover cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => url && window.open(url, '_blank')}
-                />
-                <div className={`flex items-center gap-1 px-3 py-1.5 ${isMine ? 'justify-start' : 'justify-end'}`}>
-                    <span className={`text-[10px] ${isMine ? 'text-white/50' : 'text-gray-400'}`}>
-                        {formatTime(message.sentAt)}
-                    </span>
-                    {isMine && <SeenIcon isSeen={message.isSeen} />}
+    if (!document) {
+        return (
+            <div className={`flex ${isMine ? 'justify-start' : 'justify-end'} mb-3`}>
+                <div className={`w-52 h-14 rounded-2xl bg-red-50 text-red-500 text-sm flex items-center justify-center`}>
+                    تعذر تحميل الصورة
                 </div>
             </div>
-        </div>
+        );
+    }
+
+    return (
+        <>
+            <div className={`flex ${isMine ? 'justify-start' : 'justify-end'} mb-3`}>
+                <div className={`max-w-[65%] rounded-2xl overflow-hidden ${isMine ? 'bg-primary rounded-bl-sm' : 'bg-gray-100 rounded-br-sm'}`}>
+                    <img
+                        src={document?.url || ''}
+                        alt="صورة"
+                        className="w-full max-h-64 object-cover cursor-pointer hover:opacity-90 transition-opacity bg-white"
+                        onClick={() => setIsExpanded(true)} // Open the full screen overlay instead of a new page
+                    />
+
+                    {message.content && (
+                        <p className={`text-sm px-3 pt-2 pb-1 leading-relaxed whitespace-pre-wrap ${isMine ? 'text-white' : 'text-gray-900'}`}>
+                            {message.content}
+                        </p>
+                    )}
+
+                    <div className={`flex items-center gap-1 px-3 pb-1.5 ${message.content ? 'pt-0.5' : 'pt-1.5'} ${isMine ? 'justify-start' : 'justify-end'}`}>
+                        <span className={`text-[10px] ${isMine ? 'text-white/50' : 'text-gray-400'}`}>
+                            {formatTime(message.sentAt)}
+                        </span>
+                        {isMine && <SeenIcon isSeen={message.isSeen} />}
+                    </div>
+                </div>
+            </div>
+
+            {/* The dark overlay (shows only when isExpanded is true) */}
+            {isExpanded && (
+                <div
+                    className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-80 p-4"
+                    onClick={() => setIsExpanded(false)} // Close the overlay when clicking on the dark background
+                >
+                    {/* Close button for better user experience */}
+                    <button
+                        className="absolute top-4 right-4 text-white hover:text-gray-300 p-2"
+                        onClick={() => setIsExpanded(false)}
+                    >
+                        ✕
+                    </button>
+
+                    {/* The large image shown in the center */}
+                    <img
+                        src={document.url}
+                        alt="تكبير الصورة"
+                        className="max-w-full max-h-full object-contain cursor-default bg-white/5"
+                        onClick={(e) => e.stopPropagation()} // Prevent closing the overlay when clicking on the image itself
+                    />
+                </div>
+            )}
+        </>
+
     );
 };
 
 // ─── Message Bubble (router) ────────────────────────────────────────
 const MessageBubble = ({ message, isMine }) => {
-    if (message.messageType === 'Document' && message.documentUrl) {
+    const typeStr = String(message.messageType).toLowerCase();
+    const isDocument = typeStr === '2' || typeStr === 'document' || typeStr.startsWith('application/');
+    const isImage = typeStr === '1' || typeStr === 'image' || typeStr.startsWith('image/');
+
+    if (isDocument) {
         return <DocumentBubble message={message} isMine={isMine} />;
     }
-    if (message.messageType === 'Image' && message.documentUrl) {
+    if (isImage) {
         return <ImageBubble message={message} isMine={isMine} />;
     }
 
@@ -200,8 +267,8 @@ const ChatArea = ({ activeChat }) => {
     const queryClient = useQueryClient();
 
     const { data: messagesData, isLoading } = useChatMessages(activeChat?.chatId);
-    const { url: headerAvatarUrl } = usePresignedUrl(activeChat?.profileImage);
-    const { sendMessage, isSending, error: sendError, clearError } = useSendMessage();
+    const { data: headerAvatar } = usePresignedUrl(activeChat?.profileImage);
+    const { sendMessage, isSending, error: sendError, clearError, isUploadingDocument } = useSendMessage();
     const { emitTyping, stopTyping } = useTypingIndicator(activeChat?.chatId, activeChat?.userId);
 
     const typingUser = useChatStore((s) => s.typingUsers[activeChat?.chatId]);
@@ -303,8 +370,8 @@ const ChatArea = ({ activeChat }) => {
                 <div className="flex items-center gap-3">
                     {/* Avatar */}
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm overflow-hidden flex-shrink-0">
-                        {headerAvatarUrl ? (
-                            <img src={headerAvatarUrl} alt={activeChat.fullName} className="w-full h-full object-cover" />
+                        {headerAvatar?.url ? (
+                            <img src={headerAvatar.url} alt={activeChat.fullName} className="w-full h-full object-cover" />
                         ) : (
                             <span>{activeChat.fullName?.charAt(0) || 'م'}</span>
                         )}
