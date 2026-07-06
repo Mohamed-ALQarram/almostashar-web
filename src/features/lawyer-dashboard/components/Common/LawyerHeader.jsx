@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../../auth';
-import { useNotifications, useMarkNotificationsAsRead, usePresignedUrl } from '../..';
+import { useNotifications, useMarkNotificationsAsRead } from '../..';
 
 const LawyerHeader = ({ onMenuToggle }) => {
     const { user } = useAuthStore();
@@ -9,7 +9,6 @@ const LawyerHeader = ({ onMenuToggle }) => {
     const notifRef = useRef(null);
 
     const { data: notificationsData } = useNotifications({ pageSize: 5 });
-    const { url: avatarUrl, isLoading: isAvatarLoading } = usePresignedUrl(user?.profileImage);
     const { mutate: markAsRead } = useMarkNotificationsAsRead();
 
     const notifications = Array.isArray(notificationsData)
@@ -127,19 +126,11 @@ const LawyerHeader = ({ onMenuToggle }) => {
                         <p className="text-xs text-gray-400">{user?.email || 'أحمد عبدالعاطي'}</p>
                     </div>
                     <Link to="/lawyer-dashboard/profile" className="block w-10 h-10 rounded-full">
-                        {isAvatarLoading || !avatarUrl ? (
-                            <div className="w-10 h-10 rounded-full border-2 border-gray-100 bg-gray-100 flex items-center justify-center hover:border-gold transition-colors cursor-pointer">
-                                <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                            </div>
-                        ) : (
-                            <img
-                                src={avatarUrl}
-                                alt="Profile"
-                                className="w-10 h-10 rounded-full border-2 border-gray-100 object-cover hover:border-gold transition-colors cursor-pointer"
-                            />
-                        )}
+                        <img
+                            src={user?.profileImage}
+                            alt="Profile"
+                            className="w-10 h-10 rounded-full border-2 border-gray-100 object-cover hover:border-gold transition-colors cursor-pointer"
+                        />
                     </Link>
                 </div>
             </div>

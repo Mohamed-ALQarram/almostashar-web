@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import * as adminDashboardApi from '../api/adminDashboardApi';
-
+import { getPresignedUrl } from '../api/adminDashboardApi';
 // Hooks for Admin Dashboard
 // Currently returning dummy data matching the design, to be connected to API later
 
@@ -59,5 +59,23 @@ export const useTopConsultants = () => {
                 { id: 3, name: 'د. يوسف ناصح', title: 'استشاري نفسي', rating: 4, reviews: 98, image: 'https://i.pravatar.cc/150?u=yousef' },
             ];
         },
+    });
+};
+
+/**
+ * Custom hook to fetch a presigned URL for a given file path.
+ * The query is only enabled if the filePath is defined.
+ *
+ * Usage:
+ *   const { data, isLoading, isError } = usePresignedUrl(lawyer.ssN_Url);
+ * @returns { documentId: number, documentName: string, url: string, type: string, sizeInBytes: number, expirationMinutes: number, expiresAt: string }}<PresignedUrl>
+ */
+export const usePresignedUrl = (filePath, expirationMinutes = 60) => {
+    return useQuery({
+        queryKey: ['presigned-url', filePath],
+        queryFn: () => getPresignedUrl(filePath, expirationMinutes),
+        enabled: !!filePath,
+        staleTime: 1000 * expirationMinutes * 30, // 30 times the expiration time
+        gcTime: 1000 * expirationMinutes * 30, // 30 times the expiration time
     });
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePresignedUrl } from '../../documents/hooks/usePresignedUrl';
+import { usePresignedUrl } from '../../admin-dashboard/hooks/useAdminDashboard';
 
 // ─── Date / time formatters ────────────────────────────────────────
 const formatTime = (iso) =>

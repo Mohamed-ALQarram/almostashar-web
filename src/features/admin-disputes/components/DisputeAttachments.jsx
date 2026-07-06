@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePresignedUrl } from '../../documents/hooks/usePresignedUrl';
+import { usePresignedUrl } from '../../admin-dashboard/hooks/useAdminDashboard';
 
 // ─── Infer file type from path or extension ────────────────────────
 const inferFileType = (path = '', name = '') => {
@@ -56,8 +56,11 @@ const AttachmentCard = ({ attachment }) => {
     const typeConfig = FILE_TYPE_CONFIG[fileType] || FILE_TYPE_CONFIG.document;
 
     const handleClick = () => {
-        if (data?.url) {
-            window.open(data.url, '_blank', 'noopener,noreferrer');
+        const urlToOpen = typeof data === 'string' ? data : data?.url;
+        if (urlToOpen) {
+            window.open(urlToOpen, '_blank', 'noopener,noreferrer');
+        } else {
+            console.warn('Presigned URL not ready or invalid data:', data, 'Attachment object:', attachment);
         }
     };
 

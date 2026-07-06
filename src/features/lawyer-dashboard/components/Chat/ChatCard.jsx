@@ -1,5 +1,4 @@
 import React from 'react';
-import { usePresignedUrl } from '../..';
 
 const caseTypeLabels = {
     Consultation: 'استشارة قانونية',
@@ -9,7 +8,6 @@ const caseTypeLabels = {
 };
 
 const ChatCard = ({ chat, isActive, onClick }) => {
-    const { url: avatarUrl } = usePresignedUrl(chat.profileImage);
     const formatTime = (dateStr) => {
         if (!dateStr) return '';
         const date = new Date(dateStr);
@@ -35,16 +33,16 @@ const ChatCard = ({ chat, isActive, onClick }) => {
         <button
             onClick={() => onClick(chat)}
             className={`w-full text-right p-4 flex items-center gap-3 transition-all duration-200 border-b border-gray-100 cursor-pointer ${isActive
-                    ? 'bg-primary/5 border-r-4 border-r-gold'
-                    : 'hover:bg-gray-50/80 border-r-4 border-r-transparent'
+                ? 'bg-primary/5 border-r-4 border-r-gold'
+                : 'hover:bg-gray-50/80 border-r-4 border-r-transparent'
                 }`}
             dir="rtl"
         >
             {/* Avatar */}
             <div className="relative flex-shrink-0">
                 <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm overflow-hidden">
-                    {avatarUrl ? (
-                        <img src={avatarUrl} alt={chat.fullName} className="w-full h-full object-cover" />
+                    {chat?.profileImage ? (
+                        <img src={chat?.profileImage} alt={chat.fullName} className="w-full h-full object-cover" />
                     ) : (
                         <span>{chat.fullName?.charAt(0) || 'م'}</span>
                     )}
