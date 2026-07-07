@@ -8,10 +8,6 @@ export const getDashboardStats = async () => {
   // TODO: implement fetch
 };
 
-export const getWithdrawalRequests = async () => {
-  // TODO: implement fetch
-};
-
 export const getOpenDisputes = async () => {
   // TODO: implement fetch
 };

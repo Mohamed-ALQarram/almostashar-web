@@ -118,8 +118,8 @@ const ServiceDetailsCard = ({ serviceType, details }) => {
 };
 
 const DocumentItem = ({ doc }) => {
-    const { data, isLoading } = usePresignedUrl(doc.documentId);
-    const actualUrl = data?.url || doc.url;
+    const { data, isLoading } = usePresignedUrl(doc.id);
+    const actualUrl = data?.url;
 
     const Container = actualUrl ? 'a' : 'div';
     const containerProps = actualUrl ? {

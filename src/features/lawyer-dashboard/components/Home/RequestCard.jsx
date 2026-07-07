@@ -33,18 +33,21 @@ const RequestCard = ({ request }) => {
     return (
         <div
             onClick={handleCardClick}
-            className="bg-white rounded-2xl border border-gray-100 p-5 min-w-[250px] max-w-[280px] flex-shrink-0 hover:shadow-lg transition-all duration-300 group cursor-pointer"
+            className="bg-white rounded-2xl border border-gray-100 p-5 w-[300px]  flex-shrink-0 hover:shadow-lg transition-all duration-300 group cursor-pointer"
         >
             {/* Top: Time badge + avatar */}
             <div className="flex items-center justify-between mb-4">
                 <span className="text-[11px] text-gray-400 bg-gray-50 rounded-full px-2.5 py-1">
                     {getTimeAgo(request.createdAt)}
                 </span>
-                <img
-                    src={request.clientProfileImage || `https://i.pravatar.cc/150?u=${request.clientId}`}
-                    alt={request.clientName}
-                    className="w-10 h-10 rounded-full border-2 border-gray-100 object-cover"
-                />
+                <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold overflow-hidden flex-shrink-0">
+                    {request.clientProfileImage ? (
+                        <img src={request.clientProfileImage} alt={request.clientName} className="w-full h-full object-cover" />
+                    ) : (
+                        // Fallback to first letter
+                        <span>{request.clientName ? request.clientName.charAt(0) : 'ع'}</span>
+                    )}
+                </div>
             </div>
 
             {/* Client name */}
@@ -52,12 +55,6 @@ const RequestCard = ({ request }) => {
 
             {/* Service type */}
             <p className="text-xs text-gray-500 mb-2 truncate">{request.serviceTitle}</p>
-
-            {/* Budget */}
-            <p className="text-xs text-gray-400 mb-4">
-                الميزانية المتوقعة:{' '}
-                <span className="font-semibold text-gray-700">{request.budget?.toLocaleString()} ج م</span>
-            </p>
 
             {/* Location badge */}
             {request.location && (
