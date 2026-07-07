@@ -1,8 +1,11 @@
-import React from 'react';
-import { useWithdrawalRequests } from '../hooks/useAdminDashboard';
+import useAdminWithdrawalsList from '../hooks/useAdminWithdrawalsList';
+import Button from '../../../components/ui/Button';
+import { useNavigate } from 'react-router-dom';
 
-const WithdrawalRequests = () => {
-    const { data: requests, isLoading } = useWithdrawalRequests();
+const WithdrawalRequests = ({ statusFilter = "All", pageSize = 5, cursor = null }) => {
+    const navigate = useNavigate();
+    const { data, isLoading, isError } = useAdminWithdrawalsList({ status: statusFilter, cursor, pageSize, });
+    const requests = data?.items;
 
     if (isLoading) {
         return <div className="h-64 bg-white rounded-2xl shadow-sm animate-pulse mb-8"></div>;
@@ -16,8 +19,11 @@ const WithdrawalRequests = () => {
                     <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                     <h2 className="font-bold text-gray-900">طلبات سحب الأرباح</h2>
                 </div>
-                <button className="text-sm text-primary font-medium hover:text-primary-light transition-colors">
+                <button className="text-sm text-primary font-medium hover:text-primary-light transition-colors"
+                    onClick={() => navigate('/admin/withdrawals')}
+                >
                     عرض الكل
+
                 </button>
             </div>
 
@@ -37,8 +43,7 @@ const WithdrawalRequests = () => {
                             <tr key={request.id} className="hover:bg-gray-50/50 transition-colors">
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="flex items-center gap-3">
-                                        <img className="w-8 h-8 rounded-full bg-gray-100" src={request.image} alt={request.consultantName} />
-                                        <span className="font-medium text-gray-900">{request.consultantName}</span>
+                                        <span className="font-medium text-gray-900">{request.lawyerName}</span>
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
@@ -47,17 +52,17 @@ const WithdrawalRequests = () => {
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-gray-500">
-                                    {request.date}
+                                    {request.requestedAt}
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="flex items-center justify-center gap-2">
-                                        <button className="px-4 py-1.5 rounded bg-success/10 text-success text-xs font-semibold hover:bg-success/20 transition-colors">
-                                            تأكيد
-                                        </button>
-                                        <button className="px-4 py-1.5 rounded bg-error/10 text-error text-xs font-semibold hover:bg-error/20 transition-colors">
-                                            رفض
-                                        </button>
-                                    </div>
+                                <td className="py-4 px-6 text-center whitespace-nowrap">
+                                    <Button
+                                        variant="outline"
+                                        className="!px-3 !py-1.5 !text-xs whitespace-nowrap gap-1"
+                                        onClick={() => navigate(`/admin/withdrawals/${request.id}`)}
+                                    >
+                                        عرض التفاصيل
+                                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                                    </Button>
                                 </td>
                             </tr>
                         ))}

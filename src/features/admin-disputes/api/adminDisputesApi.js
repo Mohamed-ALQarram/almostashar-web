@@ -10,12 +10,3 @@ export const getDisputes = ({ status, pageSize = 20, cursor, cursorDate } = {}) 
             ...(cursorDate && { CursorDate: cursorDate }),
         },
     });
-/*
- * @param {string} filePath - the file path
- * @returns {Promise<{ url: string, expirationMinutes: number }>}
- */
-export const getPresignedUrl = (filePath, expirationMinutes = 60) =>
-    api.post('/api/documents/PreSignedUrl', {
-        filePath,
-        expirationMinutes,
-    });

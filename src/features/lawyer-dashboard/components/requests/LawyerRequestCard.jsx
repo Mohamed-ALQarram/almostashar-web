@@ -5,7 +5,7 @@ const formatTimeAgo = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffInDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-    
+
     if (diffInDays === 0) {
         return `اليوم، ${date.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}`;
     } else if (diffInDays === 1) {
@@ -16,19 +16,19 @@ const formatTimeAgo = (dateString) => {
 };
 
 const LawyerRequestCard = ({ request, actions }) => {
-    const { 
-        title, 
-        problemDetails, 
-        serviceTitle, 
-        price, 
-        createdAt, 
-        clientName, 
-        clientProfileImage 
+    const {
+        title,
+        problemDetails,
+        serviceTitle,
+        price,
+        createdAt,
+        clientName,
+        clientProfileImage
     } = request;
 
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col relative transition-all duration-300 hover:shadow-md h-full">
-            
+
             {/* Header: Client Info & Date */}
             <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-3">
@@ -62,11 +62,6 @@ const LawyerRequestCard = ({ request, actions }) => {
                 <p className="text-xs text-gray-500 leading-relaxed line-clamp-3 mb-4 flex-1">
                     {problemDetails || 'لا يوجد وصف للطلب.'}
                 </p>
-
-                {/* Budget */}
-                <div className="text-xs font-medium text-gray-500 mb-4 bg-gray-50 p-2 rounded-lg inline-block self-start w-full">
-                    ميزانية مقترحة: <span className="text-gray-900 mr-1">{price ? `${price} ج.م` : 'غير محدد'}</span>
-                </div>
             </div>
 
             {/* Actions */}

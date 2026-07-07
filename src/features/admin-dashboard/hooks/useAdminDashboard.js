@@ -19,19 +19,6 @@ export const useDashboardStats = () => {
     });
 };
 
-export const useWithdrawalRequests = () => {
-    return useQuery({
-        queryKey: ['adminWithdrawalRequests'],
-        queryFn: async () => {
-            // Dummy data based on design
-            // await adminDashboardApi.getWithdrawalRequests();
-            return [
-                { id: 1, consultantName: 'أحمد محمد', date: '21/10/2023', amount: 1500, currency: 'ر.س', image: 'https://i.pravatar.cc/150?u=ahmed' },
-                { id: 2, consultantName: 'سارة علي', date: '21/10/2023', amount: 2300, currency: 'ر.س', image: 'https://i.pravatar.cc/150?u=sara' },
-            ];
-        },
-    });
-};
 
 export const useOpenDisputes = () => {
     return useQuery({

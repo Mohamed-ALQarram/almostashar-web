@@ -1,7 +1,7 @@
 import React from 'react';
 import AdminLayout from '../features/admin-dashboard/components/AdminLayout';
 import StatsGrid from '../features/admin-dashboard/components/StatsGrid';
-import WithdrawalRequests from '../features/admin-dashboard/components/WithdrawalRequests';
+import { WithdrawalRequests } from '../features/admin-withdrawals-requests';
 import OpenDisputes from '../features/admin-dashboard/components/OpenDisputes';
 import TopConsultants from '../features/admin-dashboard/components/TopConsultants';
 
