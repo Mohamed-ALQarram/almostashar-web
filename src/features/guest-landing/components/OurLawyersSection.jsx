@@ -9,54 +9,53 @@ const LawyerCard = ({ lawyer }) => {
     const rating = Number(lawyer.rating || 0);
 
     return (
-        <div className="premium-card group p-5 text-center transition hover:-translate-y-1 hover:border-gold/35 hover:shadow-2xl hover:shadow-primary/10">
-            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center overflow-hidden rounded-3xl border border-gold/25 bg-gradient-to-br from-primary to-primary-dark text-2xl font-black text-gold shadow-lg shadow-primary/10">
-                {lawyer.photoUrl ? (
-                    <img src={lawyer.photoUrl} alt={lawyer.fullName} className="h-full w-full object-cover" loading="lazy" />
-                ) : (
-                    getInitials(lawyer.fullName)
-                )}
+        <article className="rounded-[1.25rem] border border-primary/10 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-gold/40 hover:shadow-xl hover:shadow-primary/10">
+            <div className="flex items-center gap-4">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-brand-page text-xl font-black text-primary ring-1 ring-primary/10">
+                    {lawyer.photoUrl ? (
+                        <img src={lawyer.photoUrl} alt={lawyer.fullName} className="h-full w-full object-cover" loading="lazy" />
+                    ) : (
+                        getInitials(lawyer.fullName)
+                    )}
+                </div>
+                <div className="min-w-0 flex-1 text-right">
+                    <h3 className="truncate text-sm font-black text-primary-dark">{lawyer.fullName}</h3>
+                    <p className="mt-1 text-xs font-semibold text-brand-muted">مستشار قانوني</p>
+                    <div className="mt-3 flex items-center justify-start gap-1">
+                        {[...Array(5)].map((_, index) => (
+                            <Star key={index} className={`h-3.5 w-3.5 ${index < Math.round(rating) ? 'fill-gold text-gold' : 'text-gray-200'}`} />
+                        ))}
+                        <span className="mr-1 text-xs font-bold text-brand-muted">{rating.toFixed(1)}</span>
+                    </div>
+                </div>
             </div>
 
-            <h3 className="truncate text-sm font-black text-primary-dark">{lawyer.fullName}</h3>
-            <p className="mt-1 text-xs font-semibold text-brand-muted">مستشار قانوني</p>
-
-            <div className="mt-4 flex items-center justify-center gap-1">
-                {[...Array(5)].map((_, index) => (
-                    <Star
-                        key={index}
-                        className={`h-3.5 w-3.5 ${index < Math.round(rating) ? 'fill-gold text-gold' : 'text-gray-200'}`}
-                    />
-                ))}
-                <span className="mr-1 text-xs font-bold text-brand-muted">{rating.toFixed(1)}</span>
-            </div>
-
-            <div className={`mx-auto mt-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-extrabold ${
+            <div className={`mt-5 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-extrabold ${
                 lawyer.isActive ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-500'
             }`}>
                 <span className={`h-1.5 w-1.5 rounded-full ${lawyer.isActive ? 'bg-success' : 'bg-gray-400'}`} />
                 {lawyer.isActive ? 'متاح الآن' : 'غير متاح'}
             </div>
-        </div>
+        </article>
     );
 };
 
 const OurLawyersSection = () => {
-    const { data: lawyers, isLoading, isError } = useFeaturedLawyers(10);
+    const { data: lawyers, isLoading, isError } = useFeaturedLawyers(8);
 
     return (
         <section id="lawyers" className="guest-section bg-brand-page">
             <div className="section-container">
-                <div className="flex flex-col items-center justify-between gap-6 lg:flex-row lg:items-end">
+                <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
                     <GuestSectionHeading
                         align="right"
                         eyebrow="محامونا"
-                        title="نخبة من المحامين المعتمدين"
-                        description="تصفح مجموعة مختارة من المحامين والمستشارين القانونيين، مع عرض واضح للحالة والتقييم دون مبالغة أو ازدحام."
+                        title="محامون معتمدون بتجربة عرض واضحة"
+                        description="اعرض المحامين بشكل مباشر، بدون صور وهمية أو وعود مبالغ فيها. البيانات تأتي كما يوفرها النظام."
                     />
                     <Link
                         to="/lawyers"
-                        className="inline-flex shrink-0 items-center gap-2 rounded-full border border-primary/15 bg-white px-6 py-3 text-sm font-extrabold text-primary shadow-lg shadow-primary/5 transition hover:-translate-y-0.5 hover:border-gold/40 hover:text-gold"
+                        className="inline-flex shrink-0 items-center gap-2 rounded-full border border-primary/15 bg-white px-6 py-3 text-sm font-extrabold text-primary shadow-sm transition hover:-translate-y-0.5 hover:border-gold/40 hover:text-gold"
                     >
                         عرض جميع المحامين
                         <ArrowLeft className="h-4 w-4" />
@@ -76,7 +75,7 @@ const OurLawyersSection = () => {
                 )}
 
                 {!isLoading && !isError && lawyers?.length > 0 && (
-                    <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                    <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         {lawyers.map((lawyer) => (
                             <LawyerCard key={lawyer.lawyerId} lawyer={lawyer} />
                         ))}

@@ -1,22 +1,20 @@
 import { Bell, Lock, Smartphone } from 'lucide-react';
 import phoneMockup from '../../../assets/Mobile-phone-mockup.png';
-import logo from '../../../assets/AlMostashar-logo-new.png';
 
 const appFeatures = [
     { icon: Lock, label: 'ملفات آمنة' },
     { icon: Bell, label: 'تنبيهات فورية' },
-    { icon: Smartphone, label: 'تجربة جوال راقية' },
+    { icon: Smartphone, label: 'تجربة جوال قادمة' },
 ];
 
 const MobileAppSection = () => {
     return (
-        <section className="guest-section overflow-hidden bg-white">
+        <section className="guest-section bg-white">
             <div className="section-container">
-                <div className="grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
-                    <div className="relative order-2 flex justify-center lg:order-1">
-                        <div className="absolute top-10 h-72 w-72 rounded-full bg-gold/10 blur-3xl" aria-hidden="true" />
-                        <div className="relative w-60 rounded-[2.8rem] border border-primary/10 bg-primary-dark p-2 shadow-2xl shadow-primary/25 sm:w-72">
-                            <div className="overflow-hidden rounded-[2.35rem] bg-black">
+                <div className="grid items-center gap-10 rounded-[2rem] border border-primary/10 bg-brand-page p-6 sm:p-8 lg:grid-cols-[0.8fr_1.2fr] lg:p-12">
+                    <div className="relative flex justify-center">
+                        <div className="relative w-56 rounded-[2.4rem] border border-primary/10 bg-primary-dark p-2 shadow-2xl shadow-primary/20 sm:w-64">
+                            <div className="overflow-hidden rounded-[2rem] bg-black">
                                 <img
                                     src={phoneMockup}
                                     alt="واجهة تطبيق المستشار على الهاتف"
@@ -27,19 +25,18 @@ const MobileAppSection = () => {
                         </div>
                     </div>
 
-                    <div className="order-1 text-right lg:order-2">
-                        <img src={logo} alt="المستشار" className="mb-6 h-16 w-auto" loading="lazy" />
+                    <div className="text-right">
                         <span className="text-xs font-black uppercase tracking-[0.24em] text-gold">تطبيق المستشار</span>
                         <h2 className="mt-4 text-3xl font-black leading-tight text-primary-dark sm:text-4xl lg:text-5xl">
-                            مكتبك القانوني في جيبك
+                            متابعة قانونية أسهل من الهاتف
                         </h2>
                         <p className="mt-5 max-w-2xl text-sm leading-8 text-brand-muted sm:text-base">
-                            تجربة الجوال قادمة لتجعل متابعة الطلبات، المستندات، والتنبيهات القانونية أكثر سهولة وأناقة من أي مكان.
+                            قسم التطبيق يظهر كامتداد طبيعي للتجربة، بدون الادعاء بروابط تحميل غير متاحة. الأزرار واضحة كحالة “قريباً”.
                         </p>
 
                         <div className="mt-8 grid gap-3 sm:grid-cols-3">
                             {appFeatures.map((feature) => (
-                                <div key={feature.label} className="rounded-2xl border border-primary/10 bg-brand-page p-4">
+                                <div key={feature.label} className="rounded-2xl border border-primary/10 bg-white p-4">
                                     <feature.icon className="h-5 w-5 text-gold" />
                                     <p className="mt-3 text-sm font-extrabold text-primary">{feature.label}</p>
                                 </div>
