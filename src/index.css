@@ -18,41 +18,45 @@
 
 @layer components {
   .section-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 
   .guest-section {
-    @apply py-16 sm:py-20 lg:py-28;
+    @apply py-14 sm:py-20 lg:py-24;
+  }
+
+  .section-kicker {
+    @apply text-xs font-black uppercase tracking-[0.22em] text-gold;
+  }
+
+  .section-heading {
+    @apply mt-3 text-2xl font-black leading-tight text-primary-dark sm:text-3xl lg:text-4xl;
+  }
+
+  .section-subtitle {
+    @apply mt-4 max-w-2xl text-sm leading-8 text-brand-muted sm:text-base;
   }
 
   .premium-card {
-    @apply rounded-3xl border border-primary/10 bg-white shadow-xl shadow-primary/5;
+    @apply rounded-2xl border border-primary/10 bg-white shadow-sm;
   }
 
-  .premium-glass {
-    @apply rounded-[2rem] border border-white/20 bg-white/15 shadow-2xl shadow-primary-dark/20 backdrop-blur-xl;
+  .premium-button {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-extrabold text-white transition hover:bg-primary-dark;
   }
 
-  .subtle-grid {
-    background-image:
-      linear-gradient(rgba(26, 43, 74, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(26, 43, 74, 0.04) 1px, transparent 1px);
-    background-size: 34px 34px;
+  .ghost-button {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-primary/15 bg-white px-6 py-3 text-sm font-extrabold text-primary transition hover:border-gold/50 hover:text-gold;
   }
 
-  .gold-underline {
-    @apply relative inline-block;
-  }
-
-  .gold-underline::after {
-    content: '';
-    @apply absolute bottom-0 left-1/2 h-0.5 w-16 -translate-x-1/2 rounded-full bg-gold;
+  .gold-line {
+    @apply h-px w-12 bg-gold;
   }
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(212, 175, 55, 0.2) transparent;
+  scrollbar-color: rgba(212, 175, 55, 0.28) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -65,10 +69,10 @@
 }
 
 *::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.2);
+  background: rgba(212, 175, 55, 0.28);
   border-radius: 9999px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(212, 175, 55, 0.4);
+  background: rgba(212, 175, 55, 0.45);
 }

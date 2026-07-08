@@ -3,9 +3,9 @@ import Footer from './Footer';
 
 const GuestLayout = ({ children }) => {
     return (
-        <div className="min-h-screen flex flex-col font-cairo bg-brand-page" dir="rtl">
+        <div className="min-h-screen bg-brand-page font-cairo" dir="rtl">
             <Navbar />
-            <main className="relative flex-1 overflow-hidden bg-brand-page">{children}</main>
+            <main className="overflow-hidden">{children}</main>
             <Footer />
         </div>
     );

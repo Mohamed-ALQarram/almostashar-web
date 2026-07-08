@@ -1,54 +1,56 @@
-import { Clock3, FileLock2, Landmark, ShieldCheck } from 'lucide-react';
+import { FileLock2, Landmark, MousePointer2, ShieldCheck, UserCheck } from 'lucide-react';
 import GuestSectionHeading from './GuestSectionHeading';
 
-const features = [
+const values = [
     {
         icon: ShieldCheck,
-        title: 'ثقة مهنية',
-        description: 'واجهة وتجربة مصممة حول الجدية والاعتماد، لا حول المؤثرات الزائدة.',
+        title: 'موثوقية عالية',
+        description: 'تجربة مبنية حول الاعتماد، وضوح المعلومات، وحماية مصالح العميل.',
     },
     {
         icon: FileLock2,
-        title: 'خصوصية الملفات',
-        description: 'كل نقطة في تجربة الطلب تراعي حساسية المستندات القانونية.',
+        title: 'أمان وخصوصية',
+        description: 'نهتم بطريقة عرض البيانات والمستندات بما يناسب حساسية العمل القانوني.',
     },
     {
-        icon: Clock3,
-        title: 'وصول أسرع',
-        description: 'المستخدم يصل للخدمة أو المحامي المناسب عبر خطوات مختصرة وواضحة.',
+        icon: UserCheck,
+        title: 'محامون متخصصون',
+        description: 'تسهيل الوصول إلى المختص المناسب حسب الخدمة والاحتياج.',
     },
     {
-        icon: Landmark,
-        title: 'تنوع التخصصات',
-        description: 'خدمات تغطي احتياجات الأفراد والشركات بروح قانونية منظمة.',
+        icon: MousePointer2,
+        title: 'تجربة رقمية سهلة',
+        description: 'واجهة عربية مباشرة، واضحة، وتعمل بسلاسة على مختلف الأجهزة.',
     },
 ];
 
 const WhyChooseUsSection = () => {
     return (
-        <section id="why-us" className="guest-section">
+        <section id="why-us" className="guest-section bg-primary-dark text-white">
             <div className="section-container">
-                <div className="rounded-[2rem] bg-primary-dark p-6 text-white shadow-2xl shadow-primary/20 sm:p-8 lg:p-12">
-                    <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+                <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+                    <div>
                         <GuestSectionHeading
                             align="right"
                             light
                             eyebrow="لماذا نحن"
-                            title="تصميم يخدم القرار القانوني"
-                            description="المستشار يركز على الثقة، وضوح المعلومات، وسهولة بدء الطلب. لذلك الواجهة هادئة، عملية، ومناسبة لطبيعة الخدمات القانونية."
+                            title="تجربة قانونية أكثر وضوحاً من أول خطوة"
+                            description="كل عنصر في الواجهة يخدم هدفاً واضحاً: فهم الخدمة، تقليل التشتت، وبناء ثقة حقيقية مع المستخدم."
                         />
-
-                        <div className="grid gap-4 sm:grid-cols-2">
-                            {features.map((feature) => (
-                                <div key={feature.title} className="rounded-3xl border border-white/10 bg-white/[0.06] p-6">
-                                    <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gold/10 text-gold">
-                                        <feature.icon className="h-6 w-6" />
-                                    </div>
-                                    <h3 className="text-lg font-black">{feature.title}</h3>
-                                    <p className="mt-3 text-sm leading-7 text-white/70">{feature.description}</p>
-                                </div>
-                            ))}
+                        <div className="mt-8 flex items-center gap-3 text-sm font-bold text-white/70">
+                            <Landmark className="h-5 w-5 text-gold" />
+                            تصميم يناسب طبيعة الخدمات القانونية، لا مجرد صفحة تسويقية.
                         </div>
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        {values.map((value) => (
+                            <div key={value.title} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+                                <value.icon className="h-6 w-6 text-gold" />
+                                <h3 className="mt-5 text-lg font-black">{value.title}</h3>
+                                <p className="mt-3 text-sm leading-7 text-white/70">{value.description}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>

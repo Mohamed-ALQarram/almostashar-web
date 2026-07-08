@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { AlertCircle, ArrowLeft, Briefcase, Building2, FileText, Gavel, Loader2, Scale, Users } from 'lucide-react';
+import { AlertCircle, ArrowLeft, Briefcase, Building2, FileText, Gavel, Loader2, Scale, ShieldCheck, Users } from 'lucide-react';
 import { usePublicServices } from '../hooks/usePublicServices';
 import GuestSectionHeading from './GuestSectionHeading';
 
@@ -12,7 +12,7 @@ const SERVICE_ICON_MAP = {
     PersonalStatus: Users,
 };
 
-const FALLBACK_ICONS = [Scale, FileText, Gavel, Building2, Briefcase, Users];
+const FALLBACK_ICONS = [Scale, FileText, Gavel, Building2, Briefcase, ShieldCheck, Users];
 
 const SERVICE_SUMMARIES = {
     Consultation: 'استشارات قانونية واضحة تساعدك على فهم موقفك واتخاذ القرار بثقة.',
@@ -30,28 +30,28 @@ const ServicesSection = () => {
     const { data: services, isLoading, isError } = usePublicServices();
 
     return (
-        <section id="services" className="guest-section bg-white">
+        <section id="services" className="guest-section bg-brand-page">
             <div className="section-container">
-                <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
                     <GuestSectionHeading
                         align="right"
                         eyebrow="خدماتنا"
                         title="خدمات قانونية منظمة حسب احتياجك"
-                        description="كل خدمة مصممة لتوضح المطلوب، تختصر خطوات البداية، وتساعدك على الوصول للمحامي أو الإجراء القانوني الأنسب."
+                        description="اختر الخدمة المناسبة وراجع التفاصيل قبل البدء. كل بطاقة تعرض المعلومات الأساسية بدون ازدحام أو وعود مبالغ فيها."
                     />
-                    <div className="hidden max-w-xs rounded-3xl border border-primary/10 bg-brand-page p-5 text-sm leading-7 text-brand-muted lg:block">
-                        اختر الخدمة، راجع التفاصيل، ثم ابدأ طلبك عبر مسار واضح ومناسب لطبيعة الملف القانوني.
-                    </div>
+                    <Link to="/login" className="ghost-button self-start lg:self-auto">
+                        ابدأ طلب خدمة
+                    </Link>
                 </div>
 
                 {isLoading && (
-                    <div className="mt-14 flex justify-center py-20">
+                    <div className="mt-12 flex justify-center py-16">
                         <Loader2 className="h-10 w-10 animate-spin text-gold" />
                     </div>
                 )}
 
                 {isError && (
-                    <div className="mx-auto mt-14 max-w-xl rounded-3xl border border-error/10 bg-error/5 p-8 text-center">
+                    <div className="mx-auto mt-12 max-w-xl rounded-2xl border border-error/10 bg-white p-8 text-center">
                         <AlertCircle className="mx-auto h-10 w-10 text-error/70" />
                         <p className="mt-4 text-sm font-semibold text-brand-muted">حدث خطأ أثناء تحميل الخدمات. يرجى المحاولة لاحقاً.</p>
                     </div>
@@ -66,27 +66,23 @@ const ServicesSection = () => {
                                 <Link
                                     key={service.id}
                                     to={`/services/${service.id}`}
-                                    className="group flex min-h-[230px] flex-col rounded-[1.35rem] border border-primary/10 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-gold/40 hover:shadow-xl hover:shadow-primary/10"
+                                    className="group flex min-h-[236px] flex-col rounded-2xl border border-primary/10 bg-white p-5 transition hover:border-gold/50"
                                 >
-                                    <div className="mb-4 flex items-start gap-4">
-                                        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-brand-page ring-1 ring-primary/10 transition group-hover:bg-primary">
+                                    <div className="h-1 w-12 rounded-full bg-gold" />
+                                    <div className="mt-5 flex items-start gap-4">
+                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-page ring-1 ring-primary/10">
                                             {service.iconUrl ? (
-                                                <img
-                                                    src={service.iconUrl}
-                                                    alt={service.title}
-                                                    className="h-11 w-11 object-contain"
-                                                    loading="lazy"
-                                                />
+                                                <img src={service.iconUrl} alt={service.title} className="h-8 w-8 object-contain" loading="lazy" />
                                             ) : (
-                                                <Icon className="h-8 w-8 text-gold transition group-hover:text-gold-light" />
+                                                <Icon className="h-6 w-6 text-primary" />
                                             )}
                                         </div>
-                                        <h3 className="pt-2 text-lg font-black leading-7 text-primary-dark">{service.title}</h3>
+                                        <h3 className="pt-1 text-base font-black leading-7 text-primary-dark">{service.title}</h3>
                                     </div>
 
-                                    <p className="line-clamp-3 flex-1 text-sm leading-7 text-brand-muted">{getSummary(service)}</p>
+                                    <p className="mt-4 line-clamp-3 flex-1 text-sm leading-7 text-brand-muted">{getSummary(service)}</p>
 
-                                    <span className="mt-6 inline-flex items-center gap-2 border-t border-primary/10 pt-4 text-sm font-extrabold text-primary transition group-hover:text-gold">
+                                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-primary transition group-hover:text-gold">
                                         عرض التفاصيل
                                         <ArrowLeft className="h-4 w-4 transition group-hover:-translate-x-1" />
                                     </span>
@@ -97,7 +93,7 @@ const ServicesSection = () => {
                 )}
 
                 {!isLoading && !isError && (!services || services.length === 0) && (
-                    <div className="mx-auto mt-14 max-w-xl rounded-3xl border border-primary/10 bg-brand-page p-8 text-center">
+                    <div className="mx-auto mt-12 max-w-xl rounded-2xl border border-primary/10 bg-white p-8 text-center">
                         <p className="text-sm font-semibold text-brand-muted">لا توجد خدمات متاحة حالياً.</p>
                     </div>
                 )}

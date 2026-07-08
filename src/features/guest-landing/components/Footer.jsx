@@ -13,8 +13,8 @@ const quickLinks = [
 const serviceLinks = [
     'استشارات قانونية',
     'صياغة العقود',
-    'تمثيل قانوني',
     'تأسيس الشركات',
+    'تمثيل قانوني',
     'قضايا عمالية',
     'أحوال شخصية',
 ];
@@ -29,14 +29,14 @@ const socialLinks = [
 const Footer = () => {
     return (
         <footer id="footer" className="bg-primary-dark text-white">
-            <div className="section-container py-14 sm:py-20">
-                <div className="grid gap-10 lg:grid-cols-[1.2fr_0.7fr_0.8fr_1fr]">
+            <div className="section-container py-14 sm:py-16">
+                <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr_0.85fr_1fr]">
                     <div>
                         <Link to="/guest" className="inline-block" aria-label="المستشار">
-                            <img src={logo} alt="المستشار" className="h-20 w-auto" loading="lazy" />
+                            <img src={logo} alt="المستشار" className="h-16 w-auto" loading="lazy" />
                         </Link>
                         <p className="mt-5 max-w-sm text-sm leading-8 text-white/60">
-                            المستشار منصة قانونية عربية تجمع بين الثقة المهنية والتجربة الرقمية الراقية لخدمة الأفراد والشركات.
+                            منصة قانونية عربية تجمع بين الثقة المهنية والتجربة الرقمية الواضحة لخدمة الأفراد والشركات.
                         </p>
                         <div className="mt-6 flex gap-3">
                             {socialLinks.map((social) => (
@@ -44,7 +44,7 @@ const Footer = () => {
                                     key={social.label}
                                     href="#"
                                     aria-label={social.label}
-                                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-white/75 transition hover:border-gold/40 hover:bg-gold/15 hover:text-gold"
+                                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-white/70 transition hover:border-gold/40 hover:text-gold"
                                 >
                                     <social.icon className="h-4 w-4" />
                                 </a>
@@ -53,7 +53,7 @@ const Footer = () => {
                     </div>
 
                     <div>
-                        <h3 className="mb-5 text-base font-black text-white">روابط سريعة</h3>
+                        <h3 className="mb-5 text-base font-black">روابط سريعة</h3>
                         <ul className="space-y-3">
                             {quickLinks.map((link) => (
                                 <li key={link.label}>
@@ -72,7 +72,7 @@ const Footer = () => {
                     </div>
 
                     <div>
-                        <h3 className="mb-5 text-base font-black text-white">الخدمات القانونية</h3>
+                        <h3 className="mb-5 text-base font-black">الخدمات القانونية</h3>
                         <ul className="space-y-3">
                             {serviceLinks.map((service) => (
                                 <li key={service}>
@@ -85,7 +85,7 @@ const Footer = () => {
                     </div>
 
                     <div>
-                        <h3 className="mb-5 text-base font-black text-white">تواصل معنا</h3>
+                        <h3 className="mb-5 text-base font-black">تواصل معنا</h3>
                         <ul className="space-y-4">
                             <li className="flex items-start gap-3">
                                 <Mail className="mt-1 h-4 w-4 shrink-0 text-gold" />
@@ -101,20 +101,16 @@ const Footer = () => {
                             </li>
                         </ul>
 
-                        <div className="mt-7 rounded-3xl border border-white/10 bg-white/[0.06] p-3">
+                        <div className="mt-7 rounded-2xl border border-white/10 p-3">
                             <p className="mb-3 px-2 text-xs font-bold text-white/60">النشرة البريدية</p>
-                            <div className="flex overflow-hidden rounded-2xl bg-white">
+                            <div className="flex overflow-hidden rounded-xl bg-white">
                                 <input
                                     type="email"
                                     placeholder="بريدك الإلكتروني"
                                     className="min-w-0 flex-1 px-4 py-3 text-sm font-semibold text-primary outline-none placeholder:text-brand-muted/70"
                                     aria-label="البريد الإلكتروني للنشرة البريدية"
                                 />
-                                <button
-                                    type="button"
-                                    className="bg-gold px-4 text-primary-dark transition hover:bg-gold-light"
-                                    aria-label="إرسال البريد الإلكتروني"
-                                >
+                                <button type="button" className="bg-gold px-4 text-primary-dark" aria-label="إرسال البريد الإلكتروني">
                                     <Send className="h-4 w-4" />
                                 </button>
                             </div>
