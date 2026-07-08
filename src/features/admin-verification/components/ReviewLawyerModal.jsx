@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import DocumentPreviewModal from './DocumentPreviewModal';
+import { DocumentPreviewModal } from '../../documents';
 
 const ReviewLawyerModal = ({ lawyer, onClose, onReview, isAccepting, isRejecting }) => {
     const [previewDoc, setPreviewDoc] = useState(null);

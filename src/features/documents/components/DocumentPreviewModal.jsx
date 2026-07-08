@@ -43,17 +43,18 @@ const DocumentPreviewModal = ({ title, filePath, onClose }) => {
                         // Document Viewer
                         <div className="w-full flex-1 flex flex-col items-center gap-4">
                             {/* Simple check if PDF vs Image based on response or file extension, defaulting to image tag for now */}
-                            {data.url.toLowerCase().includes('.pdf?') ? (
-                                <iframe
-                                    src={`${data.url}#toolbar=0`}
-                                    className="w-full h-[60vh] rounded-xl border border-gray-200 shadow-sm"
-                                    title={title}
-                                />
-                            ) : (
+                            {filePath.startsWith('images') ? (
                                 <img
                                     src={data.url}
                                     alt={title}
                                     className="max-w-full max-h-[60vh] object-contain rounded-xl border border-gray-200 shadow-sm"
+                                />
+
+                            ) : (
+                                <iframe
+                                    src={data.url}
+                                    className="w-full h-[60vh] rounded-xl border border-gray-200 shadow-sm"
+                                    title={title}
                                 />
                             )}
                         </div>

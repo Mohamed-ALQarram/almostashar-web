@@ -57,5 +57,22 @@ export {
     useEditProfile
 } from './hooks/useLawyerProfile';
 
+// Wallet Hooks
+export {
+    useWallet,
+    useWalletTransactions,
+    useWithdrawalRequests,
+    useCreateWithdrawal,
+    useCancelWithdrawal,
+} from './hooks/useLawyerWallet';
+
+// Wallet Components
+export { default as WalletBalanceCard } from './components/Wallet/WalletBalanceCard';
+export { default as WithdrawButton } from './components/Wallet/WithdrawButton';
+export { default as WalletTabs } from './components/Wallet/WalletTabs';
+export { default as TransactionsList } from './components/Wallet/TransactionsList';
+export { default as WithdrawalsList } from './components/Wallet/WithdrawalsList';
+export { default as WithdrawModal } from './components/Wallet/WithdrawModal';
+
 // Store
 export { useLawyerSidebarStore } from './store/lawyerSidebarStore';

@@ -19,6 +19,7 @@ const menuItems = [
     { label: 'خدماتي', icon: <Briefcase className={ICON_CLASS} />, path: '/lawyer-dashboard/services' },
     { label: 'طلباتي', icon: <Archive className={ICON_CLASS} />, path: '/lawyer-dashboard/requests' },
     { label: 'فرص المناقصات', icon: <Archive className={ICON_CLASS} />, path: '/lawyer-dashboard/tenders' },
+    { label: 'محفظتي', icon: <Wallet className={ICON_CLASS} />, path: '/lawyer-dashboard/wallet' },
 ];
 
 const shortcuts = [
