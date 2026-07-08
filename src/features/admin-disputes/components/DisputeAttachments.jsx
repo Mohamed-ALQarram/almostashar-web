@@ -1,6 +1,6 @@
-import React from 'react';
-import { usePresignedUrl } from '../../admin-dashboard/hooks/useAdminDashboard';
-
+// import { usePresignedUrl } from '../../admin-dashboard/hooks/useAdminDashboard';
+import { DocumentPreviewModal } from '../../documents'
+import { useState } from 'react';
 // ─── Infer file type from path or extension ────────────────────────
 const inferFileType = (path = '', name = '') => {
     const str = (path + name).toLowerCase();
@@ -48,20 +48,22 @@ const FILE_TYPE_CONFIG = {
 
 // ─── AttachmentCard (inner) ────────────────────────────────────────
 // API shape: { name, size (bytes), path }
-const AttachmentCard = ({ attachment }) => {
+const AttachmentCard = ({ attachment, setPreviewDoc }) => {
     // `path` is the relative storage path used to get a presigned URL
-    const { data } = usePresignedUrl(attachment.path);
+    // const { data } = usePresignedUrl(attachment.path);
 
     const fileType = inferFileType(attachment.path, attachment.name);
     const typeConfig = FILE_TYPE_CONFIG[fileType] || FILE_TYPE_CONFIG.document;
 
     const handleClick = () => {
-        const urlToOpen = typeof data === 'string' ? data : data?.url;
-        if (urlToOpen) {
-            window.open(urlToOpen, '_blank', 'noopener,noreferrer');
-        } else {
-            console.warn('Presigned URL not ready or invalid data:', data, 'Attachment object:', attachment);
-        }
+        setPreviewDoc({ title: attachment?.name, filePath: attachment?.path })
+        // <DocumentPreviewModal lable={attachment.name} filePath={attachment.path} onClose={() => setPreviewDoc(null)} />
+        // const urlToOpen = typeof data === 'string' ? data : data?.url;
+        // if (urlToOpen) {
+        //     window.open(urlToOpen, '_blank', 'noopener,noreferrer');
+        // } else {
+        //     console.warn('Presigned URL not ready or invalid data:', data, 'Attachment object:', attachment);
+        // }
     };
 
     return (
@@ -89,6 +91,8 @@ const AttachmentCard = ({ attachment }) => {
 
 // ═══════════════════════════════════════════════════════════════════
 const DisputeAttachments = ({ attachments = [] }) => {
+    const [previewDoc, setPreviewDoc] = useState(null);
+
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-50/50" dir="rtl">
             {/* ── Header ──────────────────────────────────────── */}
@@ -103,7 +107,7 @@ const DisputeAttachments = ({ attachments = [] }) => {
             {attachments.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-5">
                     {attachments.map((attachment, index) => (
-                        <AttachmentCard key={attachment.path || index} attachment={attachment} />
+                        <AttachmentCard key={attachment.path || index} attachment={attachment} setPreviewDoc={setPreviewDoc} />
                     ))}
                 </div>
             ) : (
@@ -111,7 +115,15 @@ const DisputeAttachments = ({ attachments = [] }) => {
                     لا توجد مرفقات
                 </div>
             )}
+            {previewDoc && (
+                <DocumentPreviewModal
+                    title={previewDoc.title}
+                    filePath={previewDoc.filePath}
+                    onClose={() => setPreviewDoc(null)}
+                />
+            )}
         </div>
+
     );
 };
 

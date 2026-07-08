@@ -14,6 +14,7 @@ export { default as LawyerRegisterPage } from './LawyerRegisterPage';
 export { default as LawyerRequestsPage } from './LawyerRequestsPage';
 export { default as LawyerServicesPage } from './LawyerServicesPage';
 export { default as LawyerTendersPage } from './LawyerTendersPage';
+export { default as LawyerWalletPage } from './LawyerWalletPage';
 export { default as LoginPage } from './LoginPage';
 export { default as ServiceDetailPage } from './ServiceDetailPage';
 
