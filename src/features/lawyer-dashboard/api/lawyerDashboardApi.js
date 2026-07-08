@@ -135,3 +135,19 @@ export const updateLawyerService = (serviceId, data) =>
  */
 export const getLegalServicesCatalog = () =>
     api.get('/api/legal-services');
+
+// ─── Lawyer Cases ───────────────────────────────────────────────────
+/**
+ * GET /api/cases
+ * Fetch lawyer cases with cursor-based pagination.
+ * @param {{ status?: string, cursor?: number|string, pageSize?: number }} params
+ */
+export const getCases = (params = {}) =>
+    api.get('/api/cases', { params });
+
+/**
+ * GET /api/cases/:caseId
+ * Fetch full details for a single case.
+ */
+export const getCaseDetails = (caseId) =>
+    api.get(`/api/cases/${caseId}`);

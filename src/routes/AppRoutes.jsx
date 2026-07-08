@@ -6,6 +6,7 @@ import {
     LawyerDashboardPage,
     LawyerProfilePage,
     LawyerChatsPage,
+    LawyerCasesPage,
     LawyerServicesPage,
     LawyerRequestsPage,
     LawyerTendersPage,
@@ -62,6 +63,7 @@ const AppRoutes = () => {
             <Route path="/lawyer-dashboard" element={<ProtectedRoute allowedRoles={['Lawyer']}><LawyerDashboardPage /></ProtectedRoute>} />
             <Route path="/lawyer-dashboard/profile" element={<ProtectedRoute allowedRoles={['Lawyer']}><LawyerProfilePage /></ProtectedRoute>} />
             <Route path="/lawyer-dashboard/chats" element={<ProtectedRoute allowedRoles={['Lawyer']}><LawyerChatsPage /></ProtectedRoute>} />
+            <Route path="/lawyer-dashboard/cases" element={<ProtectedRoute allowedRoles={['Lawyer']}><LawyerCasesPage /></ProtectedRoute>} />
             <Route path="/lawyer-dashboard/services" element={<ProtectedRoute allowedRoles={['Lawyer']}><LawyerServicesPage /></ProtectedRoute>} />
             <Route path="/lawyer-dashboard/requests" element={<ProtectedRoute allowedRoles={['Lawyer']}><LawyerRequestsPage /></ProtectedRoute>} />
             <Route path="/lawyer-dashboard/tenders" element={<ProtectedRoute allowedRoles={['Lawyer']}><LawyerTendersPage /></ProtectedRoute>} />

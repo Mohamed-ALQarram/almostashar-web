@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
     LawyerSidebar,
     ChatList,
@@ -8,12 +9,23 @@ import {
 } from '../features/lawyer-dashboard';
 
 const LawyerChatsPage = () => {
+    const location = useLocation();
     const [activeChat, setActiveChat] = useState(null);
     const [showChatList, setShowChatList] = useState(true);
     const { setOpen } = useLawyerSidebarStore();
 
     // Start SignalR hub and subscribe to real-time events
     useChatSignalR();
+
+    // Auto-select chat when navigating from Cases page
+    useEffect(() => {
+        if (location.state?.selectedChat) {
+            setActiveChat(location.state.selectedChat);
+            if (window.innerWidth < 768) {
+                setShowChatList(false);
+            }
+        }
+    }, [location.state]);
 
     const handleChatSelect = (chat) => {
         setActiveChat(chat);

@@ -11,6 +11,10 @@ export { default as ChatCard } from './components/Chat/ChatCard';
 export { default as ChatList } from './components/Chat/ChatList';
 export { default as ChatArea } from './components/Chat/ChatArea';
 
+// Cases Components
+export { default as CaseCard } from './components/Cases/CaseCard';
+export { default as CaseDetails } from './components/Cases/CaseDetails';
+
 // Requests Components
 export { default as LawyerRequestCard } from './components/requests/LawyerRequestCard';
 export { default as LawyerRequestDetails } from './components/requests/LawyerRequestDetails';
@@ -50,6 +54,8 @@ export {
 export { default as useChatSignalR } from './hooks/useChatSignalR';
 export { default as useSendMessage } from './hooks/useSendMessage';
 export { default as useTypingIndicator } from './hooks/useTypingIndicator';
+
+export { useLawyerCases, useCaseDetails } from './hooks/useLawyerCases';
 
 export {
     useLawyerProfile,
