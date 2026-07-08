@@ -7,6 +7,7 @@ export { default as AdminWithdrawalsPage } from './AdminWithdrawalsPage';
 export { default as AdminWithdrawalDetailsPage } from './AdminWithdrawalDetailsPage';
 export { default as GuestPage } from './GuestPage';
 export { default as LawyerChatsPage } from './LawyerChatsPage';
+export { default as LawyerCasesPage } from './LawyerCasesPage';
 export { default as LawyerDashboardPage } from './LawyerDashboardPage';
 export { default as LawyerProfilePage } from './LawyerProfilePage';
 export { default as LawyersListPage } from './LawyersListPage';

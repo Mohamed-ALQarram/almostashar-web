@@ -14,7 +14,7 @@ const ICON_CLASS = 'w-5 h-5';
 
 const menuItems = [
     { label: 'الرئيسية', icon: <Home className={ICON_CLASS} />, path: '/lawyer-dashboard' },
-    { label: 'قضاياي', icon: <FileText className={ICON_CLASS} />, path: '#' },
+    { label: 'قضاياي', icon: <FileText className={ICON_CLASS} />, path: '/lawyer-dashboard/cases' },
     { label: 'محادثاتي', icon: <MessageCircle className={ICON_CLASS} />, path: '/lawyer-dashboard/chats' },
     { label: 'خدماتي', icon: <Briefcase className={ICON_CLASS} />, path: '/lawyer-dashboard/services' },
     { label: 'طلباتي', icon: <Archive className={ICON_CLASS} />, path: '/lawyer-dashboard/requests' },
