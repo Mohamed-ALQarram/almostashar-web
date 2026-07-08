@@ -1,92 +1,70 @@
-import { Shield, Scale, Users, Clock } from 'lucide-react';
-import whyUs1 from '../../../assets/Why-Us1.1.jpg';
-import whyUs2 from '../../../assets/Why-Us1.2.png';
-import whyUs3 from '../../../assets/Why-Us1.3.jpg';
+import { Clock3, FileLock2, Landmark, ShieldCheck } from 'lucide-react';
+import whyVisual from '../../../assets/guest-premium-3.webp';
+import GuestSectionHeading from './GuestSectionHeading';
+
 const features = [
     {
-        icon: Shield,
-        title: 'موثوقية عالية',
-        description: 'محامون معتمدون ومرخصون بخبرات واسعة في مختلف المجالات القانونية',
+        icon: ShieldCheck,
+        title: 'ثقة مهنية',
+        description: 'نضع الاعتماد والخبرة والالتزام المهني في مقدمة تجربة كل عميل.',
     },
     {
-        icon: Scale,
-        title: 'عدالة وشفافية',
-        description: 'نلتزم بأعلى معايير الشفافية والنزاهة في جميع الاستشارات القانونية',
+        icon: FileLock2,
+        title: 'خصوصية الملفات',
+        description: 'تصميم يحترم حساسية المستندات القانونية ويجعل بياناتك في مسار منظم.',
     },
     {
-        icon: Users,
-        title: 'فريق متخصص',
-        description: 'نخبة من المحامين المتخصصين في كافة فروع القانون لخدمتك',
+        icon: Clock3,
+        title: 'سرعة في الوصول',
+        description: 'واجهة مختصرة تساعدك على تحديد احتياجك وبدء التواصل دون تعقيد.',
     },
     {
-        icon: Clock,
-        title: 'استجابة سريعة',
-        description: 'نوفر لك استشارات قانونية فورية على مدار الساعة بدون انتظار',
+        icon: Landmark,
+        title: 'تخصص قانوني',
+        description: 'خدمات متنوعة تغطي احتياجات الأفراد ورواد الأعمال والشركات.',
     },
 ];
+
 const WhyChooseUsSection = () => {
     return (
-        <section id="why-us" className="py-16 sm:py-24 bg-white">
+        <section id="why-us" className="guest-section bg-primary-dark text-white">
             <div className="section-container">
-                {/* Section Title */}
-                <div className="text-center mb-12">
-                    <span className="text-gold text-sm font-semibold tracking-wider">لماذا نحن</span>
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-primary mt-2">
-                        التميز في كل التفاصيل
-                    </h2>
-                    <div className="flex items-center justify-center gap-3 mt-4">
-                        <span className="w-10 h-px bg-gold/40" />
-                        <span className="w-2 h-2 rounded-full bg-gold" />
-                        <span className="w-10 h-px bg-gold/40" />
-                    </div>
-                </div>
-                {/* Content Grid */}
-                <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                    {/* Feature Cards */}
-                    <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
-                        {features.map((feature, index) => (
-                            <div
-                                key={index}
-                                className="group bg-brand-page border border-gray-100 rounded-2xl p-5 sm:p-6 hover:shadow-lg hover:border-gold/30 transition-all duration-300"
-                            >
-                                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-gold/20 transition-colors duration-300">
-                                    <feature.icon className="w-6 h-6 text-primary group-hover:text-gold transition-colors duration-300" />
+                <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.9fr]">
+                    <div>
+                        <GuestSectionHeading
+                            align="right"
+                            light
+                            eyebrow="لماذا نحن"
+                            title="تجربة قانونية تمنحك وضوحاً قبل القرار"
+                            description="المستشار لا يقدم واجهة جميلة فقط، بل ينظم الرحلة القانونية من أول بحث إلى اختيار الخدمة والتواصل مع المختص."
+                        />
+
+                        <div className="mt-10 grid gap-4 sm:grid-cols-2">
+                            {features.map((feature) => (
+                                <div key={feature.title} className="rounded-3xl border border-white/10 bg-white/[0.06] p-6 shadow-2xl shadow-black/10 backdrop-blur-md transition hover:-translate-y-1 hover:border-gold/35">
+                                    <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gold/10 text-gold">
+                                        <feature.icon className="h-6 w-6" />
+                                    </div>
+                                    <h3 className="text-lg font-black">{feature.title}</h3>
+                                    <p className="mt-3 text-sm leading-7 text-white/70">{feature.description}</p>
                                 </div>
-                                <h3 className="text-base font-bold text-primary mb-2">
-                                    {feature.title}
-                                </h3>
-                                <p className="text-brand-muted text-sm leading-relaxed">
-                                    {feature.description}
-                                </p>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
-                    {/* Image Collage */}
-                    <div className="relative grid grid-cols-2 gap-3 sm:gap-4">
-                        <div className="col-span-2 rounded-2xl overflow-hidden shadow-lg">
+
+                    <div className="relative">
+                        <div className="absolute -left-6 -top-6 hidden h-36 w-36 rounded-full border border-gold/20 sm:block" aria-hidden="true" />
+                        <div className="overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl shadow-black/30">
                             <img
-                                src={whyUs1}
-                                alt="فريق المحامين"
-                                className="w-full h-48 sm:h-64 object-cover hover:scale-105 transition-transform duration-500"
+                                src={whyVisual}
+                                alt="مصافحة داخل مكتب قانوني فاخر"
+                                className="h-[420px] w-full object-cover"
+                                loading="lazy"
                             />
                         </div>
-                        <div className="rounded-2xl overflow-hidden shadow-lg">
-                            <img
-                                src={whyUs2}
-                                alt="خبرة قانونية"
-                                className="w-full h-32 sm:h-44 object-cover hover:scale-105 transition-transform duration-500"
-                            />
-                        </div>
-                        <div className="rounded-2xl overflow-hidden shadow-lg">
-                            <img
-                                src={whyUs3}
-                                alt="استشارات قانونية"
-                                className="w-full h-32 sm:h-44 object-cover hover:scale-105 transition-transform duration-500"
-                            />
-                        </div>
-                        {/* Decorative badge */}
-                        <div className="absolute top-4 right-4 bg-gold text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
-                            +15 سنة خبرة
+                        <div className="absolute -bottom-7 right-7 rounded-3xl border border-gold/25 bg-primary/90 p-5 shadow-2xl backdrop-blur-xl">
+                            <p className="text-sm font-bold text-white/70">منهجية المستشار</p>
+                            <p className="mt-2 text-2xl font-black text-gold">وضوح، سرية، إنجاز</p>
                         </div>
                     </div>
                 </div>
@@ -94,4 +72,5 @@ const WhyChooseUsSection = () => {
         </section>
     );
 };
+
 export default WhyChooseUsSection;

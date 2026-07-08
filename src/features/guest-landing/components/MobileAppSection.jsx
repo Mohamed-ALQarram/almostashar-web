@@ -1,99 +1,66 @@
+import { Bell, Lock, Smartphone } from 'lucide-react';
 import phoneMockup from '../../../assets/Mobile-phone-mockup.png';
-import logo from '../../../assets/AlMostashar-logo.png';
+import logo from '../../../assets/AlMostashar-logo-new.png';
+
+const appFeatures = [
+    { icon: Lock, label: 'ملفات آمنة' },
+    { icon: Bell, label: 'تنبيهات فورية' },
+    { icon: Smartphone, label: 'تجربة جوال راقية' },
+];
 
 const MobileAppSection = () => {
     return (
-        <section className="py-16 sm:py-24 bg-primary-dark relative overflow-hidden">
-            {/* Background pattern */}
-            <div className="absolute inset-0 opacity-5">
-                <div className="absolute top-10 right-10 w-60 h-60 rounded-full border border-white/20" />
-                <div className="absolute bottom-10 left-10 w-40 h-40 rounded-full border border-white/10" />
-            </div>
-
-            <div className="section-container relative z-10">
-                <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                    {/* Content */}
-                    <div className="text-center lg:text-right order-1 lg:order-1">
-                        <img
-                            src={logo}
-                            alt="المستشار"
-                            className="h-16 w-auto mx-auto lg:mx-0 mb-6"
-                        />
-                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white mb-4 leading-tight">
-                            مكتبك القانوني
-                            <br />
-                            <span className="text-gold">في جيبك</span>
-                        </h2>
-                        <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-8 max-w-md mx-auto lg:mx-0">
-                            حمّل تطبيق المستشار واحصل على استشارات قانونية فورية في أي وقت ومن أي مكان
-                        </p>
-                        {/* Download Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                            <a
-                                href="#"
-                                className="inline-flex items-center justify-center gap-3 bg-white/10 hover:bg-white/15 border border-white/20 hover:border-gold/50 rounded-xl px-6 py-3.5 transition-all duration-200"
-                            >
-                                <svg className="w-7 h-7 text-white" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
-                                </svg>
-                                <div className="text-right">
-                                    <p className="text-white/60 text-[10px]">Download on the</p>
-                                    <p className="text-white font-bold text-sm">App Store</p>
-                                </div>
-                            </a>
-                            <a
-                                href="#"
-                                className="inline-flex items-center justify-center gap-3 bg-white/10 hover:bg-white/15 border border-white/20 hover:border-gold/50 rounded-xl px-6 py-3.5 transition-all duration-200"
-                            >
-                                <svg className="w-7 h-7 text-white" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M3.18 23.49c-.36-.15-.59-.46-.64-.87L1.36 12.96c-.03-.33.07-.64.3-.89L12.3 1.55c.22-.23.53-.34.82-.3.3.04.56.21.72.47l8.47 14.13c.15.25.18.55.08.83-.1.27-.32.49-.59.6l-18.6 6.21zm1.33-2.09l15.14-5.06L13 5.35 4.51 21.4zM20.18 16.8L13.72 6.03l6.46 10.77z" />
-                                </svg>
-                                <div className="text-right">
-                                    <p className="text-white/60 text-[10px]">Get it on</p>
-                                    <p className="text-white font-bold text-sm">Google Play</p>
-                                </div>
-                            </a>
+        <section className="guest-section overflow-hidden bg-white">
+            <div className="section-container">
+                <div className="grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
+                    <div className="relative order-2 flex justify-center lg:order-1">
+                        <div className="absolute top-10 h-72 w-72 rounded-full bg-gold/10 blur-3xl" aria-hidden="true" />
+                        <div className="relative w-60 rounded-[2.8rem] border border-primary/10 bg-primary-dark p-2 shadow-2xl shadow-primary/25 sm:w-72">
+                            <div className="overflow-hidden rounded-[2.35rem] bg-black">
+                                <img
+                                    src={phoneMockup}
+                                    alt="واجهة تطبيق المستشار على الهاتف"
+                                    className="w-full"
+                                    loading="lazy"
+                                />
+                            </div>
                         </div>
                     </div>
 
-                    {/* Phone Mockup */}
-                    <div className="flex justify-center order-2 lg:order-2">
-                        <div className="relative">
-                            {/* Phone Frame */}
-                            <div className="relative w-56 sm:w-64 lg:w-72 mx-auto">
-                                {/* Outer shell */}
-                                <div className="bg-gray-900 rounded-[2.5rem] p-[6px] shadow-2xl shadow-black/40 border border-gray-700/50">
-                                    {/* Inner bezel */}
-                                    <div className="bg-black rounded-[2.2rem] overflow-hidden relative">
-                                        {/* Notch / Dynamic Island */}
-                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 bg-black w-24 h-6 rounded-b-2xl flex items-center justify-center gap-2">
-                                            <div className="w-2 h-2 rounded-full bg-gray-800 border border-gray-700" />
-                                            <div className="w-10 h-3 rounded-full bg-gray-800 border border-gray-700" />
-                                        </div>
+                    <div className="order-1 text-right lg:order-2">
+                        <img src={logo} alt="المستشار" className="mb-6 h-16 w-auto" loading="lazy" />
+                        <span className="text-xs font-black uppercase tracking-[0.24em] text-gold">تطبيق المستشار</span>
+                        <h2 className="mt-4 text-3xl font-black leading-tight text-primary-dark sm:text-4xl lg:text-5xl">
+                            مكتبك القانوني في جيبك
+                        </h2>
+                        <p className="mt-5 max-w-2xl text-sm leading-8 text-brand-muted sm:text-base">
+                            تجربة الجوال قادمة لتجعل متابعة الطلبات، المستندات، والتنبيهات القانونية أكثر سهولة وأناقة من أي مكان.
+                        </p>
 
-                                        {/* Screenshot */}
-                                        <img
-                                            src={phoneMockup}
-                                            alt="تطبيق المستشار"
-                                            className="w-full h-auto block"
-                                        />
-
-                                        {/* Bottom bar indicator */}
-                                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-white/30 rounded-full" />
-                                    </div>
+                        <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                            {appFeatures.map((feature) => (
+                                <div key={feature.label} className="rounded-2xl border border-primary/10 bg-brand-page p-4">
+                                    <feature.icon className="h-5 w-5 text-gold" />
+                                    <p className="mt-3 text-sm font-extrabold text-primary">{feature.label}</p>
                                 </div>
+                            ))}
+                        </div>
 
-                                {/* Side buttons */}
-                                {/* Power button */}
-                                <div className="absolute -left-[2px] top-24 w-[3px] h-10 bg-gray-700 rounded-l-sm" />
-                                {/* Volume up */}
-                                <div className="absolute -right-[2px] top-20 w-[3px] h-6 bg-gray-700 rounded-r-sm" />
-                                {/* Volume down */}
-                                <div className="absolute -right-[2px] top-28 w-[3px] h-6 bg-gray-700 rounded-r-sm" />
-                            </div>
-
-                            {/* Glow effect */}
-                            <div className="absolute inset-0 bg-gold/10 blur-3xl rounded-full -z-10 scale-75" />
+                        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                            {['App Store', 'Google Play'].map((store) => (
+                                <button
+                                    key={store}
+                                    type="button"
+                                    disabled
+                                    className="inline-flex items-center justify-center rounded-2xl border border-primary/10 bg-primary-dark px-6 py-4 text-right text-white opacity-90"
+                                    aria-label={`${store} قريباً`}
+                                >
+                                    <span>
+                                        <span className="block text-[11px] font-semibold text-white/50">قريباً على</span>
+                                        <span className="block text-sm font-black">{store}</span>
+                                    </span>
+                                </button>
+                            ))}
                         </div>
                     </div>
                 </div>
