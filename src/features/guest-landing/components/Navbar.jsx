@@ -8,6 +8,8 @@ const navLinks = [
     { label: 'من نحن', href: '#about' },
     { label: 'خدماتنا', href: '#services' },
     { label: 'لماذا نحن', href: '#why-us' },
+    { label: 'محامونا', href: '#lawyers' },
+    { label: 'التطبيق', href: '#mobile-app' },
     { label: 'تواصل معنا', href: '#footer' },
 ];
 
@@ -24,11 +26,10 @@ const Navbar = () => {
 
     return (
         <nav
-            className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
-                isScrolled
+            className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${isScrolled
                     ? 'border-primary/10 bg-white/95 text-primary shadow-md shadow-primary-dark/[0.08] backdrop-blur-xl'
                     : 'border-primary/10 bg-white/95 text-primary backdrop-blur-xl'
-            }`}
+                }`}
         >
             <div className="section-container flex h-[76px] items-center justify-between gap-6">
                 <Link to="/guest" className="flex items-center" aria-label="المستشار">

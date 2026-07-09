@@ -87,13 +87,13 @@ const HeroSection = () => {
                             </a>
                         </div>
 
-                        <div className="mt-7 flex flex-wrap gap-2">
+                        {/* <div className="mt-7 flex flex-wrap gap-2">
                             {trustPills.map((item) => (
                                 <div key={item} className="rounded-full border border-white/[0.18] bg-white/10 px-4 py-2 text-xs font-extrabold text-white/90 backdrop-blur-md">
                                     {item}
                                 </div>
                             ))}
-                        </div>
+                        </div> */}
 
                         <div className="mt-8 max-w-[560px] rounded-2xl border border-white/[0.18] bg-white/[0.12] p-3 shadow-sm backdrop-blur-md">
                             <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_120px]">

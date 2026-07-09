@@ -1,95 +1,113 @@
 import { Link } from 'react-router-dom';
-import { AlertCircle, ArrowLeft, Briefcase, Building2, FileText, Gavel, Loader2, Scale, ShieldCheck, Users } from 'lucide-react';
+import { Scale, FileText, Gavel, Building2, Briefcase, Users, Loader2, AlertCircle, ArrowLeft } from 'lucide-react';
 import { usePublicServices } from '../hooks/usePublicServices';
-import GuestSectionHeading from './GuestSectionHeading';
 
+// Map service types to icons (fallback mapping)
 const SERVICE_ICON_MAP = {
-    Consultation: Scale,
-    ContractDrafting: FileText,
-    LegalRepresentation: Gavel,
-    CompanyFormation: Building2,
-    LaborCases: Briefcase,
-    PersonalStatus: Users,
+    'Consultation': Scale,
+    'ContractDrafting': FileText,
+    'LegalRepresentation': Gavel,
+    'CompanyFormation': Building2,
+    'LaborCases': Briefcase,
+    'PersonalStatus': Users,
 };
 
-const FALLBACK_ICONS = [Scale, FileText, Gavel, Building2, Briefcase, ShieldCheck, Users];
+// Fallback icons by index when serviceType doesn't match
+const FALLBACK_ICONS = [Scale, FileText, Gavel, Building2, Briefcase, Users];
 
-const SERVICE_SUMMARIES = {
-    Consultation: 'رأي قانوني واضح يساعدك تفهم موقفك وتختار الخطوة الأنسب.',
-    ContractDrafting: 'صياغة ومراجعة عقود تحفظ الحقوق وتوضح التزامات كل طرف.',
-    LegalRepresentation: 'متابعة قانونية منظمة للقضايا والإجراءات أمام الجهات المختصة.',
-    CompanyFormation: 'تجهيز متطلبات تأسيس الشركات واختيار الشكل القانوني المناسب.',
-    LaborCases: 'دعم متخصص في النزاعات العمالية وحقوق الموظفين وأصحاب العمل.',
-    PersonalStatus: 'تعامل مهني وسري مع ملفات الأسرة والأحوال الشخصية.',
+// Dummy descriptions when summary is null
+const DUMMY_SUMMARIES = {
+    'Consultation': 'احصل على استشارات قانونية دقيقة وموثوقة من نخبة من المحامين المعتمدين في مختلف التخصصات.',
+    'ContractDrafting': 'صياغة ومراجعة كافة أنواع العقود التجارية والمدنية باحترافية عالية لحماية حقوقك.',
+    'LegalRepresentation': 'تمثيل قانوني متكامل أمام كافة المحاكم والجهات القضائية للدفاع عن مصالحك.',
+    'CompanyFormation': 'خدمات متكاملة لتأسيس الشركات واستخراج التراخيص اللازمة لبدء نشاطك التجاري.',
+    'LaborCases': 'متخصصون في حل النزاعات العمالية وحماية حقوق الموظفين وأصحاب العمل.',
+    'PersonalStatus': 'معالجة قضايا الأسرة والأحوال الشخصية بسرية تامة واحترافية عالية.',
 };
 
-const getIcon = (service, index) => SERVICE_ICON_MAP[service.serviceType] || FALLBACK_ICONS[index % FALLBACK_ICONS.length];
-const getSummary = (service) => service.summary || SERVICE_SUMMARIES[service.serviceType] || 'خدمة قانونية تساعدك تبدأ الإجراء المناسب بخطوات واضحة.';
+const DEFAULT_SUMMARY = 'خدمة قانونية متكاملة يقدمها فريق من المحامين المتخصصين لمساعدتك في تحقيق أهدافك القانونية.';
+
+const getIcon = (service, index) => {
+    return SERVICE_ICON_MAP[service.serviceType] || FALLBACK_ICONS[index % FALLBACK_ICONS.length];
+};
+
+const getSummary = (service) => {
+    return service.summary || DUMMY_SUMMARIES[service.serviceType] || DEFAULT_SUMMARY;
+};
 
 const ServicesSection = () => {
     const { data: services, isLoading, isError } = usePublicServices();
 
     return (
-        <section id="services" className="guest-section bg-brand-page">
+        <section id="services" className="py-16 sm:py-24 bg-white">
             <div className="section-container">
-                <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-                    <GuestSectionHeading
-                        align="right"
-                        eyebrow="الخدمات القانونية"
-                        title="ابدأ من الخدمة المناسبة لموقفك"
-                        description="سواء كنت تحتاج استشارة، صياغة عقد، تأسيس شركة، أو متابعة إجراء قانوني، ستجد الخدمة واضحة وخطواتها منظمة."
-                    />
-                    <Link to="/login" className="ghost-button self-start lg:self-auto">
-                        ابدأ طلبك
-                    </Link>
+                {/* Section Title */}
+                <div className="text-center mb-16">
+                    <span className="text-gold text-sm font-semibold tracking-wider">خدماتنا</span>
+                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-primary mt-2">
+                        خدمات قانونية متكاملة
+                    </h2>
+                    <div className="flex items-center justify-center gap-3 mt-4">
+                        <span className="w-10 h-px bg-gold/40" />
+                        <span className="w-2 h-2 rounded-full bg-gold" />
+                        <span className="w-10 h-px bg-gold/40" />
+                    </div>
+                    <p className="text-brand-muted mt-6 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
+                        نقدم مجموعة شاملة من الخدمات القانونية لتلبية كافة احتياجاتك الفردية والتجارية،
+                        من خلال فريق عمل متخصص من المحامين والمستشارين.
+                    </p>
                 </div>
 
+                {/* Loading */}
                 {isLoading && (
-                    <div className="mt-12 flex justify-center py-16">
-                        <Loader2 className="h-10 w-10 animate-spin text-gold" />
+                    <div className="flex justify-center items-center py-20">
+                        <Loader2 className="w-8 h-8 text-gold animate-spin" />
                     </div>
                 )}
 
+                {/* Error */}
                 {isError && (
-                    <div className="mx-auto mt-12 max-w-xl rounded-2xl border border-error/10 bg-white p-8 text-center">
-                        <AlertCircle className="mx-auto h-10 w-10 text-error/70" />
-                        <p className="mt-4 text-sm font-semibold text-brand-muted">حدث خطأ أثناء تحميل الخدمات. يرجى المحاولة لاحقاً.</p>
+                    <div className="flex flex-col items-center justify-center py-16 gap-3">
+                        <AlertCircle className="w-10 h-10 text-error/60" />
+                        <p className="text-brand-muted text-sm">حدث خطأ أثناء تحميل الخدمات. يرجى المحاولة لاحقاً.</p>
                     </div>
                 )}
 
+                {/* Services Grid */}
                 {!isLoading && !isError && services?.length > 0 && (
-                    <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                         {services.map((service, index) => {
                             const Icon = getIcon(service, index);
+                            const summary = getSummary(service);
 
                             return (
                                 <Link
                                     key={service.id}
                                     to={`/services/${service.id}`}
-                                    className="group flex min-h-[220px] flex-col overflow-hidden rounded-[22px] border border-primary/10 bg-white p-5 transition duration-200 hover:border-gold/40"
+                                    className="flex flex-col items-center justify-center group bg-brand-page border border-gray-100 rounded-2xl p-6 sm:p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
                                 >
-                                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-page text-primary ring-1 ring-primary/10">
-                                        <Icon className="h-5 w-5" />
+                                    <div className="w-16 h-16 rounded-xl bg-white shadow-sm flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300 border border-gray-100 group-hover:border-primary">
+                                        <img src={service.iconUrl} alt={service.title} className="w-full h-full rounded-xl text-gold group-hover:text-white transition-colors duration-300" />
                                     </div>
-
-                                    <h3 className="mt-5 text-base font-black leading-7 text-primary-dark">{service.title}</h3>
-                                    <p className="mt-4 line-clamp-3 flex-1 text-sm leading-7 text-brand-muted">{getSummary(service)}</p>
-
-                                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-primary transition group-hover:text-gold">
+                                    <h3 className="text-xl font-bold text-primary mb-3">
+                                        {service.title}
+                                    </h3>
+                                    <p className="text-brand-muted text-sm leading-relaxed text-center mb-4">
+                                        {summary}
+                                    </p>
+                                    <span className="inline-flex items-center gap-1 text-gold text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                         عرض التفاصيل
-                                        <ArrowLeft className="h-4 w-4 transition group-hover:-translate-x-1" />
+                                        <ArrowLeft className="w-3.5 h-3.5" />
                                     </span>
-                                    <span className="mt-4 h-px w-10 bg-gold/45" />
                                 </Link>
                             );
                         })}
                     </div>
                 )}
 
+                {/* Empty state */}
                 {!isLoading && !isError && (!services || services.length === 0) && (
-                    <div className="mx-auto mt-12 max-w-xl rounded-2xl border border-primary/10 bg-white p-8 text-center">
-                        <p className="text-sm font-semibold text-brand-muted">لا توجد خدمات متاحة حالياً.</p>
-                    </div>
+                    <p className="text-center text-brand-muted py-16">لا توجد خدمات متاحة حالياً.</p>
                 )}
             </div>
         </section>

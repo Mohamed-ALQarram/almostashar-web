@@ -24,8 +24,8 @@ const LawyerCard = ({ lawyer }) => {
         <article className="rounded-2xl border border-primary/10 bg-white p-5 transition hover:border-gold/50">
             <div className="flex items-center gap-4">
                 <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-page text-xl font-black text-primary ring-1 ring-primary/10">
-                    {lawyer.photoUrl ? (
-                        <img src={lawyer.photoUrl} alt={lawyer.fullName} className="h-full w-full object-cover" loading="lazy" />
+                    {lawyer.profileImage ? (
+                        <img src={lawyer.profileImage} alt={lawyer.fullName} className="h-full w-full object-cover" loading="lazy" />
                     ) : (
                         getInitials(lawyer.fullName)
                     )}
@@ -43,9 +43,8 @@ const LawyerCard = ({ lawyer }) => {
                     ))}
                     <span className="mr-1 text-xs font-bold text-brand-muted">{rating.toFixed(1)}</span>
                 </div>
-                <span className={`rounded-full px-3 py-1 text-[11px] font-extrabold ${
-                    lawyer.isActive ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-500'
-                }`}>
+                <span className={`rounded-full px-3 py-1 text-[11px] font-extrabold ${lawyer.isActive ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-500'
+                    }`}>
                     {lawyer.isActive ? 'متاح الآن' : 'غير متاح'}
                 </span>
             </div>
@@ -109,7 +108,6 @@ const LawyersListPage = () => {
                         <ArrowRight className="h-4 w-4" />
                         العودة للرئيسية
                     </Link>
-                    <span className="section-kicker">شبكة المستشار</span>
                     <h1 className="mt-5 text-3xl font-black leading-tight sm:text-5xl">ابحث عن المحامي المناسب</h1>
                     <p className="mt-5 max-w-2xl text-sm leading-8 text-white/70 sm:text-base">
                         استخدم البحث أو فلتر الخدمة للوصول إلى محامٍ يناسب طبيعة طلبك، ثم ابدأ التواصل من خلال المنصة.
@@ -134,11 +132,10 @@ const LawyersListPage = () => {
                         <button
                             type="button"
                             onClick={() => setShowFilters((value) => !value)}
-                            className={`inline-flex h-12 w-12 items-center justify-center rounded-xl border transition ${
-                                showFilters || serviceId
-                                    ? 'border-primary bg-primary text-white'
-                                    : 'border-primary/10 bg-white text-primary hover:border-gold/40'
-                            }`}
+                            className={`inline-flex h-12 w-12 items-center justify-center rounded-xl border transition ${showFilters || serviceId
+                                ? 'border-primary bg-primary text-white'
+                                : 'border-primary/10 bg-white text-primary hover:border-gold/40'
+                                }`}
                             aria-label="عرض الفلاتر"
                             aria-expanded={showFilters}
                         >
@@ -173,11 +170,10 @@ const LawyersListPage = () => {
                                         type="button"
                                         key={service.id}
                                         onClick={() => setServiceId(String(service.id))}
-                                        className={`rounded-full px-4 py-2 text-xs font-extrabold transition ${
-                                            String(service.id) === serviceId
-                                                ? 'bg-primary text-white'
-                                                : 'bg-brand-page text-brand-muted hover:text-primary'
-                                        }`}
+                                        className={`rounded-full px-4 py-2 text-xs font-extrabold transition ${String(service.id) === serviceId
+                                            ? 'bg-primary text-white'
+                                            : 'bg-brand-page text-brand-muted hover:text-primary'
+                                            }`}
                                     >
                                         {service.title}
                                     </button>

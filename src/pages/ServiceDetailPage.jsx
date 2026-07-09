@@ -79,7 +79,6 @@ const ServiceDetailPage = () => {
                         <ArrowRight className="h-4 w-4" />
                         العودة للخدمات
                     </Link>
-                    <span className="section-kicker">خدمة قانونية</span>
                     <h1 className="mt-5 max-w-4xl text-3xl font-black leading-tight sm:text-5xl">{service.title}</h1>
                     <p className="mt-5 max-w-3xl text-sm leading-8 text-white/70 sm:text-base">{summary}</p>
 

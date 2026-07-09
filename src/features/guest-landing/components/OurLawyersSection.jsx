@@ -12,8 +12,8 @@ const LawyerCard = ({ lawyer }) => {
         <article className="rounded-2xl border border-primary/10 bg-white p-5 transition hover:border-gold/50">
             <div className="flex items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-page text-lg font-black text-primary ring-1 ring-primary/10">
-                    {lawyer.photoUrl ? (
-                        <img src={lawyer.photoUrl} alt={lawyer.fullName} className="h-full w-full object-cover" loading="lazy" />
+                    {lawyer.profileImage ? (
+                        <img src={lawyer.profileImage} alt={lawyer.fullName} className="h-full w-full object-cover" loading="lazy" />
                     ) : (
                         getInitials(lawyer.fullName)
                     )}
@@ -31,9 +31,8 @@ const LawyerCard = ({ lawyer }) => {
                     ))}
                     <span className="mr-1 text-xs font-bold text-brand-muted">{rating.toFixed(1)}</span>
                 </div>
-                <span className={`rounded-full px-3 py-1 text-[11px] font-extrabold ${
-                    lawyer.isActive ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-500'
-                }`}>
+                <span className={`rounded-full px-3 py-1 text-[11px] font-extrabold ${lawyer.isActive ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-500'
+                    }`}>
                     {lawyer.isActive ? 'متاح الآن' : 'غير متاح'}
                 </span>
             </div>
