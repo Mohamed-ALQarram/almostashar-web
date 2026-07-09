@@ -1,35 +1,35 @@
-import { useParams, Link } from 'react-router-dom';
-import { ArrowRight, Clock, FileText, Loader2, AlertCircle, ShieldCheck } from 'lucide-react';
+import { Link, useParams } from 'react-router-dom';
+import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Clock, FileText, Loader2, ShieldCheck } from 'lucide-react';
 import { usePublicServices } from '../features/guest-landing/hooks/usePublicServices';
 
-const DUMMY_DESCRIPTIONS = {
-    'Consultation': 'نوفر لك استشارات قانونية شاملة ومتخصصة في جميع فروع القانون. يقوم فريقنا من المحامين المعتمدين بتحليل قضيتك بدقة وتقديم النصيحة القانونية المبنية على أسس علمية وعملية راسخة. سواء كنت تحتاج استشارة فورية أو دراسة معمقة لملفك القانوني، نحن هنا لمساعدتك في اتخاذ القرارات الصحيحة وحماية حقوقك.',
-    'ContractDrafting': 'نقدم خدمات صياغة ومراجعة العقود بمختلف أنواعها: العقود التجارية، عقود العمل، عقود الإيجار، عقود الشراكة، واتفاقيات السرية. يحرص فريقنا القانوني على ضمان حماية مصالحك وتجنب أي ثغرات قانونية قد تؤثر على حقوقك مستقبلاً.',
-    'LegalRepresentation': 'نوفر تمثيلاً قانونياً متكاملاً أمام جميع الجهات القضائية والمحاكم بمختلف درجاتها. يتولى محامونا المتمرسون الدفاع عن حقوقك ومتابعة إجراءات القضية من البداية وحتى صدور الحكم النهائي، مع إبقائك على اطلاع دائم بمستجدات القضية.',
-    'CompanyFormation': 'نقدم خدمات شاملة لتأسيس الشركات بجميع أنواعها، تشمل إعداد عقود التأسيس والنظام الأساسي، استخراج السجل التجاري والتراخيص اللازمة، وتقديم الاستشارات المتعلقة بأفضل الهياكل القانونية المناسبة لنشاطك التجاري.',
-    'LaborCases': 'متخصصون في معالجة كافة النزاعات العمالية بين الموظفين وأصحاب العمل. نساعدك في قضايا الفصل التعسفي، المطالبة بالمستحقات المالية، إصابات العمل، وتسوية النزاعات العمالية بالطرق الودية أو القضائية.',
-    'PersonalStatus': 'نتعامل مع قضايا الأحوال الشخصية بأقصى درجات السرية والاحترافية. تشمل خدماتنا قضايا الطلاق والخلع، حضانة الأطفال، النفقة، إثبات النسب، قسمة المواريث، والوصايا، مع مراعاة الحساسية الخاصة لهذه القضايا.',
+const SERVICE_DESCRIPTIONS = {
+    Consultation: 'نوفر لك استشارات قانونية واضحة تساعدك على فهم موقفك القانوني وتحديد الخيارات المتاحة قبل اتخاذ القرار.',
+    ContractDrafting: 'صياغة ومراجعة العقود بدقة لحماية مصالح الأطراف وتقليل المخاطر القانونية المحتملة.',
+    LegalRepresentation: 'تمثيل قانوني منظم أمام الجهات المختصة، مع متابعة الإجراءات وتجهيز المستندات اللازمة.',
+    CompanyFormation: 'تجهيز المتطلبات القانونية لتأسيس الشركات واختيار الإطار الأنسب لطبيعة النشاط.',
+    LaborCases: 'دعم قانوني متخصص في النزاعات العمالية وحقوق العامل وصاحب العمل.',
+    PersonalStatus: 'تعامل مهني وسري مع قضايا الأسرة والأحوال الشخصية بما يناسب حساسية هذه الملفات.',
 };
 
-const DUMMY_DOCUMENTS = {
-    'Consultation': 'صورة بطاقة الرقم القومي، أي مستندات متعلقة بالاستشارة',
-    'ContractDrafting': 'صورة بطاقة الرقم القومي، بيانات الأطراف، تفاصيل الاتفاق',
-    'LegalRepresentation': 'صورة بطاقة الرقم القومي، التوكيل الرسمي، مستندات القضية',
-    'CompanyFormation': 'صور بطاقات الشركاء، عقد الإيجار، شهادة عدم الالتباس',
-    'LaborCases': 'صورة بطاقة الرقم القومي، عقد العمل، كشف الراتب',
-    'PersonalStatus': 'صورة بطاقة الرقم القومي، عقد الزواج، شهادات الميلاد',
+const SERVICE_DOCUMENTS = {
+    Consultation: 'صورة الهوية، المستندات المرتبطة بالاستشارة، ملخص مختصر للوقائع',
+    ContractDrafting: 'بيانات الأطراف، تفاصيل الاتفاق، أي مسودات أو مراسلات سابقة',
+    LegalRepresentation: 'صورة الهوية، الوكالة إن وجدت، مستندات القضية',
+    CompanyFormation: 'بيانات الشركاء، نشاط الشركة، المستندات الرسمية المتاحة',
+    LaborCases: 'عقد العمل، كشف الراتب، المراسلات أو القرارات محل النزاع',
+    PersonalStatus: 'صورة الهوية، المستندات الأسرية ذات الصلة، ملخص الحالة',
 };
 
-const DUMMY_DURATION = {
-    'Consultation': 'من ساعة إلى ٣ أيام عمل',
-    'ContractDrafting': 'من ٣ إلى ٧ أيام عمل',
-    'LegalRepresentation': 'حسب طبيعة القضية',
-    'CompanyFormation': 'من أسبوع إلى أسبوعين',
-    'LaborCases': 'من أسبوع إلى شهر',
-    'PersonalStatus': 'حسب طبيعة القضية',
+const SERVICE_DURATION = {
+    Consultation: 'من ساعة إلى 3 أيام عمل',
+    ContractDrafting: 'من 3 إلى 7 أيام عمل',
+    LegalRepresentation: 'حسب طبيعة القضية',
+    CompanyFormation: 'من أسبوع إلى أسبوعين',
+    LaborCases: 'حسب تفاصيل النزاع',
+    PersonalStatus: 'حسب طبيعة الملف',
 };
 
-const DEFAULT_DESCRIPTION = 'خدمة قانونية متكاملة يقدمها فريق من المحامين المتخصصين. نحرص على تقديم أعلى مستويات الجودة والاحترافية لضمان حماية حقوقك وتحقيق أهدافك القانونية بأفضل الطرق الممكنة.';
+const DEFAULT_DESCRIPTION = 'خدمة قانونية متخصصة تساعدك على فهم موقفك واتخاذ القرار المناسب بثقة.';
 
 const ServiceDetailPage = () => {
     const { id } = useParams();
@@ -37,106 +37,102 @@ const ServiceDetailPage = () => {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-brand-page flex items-center justify-center">
-                <Loader2 className="w-10 h-10 text-gold animate-spin" />
+            <div className="flex min-h-screen items-center justify-center bg-brand-page">
+                <Loader2 className="h-11 w-11 animate-spin text-gold" />
             </div>
         );
     }
 
     if (isError) {
         return (
-            <div className="min-h-screen bg-brand-page flex flex-col items-center justify-center gap-4">
-                <AlertCircle className="w-12 h-12 text-error/60" />
-                <p className="text-brand-muted">حدث خطأ أثناء تحميل بيانات الخدمة.</p>
-                <Link to="/guest" className="text-gold hover:text-gold-dark text-sm font-semibold">
-                    العودة للرئيسية
-                </Link>
+            <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-brand-page px-4 text-center" dir="rtl">
+                <AlertCircle className="h-12 w-12 text-error/70" />
+                <p className="text-sm font-semibold text-brand-muted">حدث خطأ أثناء تحميل بيانات الخدمة.</p>
+                <Link to="/guest" className="font-bold text-gold">العودة للرئيسية</Link>
             </div>
         );
     }
 
-    const service = services?.find(s => s.id === Number(id));
+    const service = services?.find((item) => item.id === Number(id));
 
     if (!service) {
         return (
-            <div className="min-h-screen bg-brand-page flex flex-col items-center justify-center gap-4">
-                <AlertCircle className="w-12 h-12 text-gray-300" />
-                <p className="text-brand-muted">الخدمة غير موجودة.</p>
-                <Link to="/guest" className="text-gold hover:text-gold-dark text-sm font-semibold">
-                    العودة للرئيسية
-                </Link>
+            <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-brand-page px-4 text-center" dir="rtl">
+                <AlertCircle className="h-12 w-12 text-brand-muted/40" />
+                <p className="text-sm font-semibold text-brand-muted">الخدمة غير موجودة.</p>
+                <Link to="/guest" className="font-bold text-gold">العودة للرئيسية</Link>
             </div>
         );
     }
 
     const type = service.serviceType || '';
-    const description = service.fullDescription || DUMMY_DESCRIPTIONS[type] || DEFAULT_DESCRIPTION;
-    const documents = service.requiredDocuments || DUMMY_DOCUMENTS[type] || 'صورة بطاقة الرقم القومي';
-    const duration = service.expectedDuration || DUMMY_DURATION[type] || 'حسب طبيعة الخدمة';
-    const summary = service.summary || 'خدمة قانونية متخصصة يقدمها فريق المستشار';
+    const description = service.fullDescription || SERVICE_DESCRIPTIONS[type] || DEFAULT_DESCRIPTION;
+    const documents = service.requiredDocuments || SERVICE_DOCUMENTS[type] || 'صورة الهوية، أي مستندات مرتبطة بالخدمة';
+    const duration = service.expectedDuration || SERVICE_DURATION[type] || 'حسب طبيعة الخدمة';
+    const summary = service.summary || 'خدمة قانونية واضحة ضمن تجربة منظمة تحفظ خصوصية ملفك.';
 
     return (
         <div className="min-h-screen bg-brand-page" dir="rtl">
-            {/* Hero */}
-            <div className="bg-primary text-white">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
-                    <Link to="/guest#services" className="inline-flex items-center gap-2 text-white/60 hover:text-gold text-sm mb-8 transition-colors">
-                        <ArrowRight className="w-4 h-4" />
+            <header className="bg-primary-dark text-white">
+                <div className="section-container py-12 sm:py-16 lg:py-20">
+                    <Link to="/guest#services" className="mb-8 inline-flex items-center gap-2 text-sm font-bold text-white/60 transition hover:text-gold">
+                        <ArrowRight className="h-4 w-4" />
                         العودة للخدمات
                     </Link>
-                    <h1 className="text-3xl sm:text-4xl font-extrabold mb-4">{service.title}</h1>
-                    <p className="text-white/70 text-sm sm:text-base leading-relaxed max-w-2xl">{summary}</p>
+                    <h1 className="mt-5 max-w-4xl text-3xl font-black leading-tight sm:text-5xl">{service.title}</h1>
+                    <p className="mt-5 max-w-3xl text-sm leading-8 text-white/70 sm:text-base">{summary}</p>
 
-                    <div className="flex flex-wrap gap-4 mt-8">
-                        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-xs">
-                            <Clock className="w-4 h-4 text-gold" />
-                            <span>{duration}</span>
+                    <div className="mt-8 flex flex-wrap gap-3">
+                        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-xs font-bold">
+                            <Clock className="h-4 w-4 text-gold" />
+                            {duration}
                         </div>
-                        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-xs">
-                            <ShieldCheck className="w-4 h-4 text-gold" />
-                            <span>{service.serviceType || 'خدمة قانونية'}</span>
+                        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-xs font-bold">
+                            <ShieldCheck className="h-4 w-4 text-gold" />
+                            سرية وخصوصية
                         </div>
                     </div>
                 </div>
-            </div>
+            </header>
 
-            {/* Content */}
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-8">
-                {/* Description Card */}
-                <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-50">
-                    <h2 className="text-lg font-bold text-primary mb-4">تفاصيل الخدمة</h2>
-                    <p className="text-gray-600 text-sm leading-loose whitespace-pre-line">{description}</p>
-                </div>
+            <main className="section-container py-10 sm:py-14">
+                <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_350px]">
+                    <div className="space-y-6">
+                        <section className="premium-card p-6 sm:p-8">
+                            <h2 className="text-xl font-black text-primary-dark">تفاصيل الخدمة</h2>
+                            <p className="mt-5 whitespace-pre-line text-sm leading-9 text-brand-muted sm:text-base">{description}</p>
+                        </section>
 
-                {/* Required Documents */}
-                <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-50">
-                    <h2 className="text-lg font-bold text-primary flex items-center gap-2 mb-4">
-                        <FileText className="w-5 h-5 text-gold" />
-                        المستندات المطلوبة
-                    </h2>
-                    <ul className="space-y-3">
-                        {documents.split(/[,،]/).map((doc, i) => (
-                            <li key={i} className="flex items-start gap-2 text-gray-600 text-sm">
-                                <span className="w-1.5 h-1.5 rounded-full bg-gold mt-2 flex-shrink-0" />
-                                {doc.trim()}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                        <section className="premium-card p-6 sm:p-8">
+                            <h2 className="flex items-center gap-2 text-xl font-black text-primary-dark">
+                                <FileText className="h-5 w-5 text-gold" />
+                                المستندات المطلوبة
+                            </h2>
+                            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                                {documents.split(/[,،]/).map((doc) => (
+                                    <div key={doc.trim()} className="flex items-start gap-3 rounded-xl bg-brand-page p-4 text-sm font-semibold leading-7 text-brand-muted">
+                                        <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-gold" />
+                                        {doc.trim()}
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    </div>
 
-                {/* CTA */}
-                <div className="bg-primary/5 rounded-2xl p-6 sm:p-8 text-center border border-primary/10">
-                    <h3 className="text-lg font-bold text-primary mb-2">هل تحتاج هذه الخدمة؟</h3>
-                    <p className="text-brand-muted text-sm mb-6">سجّل الآن واحصل على أفضل الخدمات القانونية من محامين معتمدين</p>
-                    <Link
-                        to="/login"
-                        className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold py-3 px-8 rounded-xl transition-colors shadow-lg"
-                    >
-                        ابدأ الآن
-                        <ArrowRight className="w-4 h-4 rotate-180" />
-                    </Link>
+                    <aside className="lg:sticky lg:top-8 lg:self-start">
+                        <div className="rounded-2xl bg-primary-dark p-6 text-white">
+                            <h3 className="text-2xl font-black leading-9">ابدأ طلبك بخطوات واضحة</h3>
+                            <p className="mt-4 text-sm leading-8 text-white/70">
+                                سجّل الدخول وراجع المتطلبات الأساسية قبل إرسال الطلب، ثم تابع الخطوات من داخل المنصة.
+                            </p>
+                            <Link to="/login" className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold px-6 py-3.5 text-sm font-extrabold text-primary-dark hover:bg-gold-light">
+                                ابدأ الآن
+                                <ArrowLeft className="h-4 w-4" />
+                            </Link>
+                        </div>
+                    </aside>
                 </div>
-            </div>
+            </main>
         </div>
     );
 };

@@ -6,8 +6,11 @@
   html {
     scroll-behavior: smooth;
   }
+
   body {
+    background: #FAF9F6;
     font-family: 'Cairo', sans-serif;
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -15,34 +18,61 @@
 
 @layer components {
   .section-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
   }
-  .gold-underline {
-    @apply relative inline-block;
+
+  .guest-section {
+    @apply py-14 sm:py-16 lg:py-20;
   }
-  .gold-underline::after {
-    content: '';
-    @apply absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-gold rounded-full;
+
+  .section-kicker {
+    @apply text-sm font-extrabold text-gold;
+  }
+
+  .section-heading {
+    @apply mt-3 text-2xl font-black leading-tight text-primary-dark sm:text-3xl lg:text-4xl;
+  }
+
+  .section-subtitle {
+    @apply mt-4 max-w-xl text-sm leading-8 text-brand-muted sm:text-base;
+  }
+
+  .premium-card {
+    @apply rounded-[22px] border border-primary/10 bg-white shadow-sm;
+  }
+
+  .premium-button {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-extrabold text-white transition hover:bg-primary-dark;
+  }
+
+  .ghost-button {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-primary/15 bg-white px-6 py-3 text-sm font-extrabold text-primary transition hover:border-gold/50 hover:text-gold;
+  }
+
+  .gold-line {
+    @apply h-px w-12 bg-gold;
   }
 }
 
-/* ─── Custom Scrollbar (Global) ─────────────────────────────────── */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(212, 175, 55, 0.2) transparent;
+  scrollbar-color: rgba(212, 175, 55, 0.28) transparent;
 }
 
 *::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
+
 *::-webkit-scrollbar-track {
   background: transparent;
 }
+
 *::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.2);
+  background: rgba(212, 175, 55, 0.28);
   border-radius: 9999px;
 }
+
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(212, 175, 55, 0.4);
+  background: rgba(212, 175, 55, 0.45);
 }

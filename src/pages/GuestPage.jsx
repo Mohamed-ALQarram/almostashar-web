@@ -6,7 +6,7 @@ import {
     ServicesSection,
     OurLawyersSection,
     JoinNetworkSection,
-    MobileAppSection,
+    MobileAppSection
 } from '../features/guest-landing';
 
 const GuestPage = () => {

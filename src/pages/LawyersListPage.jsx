@@ -1,51 +1,61 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Filter, Star, User, Loader2, ArrowRight, X } from 'lucide-react';
+import { ArrowRight, Filter, Loader2, Search, Star, User, X } from 'lucide-react';
 import { useLawyers } from '../features/guest-landing/hooks/usePublicLawyers';
 import { usePublicServices } from '../features/guest-landing/hooks/usePublicServices';
 
-// ─── Debounce hook ──────────────────────────────────────────────────
 const useDebounce = (value, delay = 400) => {
     const [debounced, setDebounced] = useState(value);
+
     useEffect(() => {
         const id = setTimeout(() => setDebounced(value), delay);
         return () => clearTimeout(id);
     }, [value, delay]);
+
     return debounced;
 };
 
-const getInitials = (name) => name ? name.charAt(0) : '؟';
+const getInitials = (name) => name?.trim()?.charAt(0) || '؟';
 
-// ─── Single Lawyer Card ─────────────────────────────────────────────
 const LawyerCard = ({ lawyer }) => {
+    const rating = Number(lawyer.rating || 0);
+
     return (
-        <div className="group bg-white border border-gray-100 rounded-2xl p-5 sm:p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center text-center">
-            <div className="w-20 h-20 rounded-full border-3 border-gold/30 overflow-hidden mb-4 bg-primary/5 flex items-center justify-center">
-                <span className="text-2xl font-bold text-primary">{getInitials(lawyer.fullName)}</span>
+        <article className="rounded-2xl border border-primary/10 bg-white p-5 transition hover:border-gold/50">
+            <div className="flex items-center gap-4">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-page text-xl font-black text-primary ring-1 ring-primary/10">
+                    {lawyer.profileImage ? (
+                        <img src={lawyer.profileImage} alt={lawyer.fullName} className="h-full w-full object-cover" loading="lazy" />
+                    ) : (
+                        getInitials(lawyer.fullName)
+                    )}
+                </div>
+                <div className="min-w-0 flex-1">
+                    <h3 className="truncate text-sm font-black text-primary-dark">{lawyer.fullName}</h3>
+                    <p className="mt-1 text-xs font-semibold text-brand-muted">مستشار قانوني</p>
+                </div>
             </div>
 
-            <h3 className="font-bold text-primary text-sm mb-1 truncate max-w-full">{lawyer.fullName}</h3>
-
-            <div className="flex items-center gap-1 mb-3">
-                {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={`w-3.5 h-3.5 ${i < Math.round(lawyer.rating || 0) ? 'text-gold fill-gold' : 'text-gray-200'}`} />
-                ))}
-                <span className="text-xs text-brand-muted mr-1">({(lawyer.rating || 0).toFixed(1)})</span>
+            <div className="mt-5 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, index) => (
+                        <Star key={index} className={`h-3.5 w-3.5 ${index < Math.round(rating) ? 'fill-gold text-gold' : 'text-gray-200'}`} />
+                    ))}
+                    <span className="mr-1 text-xs font-bold text-brand-muted">{rating.toFixed(1)}</span>
+                </div>
+                <span className={`rounded-full px-3 py-1 text-[11px] font-extrabold ${lawyer.isActive ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-500'
+                    }`}>
+                    {lawyer.isActive ? 'متاح الآن' : 'غير متاح'}
+                </span>
             </div>
-
-            <div className={`text-[10px] font-semibold px-3 py-1 rounded-full ${lawyer.isActive ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-400'}`}>
-                {lawyer.isActive ? 'متاح الآن' : 'غير متاح'}
-            </div>
-        </div>
+        </article>
     );
 };
 
-// ─── Main Page ──────────────────────────────────────────────────────
 const LawyersListPage = () => {
     const [searchInput, setSearchInput] = useState('');
     const [serviceId, setServiceId] = useState('');
     const [showFilters, setShowFilters] = useState(false);
-
     const debouncedSearch = useDebounce(searchInput);
 
     const {
@@ -62,10 +72,7 @@ const LawyersListPage = () => {
     });
 
     const { data: services } = usePublicServices();
-
-    const allLawyers = data?.pages?.flatMap(p => p.items || []) || [];
-
-    // ── Infinite scroll observer ────────────────────────────────────
+    const allLawyers = data?.pages?.flatMap((page) => page.items || []) || [];
     const sentinelRef = useRef(null);
 
     const handleObserver = useCallback((entries) => {
@@ -73,14 +80,14 @@ const LawyersListPage = () => {
         if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
             fetchNextPage();
         }
-    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+    }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
     useEffect(() => {
         const el = sentinelRef.current;
-        if (!el) return;
+        if (!el) return undefined;
 
         const observer = new IntersectionObserver(handleObserver, {
-            rootMargin: '200px',
+            rootMargin: '220px',
         });
         observer.observe(el);
         return () => observer.disconnect();
@@ -91,91 +98,84 @@ const LawyersListPage = () => {
         setServiceId('');
     };
 
-    const hasActiveFilters = debouncedSearch || serviceId;
+    const hasActiveFilters = Boolean(debouncedSearch || serviceId);
 
     return (
         <div className="min-h-screen bg-brand-page" dir="rtl">
-            {/* Hero Header */}
-            <div className="bg-primary text-white">
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
-                    <Link to="/guest" className="inline-flex items-center gap-2 text-white/60 hover:text-gold text-sm mb-6 transition-colors">
-                        <ArrowRight className="w-4 h-4" />
+            <header className="bg-primary-dark text-white">
+                <div className="section-container py-12 sm:py-16 lg:py-20">
+                    <Link to="/guest" className="mb-8 inline-flex items-center gap-2 text-sm font-bold text-white/60 transition hover:text-gold">
+                        <ArrowRight className="h-4 w-4" />
                         العودة للرئيسية
                     </Link>
-                    <h1 className="text-3xl sm:text-4xl font-extrabold mb-3">محامونا المعتمدون</h1>
-                    <p className="text-white/60 text-sm sm:text-base max-w-xl">
-                        تصفح قائمة المحامين والمستشارين القانونيين المعتمدين واختر الأنسب لقضيتك
+                    <h1 className="mt-5 text-3xl font-black leading-tight sm:text-5xl">ابحث عن المحامي المناسب</h1>
+                    <p className="mt-5 max-w-2xl text-sm leading-8 text-white/70 sm:text-base">
+                        استخدم البحث أو فلتر الخدمة للوصول إلى محامٍ يناسب طبيعة طلبك، ثم ابدأ التواصل من خلال المنصة.
                     </p>
                 </div>
-            </div>
+            </header>
 
-            {/* Search & Filters Bar */}
-            <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-sm">
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+            <div className="sticky top-0 z-30 border-b border-primary/10 bg-brand-page/95 backdrop-blur-xl">
+                <div className="section-container py-4">
                     <div className="flex items-center gap-3">
-                        {/* Search */}
-                        <div className="relative flex-1 max-w-md">
-                            <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <div className="relative flex-1">
+                            <Search className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gold" />
                             <input
-                                type="text"
+                                type="search"
                                 value={searchInput}
-                                onChange={(e) => setSearchInput(e.target.value)}
-                                placeholder="ابحث بالاسم..."
-                                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2.5 pr-10 pl-4 text-sm focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold/20 transition-colors"
+                                onChange={(event) => setSearchInput(event.target.value)}
+                                placeholder="ابحث باسم المحامي..."
+                                className="h-12 w-full rounded-xl border border-primary/10 bg-white pl-4 pr-12 text-sm font-semibold text-primary outline-none placeholder:text-brand-muted/70 focus:border-gold"
                             />
                         </div>
 
-                        {/* Filter toggle */}
                         <button
                             type="button"
-                            onClick={() => setShowFilters(!showFilters)}
-                            className={`p-2.5 rounded-xl border transition-colors ${showFilters || serviceId
-                                ? 'bg-primary text-white border-primary'
-                                : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
+                            onClick={() => setShowFilters((value) => !value)}
+                            className={`inline-flex h-12 w-12 items-center justify-center rounded-xl border transition ${showFilters || serviceId
+                                ? 'border-primary bg-primary text-white'
+                                : 'border-primary/10 bg-white text-primary hover:border-gold/40'
                                 }`}
+                            aria-label="عرض الفلاتر"
+                            aria-expanded={showFilters}
                         >
-                            <Filter className="w-5 h-5" />
+                            <Filter className="h-5 w-5" />
                         </button>
 
-                        {/* Clear */}
                         {hasActiveFilters && (
                             <button
                                 type="button"
                                 onClick={clearFilters}
-                                className="p-2.5 rounded-xl bg-error/10 text-error border border-error/20 hover:bg-error/20 transition-colors"
-                                title="مسح الفلاتر"
+                                className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-error/20 bg-error/10 text-error"
+                                aria-label="مسح الفلاتر"
                             >
-                                <X className="w-5 h-5" />
+                                <X className="h-5 w-5" />
                             </button>
                         )}
                     </div>
 
-                    {/* Filter panel */}
                     {showFilters && (
-                        <div className="mt-4 pt-4 border-t border-gray-100 animate-fadeIn">
-                            <p className="text-xs font-semibold text-primary mb-3">فلترة حسب التخصص</p>
+                        <div className="mt-4 rounded-2xl border border-primary/10 bg-white p-4">
+                            <p className="mb-3 text-xs font-black text-primary">فلترة حسب التخصص</p>
                             <div className="flex flex-wrap gap-2">
                                 <button
                                     type="button"
                                     onClick={() => setServiceId('')}
-                                    className={`text-xs px-4 py-2 rounded-full transition-colors ${!serviceId
-                                        ? 'bg-primary text-white'
-                                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'
-                                        }`}
+                                    className={`rounded-full px-4 py-2 text-xs font-extrabold transition ${!serviceId ? 'bg-primary text-white' : 'bg-brand-page text-brand-muted hover:text-primary'}`}
                                 >
                                     الكل
                                 </button>
-                                {services?.map(s => (
+                                {services?.map((service) => (
                                     <button
                                         type="button"
-                                        key={s.id}
-                                        onClick={() => setServiceId(String(s.id))}
-                                        className={`text-xs px-4 py-2 rounded-full transition-colors ${String(s.id) === serviceId
+                                        key={service.id}
+                                        onClick={() => setServiceId(String(service.id))}
+                                        className={`rounded-full px-4 py-2 text-xs font-extrabold transition ${String(service.id) === serviceId
                                             ? 'bg-primary text-white'
-                                            : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'
+                                            : 'bg-brand-page text-brand-muted hover:text-primary'
                                             }`}
                                     >
-                                        {s.title}
+                                        {service.title}
                                     </button>
                                 ))}
                             </div>
@@ -184,65 +184,55 @@ const LawyersListPage = () => {
                 </div>
             </div>
 
-            {/* Content */}
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-                {/* Initial loading */}
+            <main className="section-container py-8 sm:py-12">
                 {isLoading && (
-                    <div className="flex justify-center items-center py-24">
-                        <Loader2 className="w-10 h-10 text-gold animate-spin" />
+                    <div className="flex justify-center py-24">
+                        <Loader2 className="h-11 w-11 animate-spin text-gold" />
                     </div>
                 )}
 
-                {/* Error */}
                 {isError && (
-                    <p className="text-center text-brand-muted py-20">حدث خطأ أثناء تحميل المحامين. يرجى المحاولة لاحقاً.</p>
+                    <div className="rounded-2xl border border-error/10 bg-white p-8 text-center text-sm font-semibold text-brand-muted">
+                        حدث خطأ أثناء تحميل المحامين. يرجى المحاولة لاحقاً.
+                    </div>
                 )}
 
-                {/* Grid */}
                 {!isLoading && !isError && allLawyers.length > 0 && (
                     <>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
+                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                             {allLawyers.map((lawyer) => (
                                 <LawyerCard key={lawyer.lawyerId} lawyer={lawyer} />
                             ))}
                         </div>
 
-                        {/* Scroll sentinel */}
                         <div ref={sentinelRef} className="h-1" />
 
-                        {/* Loading more indicator */}
                         {isFetchingNextPage && (
                             <div className="flex justify-center py-8">
-                                <Loader2 className="w-6 h-6 text-gold animate-spin" />
+                                <Loader2 className="h-7 w-7 animate-spin text-gold" />
                             </div>
                         )}
 
-                        {/* End of list */}
                         {!hasNextPage && allLawyers.length > 12 && (
-                            <p className="text-center text-brand-muted text-sm py-8">تم عرض جميع المحامين</p>
+                            <p className="py-8 text-center text-sm font-semibold text-brand-muted">تم عرض جميع النتائج المتاحة</p>
                         )}
                     </>
                 )}
 
-                {/* Empty */}
                 {!isLoading && !isError && allLawyers.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-24 gap-4">
-                        <User className="w-12 h-12 text-gray-200" />
-                        <p className="text-brand-muted text-sm">
+                    <div className="mx-auto flex max-w-xl flex-col items-center justify-center rounded-2xl border border-primary/10 bg-white p-10 text-center">
+                        <User className="h-12 w-12 text-gold" />
+                        <p className="mt-4 text-sm font-semibold text-brand-muted">
                             {hasActiveFilters ? 'لا توجد نتائج مطابقة للبحث.' : 'لا يوجد محامون متاحون حالياً.'}
                         </p>
                         {hasActiveFilters && (
-                            <button
-                                type="button"
-                                onClick={clearFilters}
-                                className="text-gold hover:text-gold-dark text-sm font-semibold"
-                            >
+                            <button type="button" onClick={clearFilters} className="mt-4 text-sm font-extrabold text-gold">
                                 مسح الفلاتر
                             </button>
                         )}
                     </div>
                 )}
-            </div>
+            </main>
         </div>
     );
 };

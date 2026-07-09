@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
-import logo from '../../../assets/AlMostashar-logo.png';
+import { LogIn, Menu, X } from 'lucide-react';
+import logo from '../../../assets/AlMostashar-logo-new.png';
 
 const navLinks = [
     { label: 'الرئيسية', href: '#hero' },
     { label: 'من نحن', href: '#about' },
     { label: 'خدماتنا', href: '#services' },
     { label: 'لماذا نحن', href: '#why-us' },
+    { label: 'محامونا', href: '#lawyers' },
+    { label: 'التطبيق', href: '#mobile-app' },
     { label: 'تواصل معنا', href: '#footer' },
 ];
 
@@ -16,87 +18,78 @@ const Navbar = () => {
     const [isMobileOpen, setIsMobileOpen] = useState(false);
 
     useEffect(() => {
-        const handleScroll = () => setIsScrolled(window.scrollY > 20);
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        const onScroll = () => setIsScrolled(window.scrollY > 20);
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
     return (
         <nav
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-                isScrolled
-                    ? 'bg-primary-dark/95 backdrop-blur-md shadow-lg py-2'
-                    : 'bg-transparent py-4'
-            }`}
+            className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${isScrolled
+                    ? 'border-primary/10 bg-white/95 text-primary shadow-md shadow-primary-dark/[0.08] backdrop-blur-xl'
+                    : 'border-primary/10 bg-white/95 text-primary backdrop-blur-xl'
+                }`}
         >
-            <div className="section-container flex items-center justify-between">
-                {/* Logo */}
-                <Link to="/" className="flex-shrink-0">
-                    <img src={logo} alt="المستشار" className="h-12 w-auto" />
+            <div className="section-container flex h-[76px] items-center justify-between gap-6">
+                <Link to="/guest" className="flex items-center" aria-label="المستشار">
+                    <img src={logo} alt="المستشار" className="h-14 w-auto" />
                 </Link>
 
-                {/* Desktop Nav Links */}
-                <ul className="hidden lg:flex items-center gap-8">
+                <ul className="hidden items-center gap-1 lg:flex">
                     {navLinks.map((link) => (
                         <li key={link.href}>
                             <a
                                 href={link.href}
-                                className="text-white/80 hover:text-gold text-sm font-medium transition-colors duration-200 relative group"
+                                className="rounded-xl px-4 py-2 text-sm font-bold text-primary/70 transition hover:bg-primary/5 hover:text-primary"
                             >
                                 {link.label}
-                                <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full" />
                             </a>
                         </li>
                     ))}
                 </ul>
 
-                {/* Login Button */}
-                <div className="hidden lg:flex items-center gap-3">
-                    <Link
-                        to="/login"
-                        className="px-5 py-2.5 bg-gold hover:bg-gold-dark text-white text-sm font-bold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
-                    >
-                        تسجيل الدخول / إنشاء حساب
-                    </Link>
-                </div>
-
-                {/* Mobile Hamburger */}
-                <button
-                    onClick={() => setIsMobileOpen(!isMobileOpen)}
-                    className="lg:hidden text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
-                    aria-label="Toggle menu"
+                <Link
+                    to="/login"
+                    className="hidden items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-extrabold text-white transition hover:bg-primary-dark lg:inline-flex"
                 >
-                    {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
+                    <LogIn className="h-4 w-4" />
+                    تسجيل الدخول
+                </Link>
+
+                <button
+                    type="button"
+                    onClick={() => setIsMobileOpen((value) => !value)}
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-primary/10 bg-white text-primary transition hover:border-gold/40 lg:hidden"
+                    aria-label={isMobileOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
+                    aria-expanded={isMobileOpen}
+                >
+                    {isMobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                 </button>
             </div>
 
-            {/* Mobile Drawer */}
-            <div
-                className={`lg:hidden overflow-hidden transition-all duration-300 ${
-                    isMobileOpen ? 'max-h-[400px] opacity-100' : 'max-h-0 opacity-0'
-                }`}
-            >
-                <div className="section-container py-4 border-t border-white/10">
-                    <ul className="flex flex-col gap-3">
+            <div className={`overflow-hidden transition-all duration-300 lg:hidden ${isMobileOpen ? 'max-h-96' : 'max-h-0'}`}>
+                <div className="section-container pb-4">
+                    <div className="rounded-2xl border border-primary/10 bg-white p-2 shadow-lg shadow-primary-dark/[0.08]">
                         {navLinks.map((link) => (
-                            <li key={link.href}>
-                                <a
-                                    href={link.href}
-                                    onClick={() => setIsMobileOpen(false)}
-                                    className="block text-white/80 hover:text-gold py-2 text-sm font-medium transition-colors"
-                                >
-                                    {link.label}
-                                </a>
-                            </li>
+                            <a
+                                key={link.href}
+                                href={link.href}
+                                onClick={() => setIsMobileOpen(false)}
+                                className="block rounded-xl px-4 py-3 text-sm font-bold text-primary/75 hover:bg-primary/5 hover:text-primary"
+                            >
+                                {link.label}
+                            </a>
                         ))}
-                    </ul>
-                    <Link
-                        to="/login"
-                        onClick={() => setIsMobileOpen(false)}
-                        className="mt-4 block w-full text-center px-5 py-3 bg-gold hover:bg-gold-dark text-white text-sm font-bold rounded-lg transition-all duration-200"
-                    >
-                        تسجيل الدخول / إنشاء حساب
-                    </Link>
+                        <Link
+                            to="/login"
+                            onClick={() => setIsMobileOpen(false)}
+                            className="mt-2 flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-extrabold text-white"
+                        >
+                            <LogIn className="h-4 w-4" />
+                            تسجيل الدخول / إنشاء حساب
+                        </Link>
+                    </div>
                 </div>
             </div>
         </nav>
