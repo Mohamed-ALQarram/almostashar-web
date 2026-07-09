@@ -70,7 +70,7 @@ const HeroSection = () => {
                         </div>
 
                         <h1 className="mt-6 max-w-[560px] text-4xl font-black leading-[1.18] text-white drop-shadow-sm sm:text-5xl lg:text-6xl">
-                            وصّل لمستشارك القانوني بثقة
+                            شريكك القانوني في كل خطوة
                         </h1>
 
                         <p className="mt-6 max-w-[560px] text-base leading-9 text-white/[0.82] sm:text-lg">
