@@ -69,7 +69,7 @@ const ServiceDetailPage = () => {
     const description = service.fullDescription || SERVICE_DESCRIPTIONS[type] || DEFAULT_DESCRIPTION;
     const documents = service.requiredDocuments || SERVICE_DOCUMENTS[type] || 'صورة الهوية، أي مستندات مرتبطة بالخدمة';
     const duration = service.expectedDuration || SERVICE_DURATION[type] || 'حسب طبيعة الخدمة';
-    const summary = service.summary || 'خدمة قانونية متخصصة ضمن تجربة آمنة ومنظمة.';
+    const summary = service.summary || 'خدمة قانونية واضحة ضمن تجربة منظمة تحفظ خصوصية ملفك.';
 
     return (
         <div className="min-h-screen bg-brand-page" dir="rtl">
@@ -122,9 +122,9 @@ const ServiceDetailPage = () => {
 
                     <aside className="lg:sticky lg:top-8 lg:self-start">
                         <div className="rounded-2xl bg-primary-dark p-6 text-white">
-                            <h3 className="text-2xl font-black leading-9">ابدأ طلب هذه الخدمة</h3>
+                            <h3 className="text-2xl font-black leading-9">ابدأ طلبك بخطوات واضحة</h3>
                             <p className="mt-4 text-sm leading-8 text-white/70">
-                                سجّل الدخول وابدأ طلبك عبر مسار واضح يحافظ على بياناتك ويعرض المتطلبات قبل التواصل.
+                                سجّل الدخول وراجع المتطلبات الأساسية قبل إرسال الطلب، ثم تابع الخطوات من داخل المنصة.
                             </p>
                             <Link to="/login" className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold px-6 py-3.5 text-sm font-extrabold text-primary-dark hover:bg-gold-light">
                                 ابدأ الآن

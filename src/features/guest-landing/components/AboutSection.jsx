@@ -1,22 +1,22 @@
-import { LockKeyhole, Scale, Sparkles } from 'lucide-react';
+import { ClipboardCheck, ListChecks, MessageCircle } from 'lucide-react';
 import trustImage from '../../../assets/guest-trust-handshake.webp';
 import GuestSectionHeading from './GuestSectionHeading';
 
 const trustCards = [
     {
-        icon: Scale,
-        title: 'محامون معتمدون',
-        description: 'شبكة مهنية منتقاة تساعدك على الوصول لمحامٍ مناسب حسب نوع الخدمة والاحتياج.',
+        icon: ClipboardCheck,
+        title: 'اختر الخدمة',
+        description: 'ابدأ من خدمة واضحة تناسب موقفك، بدل ما تضيع وقتك في خطوات غير محددة.',
     },
     {
-        icon: Sparkles,
-        title: 'استشارات مدعومة بالتقنية',
-        description: 'تجربة رقمية منظمة تختصر الخطوات وتوضح المعلومات المطلوبة قبل بدء الطلب.',
+        icon: MessageCircle,
+        title: 'تواصل مع محامٍ',
+        description: 'تواصل مع محامين موثوقين حسب نوع الطلب وطبيعة الملف القانوني.',
     },
     {
-        icon: LockKeyhole,
-        title: 'سرية وخصوصية',
-        description: 'تصميم يحترم حساسية الملفات القانونية ويقدمها في مسار آمن وواضح.',
+        icon: ListChecks,
+        title: 'تابع طلبك',
+        description: 'راجع حالة الطلب والمستندات المطلوبة من مكان واحد وبخطوات منظمة.',
     },
 ];
 
@@ -40,8 +40,8 @@ const AboutSection = () => {
                         <GuestSectionHeading
                             align="right"
                             eyebrow="من نحن"
-                            title="منصة قانونية رقمية تجمع الثقة المهنية مع تجربة استخدام واضحة"
-                            description="المستشار ليس واجهة استعراضية. هو مسار عملي يساعدك على تحديد الخدمة، فهم المطلوب، وبدء التواصل مع المختص بثقة وخصوصية."
+                            title="منصة مصرية تجعل الخدمات القانونية أقرب وأسهل"
+                            description="المستشار يسهّل الوصول للخدمات القانونية في مصر من خلال تجربة رقمية واضحة، تجمع بين اختيار الخدمة المناسبة، التواصل مع محامين موثوقين، ومتابعة الطلب من مكان واحد."
                         />
 
                         <div className="mt-9 grid gap-4 sm:grid-cols-3">

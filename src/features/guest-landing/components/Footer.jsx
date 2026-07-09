@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Send, Twitter } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter } from 'lucide-react';
 import logo from '../../../assets/AlMostashar-logo-new.png';
 
 const quickLinks = [
@@ -36,7 +36,7 @@ const Footer = () => {
                             <img src={logo} alt="المستشار" className="h-16 w-auto" loading="lazy" />
                         </Link>
                         <p className="mt-5 max-w-sm text-sm leading-8 text-white/60">
-                            منصة قانونية عربية تجمع بين الثقة المهنية والتجربة الرقمية الواضحة لخدمة الأفراد والشركات.
+                            منصة مصرية للخدمات القانونية الرقمية، تساعد الأفراد والشركات على الوصول لمحامٍ مناسب ومتابعة الطلب بوضوح وخصوصية.
                         </p>
                         <div className="mt-6 flex gap-3">
                             {socialLinks.map((social) => (
@@ -93,28 +93,17 @@ const Footer = () => {
                             </li>
                             <li className="flex items-start gap-3">
                                 <Phone className="mt-1 h-4 w-4 shrink-0 text-gold" />
-                                <span className="text-sm text-white/60" dir="ltr">+966 50 000 0000</span>
+                                <span className="text-sm text-white/60" dir="ltr">+20 100 000 0000</span>
                             </li>
                             <li className="flex items-start gap-3">
                                 <MapPin className="mt-1 h-4 w-4 shrink-0 text-gold" />
-                                <span className="text-sm leading-7 text-white/60">الرياض، المملكة العربية السعودية</span>
+                                <span className="text-sm leading-7 text-white/60">القاهرة، مصر</span>
                             </li>
                         </ul>
 
-                        <div className="mt-7 rounded-2xl border border-white/10 p-3">
-                            <p className="mb-3 px-2 text-xs font-bold text-white/60">النشرة البريدية</p>
-                            <div className="flex overflow-hidden rounded-xl bg-white">
-                                <input
-                                    type="email"
-                                    placeholder="بريدك الإلكتروني"
-                                    className="min-w-0 flex-1 px-4 py-3 text-sm font-semibold text-primary outline-none placeholder:text-brand-muted/70"
-                                    aria-label="البريد الإلكتروني للنشرة البريدية"
-                                />
-                                <button type="button" className="bg-gold px-4 text-primary-dark" aria-label="إرسال البريد الإلكتروني">
-                                    <Send className="h-4 w-4" />
-                                </button>
-                            </div>
-                        </div>
+                        <p className="mt-7 text-sm leading-8 text-white/50">
+                            للتواصل أو الاستفسار عن الخدمات، استخدم بيانات التواصل الموضحة أو ابدأ طلبك من خلال المنصة.
+                        </p>
                     </div>
                 </div>
             </div>

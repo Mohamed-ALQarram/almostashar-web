@@ -15,16 +15,16 @@ const SERVICE_ICON_MAP = {
 const FALLBACK_ICONS = [Scale, FileText, Gavel, Building2, Briefcase, ShieldCheck, Users];
 
 const SERVICE_SUMMARIES = {
-    Consultation: 'استشارات قانونية واضحة تساعدك على فهم موقفك واتخاذ القرار بثقة.',
-    ContractDrafting: 'صياغة ومراجعة العقود باحتراف يحمي مصالحك ويقلل المخاطر.',
-    LegalRepresentation: 'تمثيل قانوني منظم ومتابعة دقيقة لإجراءات القضايا والملفات.',
-    CompanyFormation: 'تأسيس الشركات وتجهيز المتطلبات القانونية لبداية أعمال مستقرة.',
+    Consultation: 'رأي قانوني واضح يساعدك تفهم موقفك وتختار الخطوة الأنسب.',
+    ContractDrafting: 'صياغة ومراجعة عقود تحفظ الحقوق وتوضح التزامات كل طرف.',
+    LegalRepresentation: 'متابعة قانونية منظمة للقضايا والإجراءات أمام الجهات المختصة.',
+    CompanyFormation: 'تجهيز متطلبات تأسيس الشركات واختيار الشكل القانوني المناسب.',
     LaborCases: 'دعم متخصص في النزاعات العمالية وحقوق الموظفين وأصحاب العمل.',
-    PersonalStatus: 'تعامل مهني وسري مع قضايا الأسرة والأحوال الشخصية.',
+    PersonalStatus: 'تعامل مهني وسري مع ملفات الأسرة والأحوال الشخصية.',
 };
 
 const getIcon = (service, index) => SERVICE_ICON_MAP[service.serviceType] || FALLBACK_ICONS[index % FALLBACK_ICONS.length];
-const getSummary = (service) => service.summary || SERVICE_SUMMARIES[service.serviceType] || 'خدمة قانونية متخصصة تساعدك على الوصول إلى الإجراء المناسب بوضوح واحتراف.';
+const getSummary = (service) => service.summary || SERVICE_SUMMARIES[service.serviceType] || 'خدمة قانونية تساعدك تبدأ الإجراء المناسب بخطوات واضحة.';
 
 const ServicesSection = () => {
     const { data: services, isLoading, isError } = usePublicServices();
@@ -35,12 +35,12 @@ const ServicesSection = () => {
                 <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
                     <GuestSectionHeading
                         align="right"
-                        eyebrow="خدماتنا"
-                        title="خدمات قانونية منظمة حسب احتياجك"
-                        description="اختر الخدمة المناسبة وراجع التفاصيل قبل البدء. كل بطاقة تعرض المعلومات الأساسية بدون ازدحام أو وعود مبالغ فيها."
+                        eyebrow="الخدمات القانونية"
+                        title="ابدأ من الخدمة المناسبة لموقفك"
+                        description="سواء كنت تحتاج استشارة، صياغة عقد، تأسيس شركة، أو متابعة إجراء قانوني، ستجد الخدمة واضحة وخطواتها منظمة."
                     />
                     <Link to="/login" className="ghost-button self-start lg:self-auto">
-                        ابدأ طلب خدمة
+                        ابدأ طلبك
                     </Link>
                 </div>
 
@@ -58,7 +58,7 @@ const ServicesSection = () => {
                 )}
 
                 {!isLoading && !isError && services?.length > 0 && (
-                    <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                         {services.map((service, index) => {
                             const Icon = getIcon(service, index);
 
@@ -66,26 +66,20 @@ const ServicesSection = () => {
                                 <Link
                                     key={service.id}
                                     to={`/services/${service.id}`}
-                                    className="group flex min-h-[236px] flex-col rounded-2xl border border-primary/10 bg-white p-5 transition hover:border-gold/50"
+                                    className="group flex min-h-[220px] flex-col overflow-hidden rounded-[22px] border border-primary/10 bg-white p-5 transition duration-200 hover:border-gold/40"
                                 >
-                                    <div className="h-1 w-12 rounded-full bg-gold" />
-                                    <div className="mt-5 flex items-start gap-4">
-                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-page ring-1 ring-primary/10">
-                                            {service.iconUrl ? (
-                                                <img src={service.iconUrl} alt={service.title} className="h-8 w-8 object-contain" loading="lazy" />
-                                            ) : (
-                                                <Icon className="h-6 w-6 text-primary" />
-                                            )}
-                                        </div>
-                                        <h3 className="pt-1 text-base font-black leading-7 text-primary-dark">{service.title}</h3>
+                                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-page text-primary ring-1 ring-primary/10">
+                                        <Icon className="h-5 w-5" />
                                     </div>
 
+                                    <h3 className="mt-5 text-base font-black leading-7 text-primary-dark">{service.title}</h3>
                                     <p className="mt-4 line-clamp-3 flex-1 text-sm leading-7 text-brand-muted">{getSummary(service)}</p>
 
                                     <span className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-primary transition group-hover:text-gold">
                                         عرض التفاصيل
                                         <ArrowLeft className="h-4 w-4 transition group-hover:-translate-x-1" />
                                     </span>
+                                    <span className="mt-4 h-px w-10 bg-gold/45" />
                                 </Link>
                             );
                         })}

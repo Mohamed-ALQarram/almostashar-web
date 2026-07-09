@@ -51,8 +51,8 @@ const OurLawyersSection = () => {
                     <GuestSectionHeading
                         align="right"
                         eyebrow="محامونا"
-                        title="نخبة من المحامين المعتمدين"
-                        description="عرض هادئ وواضح للمحامين المتاحين، مع الالتزام بالبيانات الفعلية القادمة من النظام."
+                        title="محامون يمكنك البدء معهم بثقة"
+                        description="تصفح المحامين المتاحين واختَر الأنسب لطبيعة طلبك من خلال بيانات واضحة مصدرها النظام."
                     />
                     <Link to="/lawyers" className="ghost-button self-start lg:self-auto">
                         عرض جميع المحامين
@@ -68,7 +68,7 @@ const OurLawyersSection = () => {
 
                 {isError && (
                     <p className="mt-12 rounded-2xl border border-error/10 bg-white p-8 text-center text-sm font-semibold text-brand-muted">
-                        حدث خطأ أثناء تحميل المحامين.
+                        تعذر تحميل قائمة المحامين حالياً. حاول مرة أخرى بعد قليل.
                     </p>
                 )}
 
@@ -83,7 +83,7 @@ const OurLawyersSection = () => {
                 {!isLoading && !isError && (!lawyers || lawyers.length === 0) && (
                     <div className="mx-auto mt-12 max-w-xl rounded-2xl border border-primary/10 bg-white p-8 text-center">
                         <UserRoundCheck className="mx-auto h-10 w-10 text-gold" />
-                        <p className="mt-4 text-sm font-semibold text-brand-muted">لا يوجد محامون متاحون حالياً.</p>
+                        <p className="mt-4 text-sm font-semibold text-brand-muted">لا توجد بيانات محامين متاحة حالياً.</p>
                     </div>
                 )}
             </div>

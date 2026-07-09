@@ -30,7 +30,7 @@ const Navbar = () => {
                     : 'border-primary/10 bg-white/90 text-primary backdrop-blur-xl'
             }`}
         >
-            <div className="section-container flex h-20 items-center justify-between gap-6">
+            <div className="section-container flex h-[76px] items-center justify-between gap-6">
                 <Link to="/guest" className="flex items-center" aria-label="المستشار">
                     <img src={logo} alt="المستشار" className="h-14 w-auto" />
                 </Link>
@@ -40,7 +40,7 @@ const Navbar = () => {
                         <li key={link.href}>
                             <a
                                 href={link.href}
-                                className={`rounded-full px-4 py-2 text-sm font-bold transition ${
+                                className={`rounded-xl px-4 py-2 text-sm font-bold transition ${
                                     isScrolled || isMobileOpen
                                         ? 'text-white/75 hover:bg-white/10 hover:text-white'
                                         : 'text-primary/70 hover:bg-primary/5 hover:text-primary'
@@ -54,7 +54,7 @@ const Navbar = () => {
 
                 <Link
                     to="/login"
-                    className={`hidden items-center gap-2 rounded-full px-5 py-2.5 text-sm font-extrabold transition lg:inline-flex ${
+                    className={`hidden items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-extrabold transition lg:inline-flex ${
                         isScrolled || isMobileOpen
                             ? 'bg-gold text-primary-dark hover:bg-gold-light'
                             : 'bg-primary text-white hover:bg-primary-dark'
@@ -67,7 +67,7 @@ const Navbar = () => {
                 <button
                     type="button"
                     onClick={() => setIsMobileOpen((value) => !value)}
-                    className={`inline-flex h-11 w-11 items-center justify-center rounded-full border transition lg:hidden ${
+                    className={`inline-flex h-11 w-11 items-center justify-center rounded-xl border transition lg:hidden ${
                         isScrolled || isMobileOpen
                             ? 'border-white/15 bg-white/10 text-white'
                             : 'border-primary/10 bg-white text-primary'

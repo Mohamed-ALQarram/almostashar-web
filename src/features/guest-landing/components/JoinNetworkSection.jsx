@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 
 const benefits = [
-    'استقبال طلبات قانونية منظمة من عملاء جادين',
-    'إدارة خدماتك وحضورك المهني من مكان واحد',
-    'تجربة متابعة ودفع واضحة وموثوقة',
-    'ظهور احترافي يعكس تخصصك القانوني',
+    'استقبال طلبات واضحة من عملاء يبحثون عن خدمة قانونية محددة',
+    'إدارة حضورك المهني وخدماتك من مكان واحد',
+    'متابعة منظمة للطلبات والتواصل مع العملاء',
+    'ملف مهني يعرض تخصصك وخبرتك بصورة مناسبة',
 ];
 
 const JoinNetworkSection = () => {
@@ -17,10 +17,10 @@ const JoinNetworkSection = () => {
                         <div>
                             <span className="section-kicker">للمحامين</span>
                             <h2 className="mt-4 max-w-2xl text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">
-                                انضم إلى شبكة المستشار القانونية
+                                انضم لشبكة المستشار من المحامين
                             </h2>
                             <p className="mt-5 max-w-2xl text-sm leading-8 text-white/70 sm:text-base">
-                                مساحة مهنية تساعد المحامي على استقبال الطلبات، تنظيم الخدمات، وبناء حضور رقمي يليق بخبرته.
+                                لو بتقدم خدمات قانونية باحتراف، المستشار يساعدك توصل لعملاء محتاجين دعم قانوني واضح ومنظم.
                             </p>
                             <Link to="/lawyer-register" className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-3.5 text-sm font-extrabold text-primary-dark transition hover:bg-gold-light">
                                 سجّل كمحامٍ

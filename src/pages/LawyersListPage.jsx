@@ -110,9 +110,9 @@ const LawyersListPage = () => {
                         العودة للرئيسية
                     </Link>
                     <span className="section-kicker">شبكة المستشار</span>
-                    <h1 className="mt-5 text-3xl font-black leading-tight sm:text-5xl">محامونا المعتمدون</h1>
+                    <h1 className="mt-5 text-3xl font-black leading-tight sm:text-5xl">ابحث عن المحامي المناسب</h1>
                     <p className="mt-5 max-w-2xl text-sm leading-8 text-white/70 sm:text-base">
-                        ابحث في قائمة المحامين والمستشارين القانونيين واختر المختص الأنسب لطبيعة احتياجك.
+                        استخدم البحث أو فلتر الخدمة للوصول إلى محامٍ يناسب طبيعة طلبك، ثم ابدأ التواصل من خلال المنصة.
                     </p>
                 </div>
             </header>
@@ -218,7 +218,7 @@ const LawyersListPage = () => {
                         )}
 
                         {!hasNextPage && allLawyers.length > 12 && (
-                            <p className="py-8 text-center text-sm font-semibold text-brand-muted">تم عرض جميع المحامين</p>
+                            <p className="py-8 text-center text-sm font-semibold text-brand-muted">تم عرض جميع النتائج المتاحة</p>
                         )}
                     </>
                 )}

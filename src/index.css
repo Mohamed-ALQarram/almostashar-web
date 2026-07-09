@@ -22,11 +22,11 @@
   }
 
   .guest-section {
-    @apply py-14 sm:py-20 lg:py-24;
+    @apply py-14 sm:py-16 lg:py-20;
   }
 
   .section-kicker {
-    @apply text-xs font-black uppercase tracking-[0.22em] text-gold;
+    @apply text-sm font-extrabold text-gold;
   }
 
   .section-heading {
@@ -34,19 +34,19 @@
   }
 
   .section-subtitle {
-    @apply mt-4 max-w-2xl text-sm leading-8 text-brand-muted sm:text-base;
+    @apply mt-4 max-w-xl text-sm leading-8 text-brand-muted sm:text-base;
   }
 
   .premium-card {
-    @apply rounded-2xl border border-primary/10 bg-white shadow-sm;
+    @apply rounded-[22px] border border-primary/10 bg-white shadow-sm;
   }
 
   .premium-button {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-extrabold text-white transition hover:bg-primary-dark;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-extrabold text-white transition hover:bg-primary-dark;
   }
 
   .ghost-button {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-primary/15 bg-white px-6 py-3 text-sm font-extrabold text-primary transition hover:border-gold/50 hover:text-gold;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-primary/15 bg-white px-6 py-3 text-sm font-extrabold text-primary transition hover:border-gold/50 hover:text-gold;
   }
 
   .gold-line {
