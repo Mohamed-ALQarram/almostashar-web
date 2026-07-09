@@ -101,13 +101,13 @@ const HeroSection = () => {
                                     <Search className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gold" />
                                     <input
                                         type="search"
-                                        placeholder="ابحث عن خدمة قانونية أو محامٍ..."
+                                        placeholder="اكتب اسم الخدمة أو المحامي..."
                                         className="h-12 w-full rounded-xl border border-white/[0.18] bg-white/[0.92] pl-4 pr-12 text-sm font-semibold text-primary outline-none placeholder:text-brand-muted/70 focus:border-gold"
                                         aria-label="البحث عن خدمة قانونية أو محام"
                                     />
                                 </div>
                                 <button type="button" className="h-12 rounded-xl bg-gold px-5 text-sm font-extrabold text-primary-dark hover:bg-gold-light">
-                                    ابحث
+                                    بحث
                                 </button>
                             </div>
                         </div>
