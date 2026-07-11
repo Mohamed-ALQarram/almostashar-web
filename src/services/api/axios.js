@@ -60,7 +60,9 @@ api.interceptors.response.use(
         const originalRequest = error.config;
 
         // ── 401 → attempt silent refresh ────────────────────────
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        const isAuthRequest = originalRequest.url?.includes('/api/auth/login') || originalRequest.url?.includes('/api/auth/refresh');
+
+        if (error.response?.status === 401 && !originalRequest._retry && !isAuthRequest) {
             // Mark to prevent infinite loops
             originalRequest._retry = true;
 
