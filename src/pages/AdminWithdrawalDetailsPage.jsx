@@ -206,7 +206,7 @@ const AdminWithdrawalDetailsPage = () => {
                             <div className="sm:col-span-2">
                                 <div className="text-sm text-gray-500 mb-1">طريقة السحب</div>
                                 <div className="font-medium text-gray-900">
-                                    {MethodIcon(request.method)}
+                                    <MethodIcon method={request.method} />
                                 </div>
                             </div>
                         </div>
