@@ -2,7 +2,7 @@ import React from 'react';
 import { useAuthStore } from '../../auth/store/authStore';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
-
+import logo from '../../../assets/AlMostashar-logo.png';
 const AdminSidebar = ({ isOpen, onClose }) => {
     const { user, logout } = useAuthStore();
     const location = useLocation();
@@ -42,22 +42,21 @@ const AdminSidebar = ({ isOpen, onClose }) => {
                 `}
                 dir="rtl"
             >
-                {/* Brand area */}
+                {/* Brand */}
                 <div className="p-6 border-b border-white/10 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded bg-gold/20 flex items-center justify-center text-gold">
-                        {/* Logo icon placeholder */}
-                        <span className="text-xl leading-none">∆</span>
+                    <img
+                        src={logo}
+                        alt="منصة المستشار"
+                        className="w-10 h-10 rounded-full object-cover flex-shrink-0 border-2 border-gold/30"
+                    />
+                    <div className="flex-1 min-w-0">
+                        <h2 className="font-bold text-sm leading-tight truncate">منصة المستشار</h2>
+                        <p className="text-white/50 text-xs truncate">لوحة الإدارة</p>
                     </div>
-                    <div className="flex-1">
-                        <h2 className="font-bold text-lg leading-tight">منصة الاستشارات</h2>
-                        <p className="text-white/60 text-xs">لوحة الإدارة</p>
-                    </div>
-                    {/* Close button — mobile only */}
-                    <button
-                        onClick={onClose}
-                        className="lg:hidden p-1 text-white/60 hover:text-white transition-colors"
-                    >
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                    <button onClick={onClose} className="lg:hidden p-1 text-white/60 hover:text-white transition-colors mr-auto">
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                     </button>
                 </div>
 
@@ -136,9 +135,9 @@ const AdminSidebar = ({ isOpen, onClose }) => {
                     </Button>
 
                     <div className="flex items-center gap-3 p-3 mt-4 bg-primary-light/30 rounded-lg">
-                        <img src={user?.avatar || "https://i.pravatar.cc/150?u=admin_avatar"} alt="Admin Profile" className="w-10 h-10 rounded-full border-2 border-gold/50" />
+                        <img src={user?.profileImage || "https://i.pravatar.cc/150?u=admin_avatar"} alt="Admin Profile" className="w-10 h-10 rounded-full border-2 border-gold/50" />
                         <div className="flex-1 overflow-hidden">
-                            <h4 className="font-semibold text-sm truncate">{user?.name || "أحمد العلي"}</h4>
+                            <h4 className="font-semibold text-sm truncate">{user?.firstName + " " + user.lastName || "أحمد العلي"}</h4>
                             <p className="text-white/60 text-xs truncate">مدير النظام</p>
                         </div>
                     </div>
