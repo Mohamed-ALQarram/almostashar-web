@@ -24,7 +24,7 @@ const useLogin = () => {
                 navigate('/account-status')
             else {
                 setAuth(data);
-                navigate('/login');
+                navigate('/');
             }
         },
     });
